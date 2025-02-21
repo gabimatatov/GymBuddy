@@ -1,8 +1,6 @@
 package com.example.myapplication.activities
 
-import androidx.activity.enableEdgeToEdge
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import com.example.myapplication.MainActivity
 import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
