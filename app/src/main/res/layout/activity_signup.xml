@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/login_screen_bg"
+    android:gravity="top|center"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:layout_marginTop="10dp"
+        android:contentDescription="@string/login_image"
+        android:src="@drawable/gym_buddy_icon"
+        />
+
+    <!-- Username Field -->
+    <EditText
+        android:id="@+id/et_username_signup"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="Username"
+        android:inputType="text"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="10dp"/>
+
+    <!-- Password Field -->
+    <EditText
+        android:id="@+id/et_password_signup"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:layout_marginBottom="10dp"/>
+
+    <EditText
+        android:id="@+id/et_email_signup"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:layout_marginBottom="25dp"/>
+
+    <!-- Add a Button for Login -->
+    <Button
+        android:id="@+id/btn_signup"
+        android:layout_width="200dp"
+        android:backgroundTint="@color/login_button"
+        android:layout_height="wrap_content"
+        android:text="Sign up" />
+
+    <!-- Sign up TextViews in a Horizontal LinearLayout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="50dp"
+        android:gravity="bottom|center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Already have an account?"
+            android:layout_marginRight="5dp"/>
+
+        <TextView
+            android:id="@+id/tv_signin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/login_button"
+            android:text="Sign in" />
+
+    </LinearLayout>
+
+</LinearLayout>
