@@ -1,13 +1,13 @@
-package com.example.myapplication.ui.chat
+package com.example.gymbuddy.ui.add
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class ChatViewModel : ViewModel() {
+class AddViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is Chat Fragment"
+        value = "This is Add Fragment"
     }
     val text: LiveData<String> = _text
 }

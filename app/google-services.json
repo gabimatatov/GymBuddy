@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:796550414070:android:9cc0ee0307b0325a6ff6d7",
+        "mobilesdk_app_id": "1:796550414070:android:7def5575b73747e46ff6d7",
         "android_client_info": {
-          "package_name": "com.example.myapplication"
+          "package_name": "com.example.gymbuddy"
         }
       },
       "oauth_client": [],

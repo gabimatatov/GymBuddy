@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.favorites
+package com.example.gymbuddy.ui.favorites
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

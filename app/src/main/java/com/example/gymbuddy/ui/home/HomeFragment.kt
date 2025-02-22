@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.home
+package com.example.gymbuddy.ui.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.myapplication.databinding.FragmentHomeBinding
+import com.example.gymbuddy.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
 
