@@ -18,6 +18,7 @@ googleServices = "4.4.2"
 firebaseBom = "33.7.0"
 picasso = "2.8"
 roomRuntime = "2.6.1"
+lifecycle = "2.7.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -43,7 +44,7 @@ firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 firebase-storage = { module = "com.google.firebase:firebase-storage" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 picasso = { module = "com.squreup.picasso:picasso", version.ref = "picasso" }
-
+lifecycle-livedata = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycle" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

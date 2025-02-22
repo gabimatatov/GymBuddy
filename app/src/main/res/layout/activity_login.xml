@@ -7,7 +7,7 @@
     android:background="@color/screen_bg"
     android:gravity="top|center"
     android:orientation="vertical"
-    tools:context=".activities.SignupActivity">
+    tools:context=".activities.LoginActivity">
 
     <ImageView
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
 
     <!-- Username Field -->
     <EditText
-        android:id="@+id/et_username_signup"
+        android:id="@+id/et_username"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:hint="Username"
@@ -29,28 +29,20 @@
 
     <!-- Password Field -->
     <EditText
-        android:id="@+id/et_password_signup"
+        android:id="@+id/et_password"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:hint="Password"
         android:inputType="textPassword"
-        android:layout_marginBottom="10dp"/>
-
-    <EditText
-        android:id="@+id/et_email_signup"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:hint="Email"
-        android:inputType="textEmailAddress"
         android:layout_marginBottom="25dp"/>
 
     <!-- Add a Button for Login -->
     <Button
-        android:id="@+id/btn_signup"
+        android:id="@+id/btn_login"
         android:layout_width="200dp"
         android:backgroundTint="@color/login_button"
         android:layout_height="wrap_content"
-        android:text="Sign up" />
+        android:text="Login" />
 
     <!-- Sign up TextViews in a Horizontal LinearLayout -->
     <LinearLayout
@@ -63,15 +55,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Already have an account?"
+            android:text="No account?"
             android:layout_marginRight="5dp"/>
 
         <TextView
-            android:id="@+id/tv_signin"
+            android:id="@+id/tv_signup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/login_button"
-            android:text="Sign in" />
+            android:text="Sign up" />
 
     </LinearLayout>
 
