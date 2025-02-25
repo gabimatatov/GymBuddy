@@ -22,7 +22,7 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="16dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/trainer_icon" />
+            tools:src="@drawable/trainer_icon" />
 
         <!-- User Name -->
         <TextView
@@ -31,9 +31,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_toEndOf="@id/userPhotoImageView"
-            android:text="User Name"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="User Name" />
 
         <!-- User Email -->
         <TextView
@@ -43,14 +43,14 @@
             android:layout_below="@id/displayNameTextView"
             android:layout_marginTop="10dp"
             android:layout_toEndOf="@id/userPhotoImageView"
-            android:text="user@example.com"
             android:textColor="@android:color/darker_gray"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            tools:text="user@example.com" />
     </RelativeLayout>
 
-    <!-- My Recipes Section -->
+    <!-- My Workouts Section -->
     <TextView
-        android:id="@+id/myRecipesTitleTextView"
+        android:id="@+id/myWorkoutsTitleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -58,7 +58,7 @@
         android:textSize="20sp"
         android:textStyle="bold"/>
 
-    <!-- Recipe List -->
+    <!-- Workout List -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/myWorkoutsRecyclerView"
         android:layout_width="match_parent"

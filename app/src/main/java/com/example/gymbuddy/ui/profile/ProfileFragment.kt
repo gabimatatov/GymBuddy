@@ -1,6 +1,5 @@
 package com.example.gymbuddy.ui.profile
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,7 +19,10 @@ import androidx.lifecycle.Observer
 import com.example.gymbuddy.ui.dialog.EditDisplayNameDialogFragment
 import com.example.gymbuddy.ui.dialog.EditProfileImageDialogFragment
 import com.example.gymbuddy.ViewModels.AuthViewModel
+import com.example.gymbuddy.ViewModels.UserViewModel
 import com.example.gymbuddy.R
+import com.example.gymbuddy.dataclass.User
+import com.example.gymbuddy.GlobalVariables
 
 
 class ProfileFragment : Fragment(),
@@ -28,6 +30,7 @@ class ProfileFragment : Fragment(),
     EditProfileImageDialogFragment.EditProfileImageDialogListener {
 
     private val authViewModel: AuthViewModel by viewModels()
+    private lateinit var userViewModel: UserViewModel
     private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,22 +42,28 @@ class ProfileFragment : Fragment(),
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
-        val displayNameTextView: TextView = view.findViewById(R.id.displayNameTextView)
-        val emailTextView: TextView = view.findViewById(R.id.emailTextView)
-        val userPhotoImageView: ImageView = view.findViewById(R.id.userPhotoImageView)
-
-        sharedPreferences = requireActivity().getSharedPreferences("user_data", Context.MODE_PRIVATE)
-        val displayName = sharedPreferences.getString("displayName", "")
-        val email = sharedPreferences.getString("email", "")
-        val photoUrl = sharedPreferences.getString("photoUrl", "")
-
-        displayNameTextView.text = displayName
-        emailTextView.text = email
-        if (photoUrl.isNullOrEmpty()) {
-            userPhotoImageView.setImageResource(R.drawable.trainer_icon) // Default image
-        } else {
-            userPhotoImageView.setImageURI(photoUrl.toUri()) // Load stored image
+        GlobalVariables.currentUser?.let { user ->
+            updateUI(user, view)
         }
+
+        authViewModel.currentUser.observe(viewLifecycleOwner, Observer { user ->
+            user?.let {
+                val emailTextView: TextView = view.findViewById(R.id.emailTextView)
+                emailTextView.text = user.email
+                // Initialize or update UserViewModel when the current user is available
+                userViewModel = UserViewModel(user.uid)
+                userViewModel.userLiveData.observe(viewLifecycleOwner, Observer { userData ->
+                    userData?.let {
+                        if (userData != GlobalVariables.currentUser){
+                            GlobalVariables.currentUser = userData
+                            updateUI(userData)
+                        }
+                    }
+                })
+            }
+        })
+        val displayNameTextView: TextView = view.findViewById(R.id.displayNameTextView)
+        val userPhotoImageView: ImageView = view.findViewById(R.id.userPhotoImageView)
 
         displayNameTextView.setOnClickListener {
             showEditUsernameDialog()
@@ -77,20 +86,12 @@ class ProfileFragment : Fragment(),
     }
 
     override fun onDisplayNameUpdated(displayName: String) {
-        authViewModel.updateDisplayName(displayName)
-
-        // Update the display name
-        sharedPreferences.edit {
-            putString("displayName", displayName)
-        }
-
-        val displayNameTextView: TextView? = view?.findViewById(R.id.displayNameTextView)
-        displayNameTextView?.text = displayName
+        userViewModel.updateUserName(displayName)
         Log.d("NameUpdate", "Updated display name")
     }
 
     override fun onImageUpdated(imageUri: String) {
-        authViewModel.updateUserPhoto(imageUri.toUri())
+        //authViewModel.updateUserPhoto(imageUri.toUri())
 
         // Update the photo URI in SharedPreferences
         sharedPreferences.edit {
@@ -100,5 +101,19 @@ class ProfileFragment : Fragment(),
         val userPhotoImageView: ImageView? = view?.findViewById(R.id.userPhotoImageView)
         userPhotoImageView?.setImageURI(imageUri.toUri())
         Log.d("ImageUpdate", "Updated profile image")
+    }
+
+    private fun updateUI(userData: User, thisView: View? = view) {
+        val displayNameTextView: TextView? = thisView?.findViewById(R.id.displayNameTextView)
+        val emailTextView: TextView? = thisView?.findViewById(R.id.emailTextView)
+        val userPhotoImageView: ImageView? = thisView?.findViewById(R.id.userPhotoImageView)
+
+        displayNameTextView?.text = userData.name
+        emailTextView?.text = authViewModel.currentUser.value?.email
+        userData.photoUrl?.let { url ->
+            if(url != "") {
+                userPhotoImageView?.setImageURI(url.toUri())
+            }
+        }
     }
 }

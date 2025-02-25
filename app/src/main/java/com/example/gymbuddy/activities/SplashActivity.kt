@@ -13,6 +13,8 @@ import com.example.gymbuddy.MainActivity
 import com.example.gymbuddy.R
 import com.example.gymbuddy.ViewModels.AuthViewModel
 import com.example.gymbuddy.AppConfiguration
+import com.example.gymbuddy.GlobalVariables
+import com.example.gymbuddy.ViewModels.UserViewModel
 
 class SplashActivity : AppCompatActivity() {
 
@@ -30,12 +32,19 @@ class SplashActivity : AppCompatActivity() {
         authViewModel.isUserSignedIn.observe(this) { isSignedIn ->
             if (isSignedIn) {
                 // User is signed in, navigate to MainActivity
-                startActivity(Intent(this, MainActivity::class.java))
+                val userid = authViewModel.currentUser.value!!.uid
+                val userViewModel = UserViewModel(userid)
+                userViewModel.userLiveData.observe(this) { userdata ->
+                    GlobalVariables.currentUser = userdata
+                    // User is signed in, navigate to the MainActivity
+                    startActivity(Intent(this, MainActivity::class.java))
+                    finish()
+                }
             } else {
                 // User is not signed in, navigate to LoginActivity
                 startActivity(Intent(this, LoginActivity::class.java))
+                finish()
             }
-            finish()
         }
     }
 }

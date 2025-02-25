@@ -1,10 +1,16 @@
 package com.example.gymbuddy.dataclass
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class User(
-    val userId: String,
-    val name: String,
-    val photoUrl: String,
-    val recipeIds: List<String>,
-    val favoriteWorkoutIds: List<String>,
-    val ratedWorkouts: Map<String, Int>
-)
+    val userId: String = "",
+    val name: String = "",
+    val photoUrl: String = "",
+    val workoutIds: List<String> = emptyList(),
+    val favoriteWorkoutIds: List<String> = emptyList(),
+    val ratedWorkouts: Map<String, Int> = emptyMap()
+) {
+    // Add a no-argument constructor
+    constructor() : this("", "", "", emptyList(), emptyList(), emptyMap())
+}

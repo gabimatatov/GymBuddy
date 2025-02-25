@@ -67,4 +67,8 @@ dependencies {
 
     // Picasso
     implementation(libs.com.squareup.picasso.picasso)
+
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlin.stdlib)
+
 }

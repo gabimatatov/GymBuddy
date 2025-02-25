@@ -10,18 +10,19 @@ import android.net.Uri
 import android.widget.Toast
 import com.example.gymbuddy.repos.FirebaseRepository
 import androidx.lifecycle.map
-
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 
 class AuthViewModel : ViewModel() {
 
     private val _currentUser = MutableLiveData<FirebaseUser?>()
-    private val firebaseRepository: FirebaseRepository = FirebaseRepository(FirebaseAuth.getInstance())
+    private val firebaseRepository: FirebaseRepository = FirebaseRepository()
     val currentUser: LiveData<FirebaseUser?> = _currentUser
     val isUserSignedIn: LiveData<Boolean> = currentUser.map { it != null }
 
     init {
         // Set up a Firebase AuthStateListener to update LiveData on authentication state change
-        FirebaseAuth.getInstance().addAuthStateListener { firebaseAuth ->
+        firebaseRepository.getInstance().addAuthStateListener { firebaseAuth ->
             _currentUser.value = firebaseAuth.currentUser
         }
     }
@@ -38,12 +39,11 @@ class AuthViewModel : ViewModel() {
             }
     }
 
-    fun signUp(email: String, password: String, name: String, context: Context) {
-        firebaseRepository.signUp(email, password, name)
+    fun signUp(email: String, password: String, context: Context) {
+        firebaseRepository.signUp(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     // Sign-up success
-                    updateDisplayName(name)
                 } else {
                     // If sign up fails, display a message to the user.
                     Toast.makeText(context, "Authentication failed.", Toast.LENGTH_SHORT).show()
@@ -51,15 +51,8 @@ class AuthViewModel : ViewModel() {
             }
     }
 
-    fun updateDisplayName(name: String) {
-        firebaseRepository.updateDisplayName(name)
-    }
-
     fun signOut() {
         firebaseRepository.signOut()
     }
 
-    fun updateUserPhoto(photoUri: Uri) {
-        firebaseRepository.updateUserPhoto(photoUri)
-    }
 }

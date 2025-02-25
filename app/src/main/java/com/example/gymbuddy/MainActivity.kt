@@ -32,11 +32,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        saveUserDetails()
-
-        initNavigation()
-
         checkUserStatus()
+        initNavigation()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -45,13 +42,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        return when (item.itemId) {
             R.id.action_sign_out -> {
                 // Handle sign out action here
                 authViewModel.signOut()
-                return true
+                true
             }
-            else -> return super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -102,18 +99,6 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 else -> false
-            }
-        }
-    }
-    private fun saveUserDetails() {
-        val sharedPreferences = getSharedPreferences("user_data", Context.MODE_PRIVATE)
-        authViewModel.currentUser.observe(this) { user ->
-            sharedPreferences.edit {
-                user?.let{
-                    putString("displayName", it.displayName)
-                    putString("email", it.email)
-                    putString("photoUrl", it.photoUrl?.toString())
-                }
             }
         }
     }

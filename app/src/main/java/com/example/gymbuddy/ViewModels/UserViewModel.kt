@@ -1,34 +1,105 @@
 package com.example.gymbuddy.ViewModels
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.gymbuddy.dataclass.User
-import com.example.gymbuddy.repos.FirestoreRepository
+import com.example.gymbuddy.repos.UserRepository
 
-class UserViewModel : ViewModel() {
+class UserViewModel(private val userId: String) : ViewModel() {
 
-    private val repository = FirestoreRepository()
-    private val _userData = MutableLiveData<User>()
-    val userData: LiveData<User> get() = _userData
+    private val userRepository = UserRepository()
+    private val _userLiveData: MutableLiveData<User> = MutableLiveData()
+    val userLiveData: LiveData<User> get() = _userLiveData
 
-    fun fetchUserData(userId: String) {
-        repository.getUserData(userId).observeForever {
-            _userData.value = it
-        }
+    init {
+        // Initialize user document on initialization
+        userRepository.initializeUserDocument(userId)
+        // Fetch user data on initialization
+        fetchUser()
+    }
+
+    private fun fetchUser() {
+        userRepository.fetchUser(userId,
+            onSuccess = { user ->
+                _userLiveData.postValue(user)
+            },
+            onFailure = {
+                // Handle failure
+            }
+        )
     }
 
     fun updateUser(user: User) {
-        repository.updateUser(user)
+        userRepository.updateUser(user,
+            onSuccess = {
+                // After a successful update, fetch the user again to reflect changes
+                fetchUser()
+            },
+            onFailure = {
+                // Handle failure
+            }
+        )
     }
 
-    fun addUserRecipe(userId: String, workoutId: String) {
-        repository.addUserWorkout(userId, workoutId)
+    fun updateUserName(newName: String) {
+        userRepository.updateUserName(userId, newName,
+            onSuccess = {
+                // After a successful update, fetch the user again to reflect changes
+                fetchUser()
+            },
+            onFailure = {
+                // Handle failure
+            }
+        )
     }
 
-    fun addUserFavoriteRecipe(userId: String, workoutId: String) {
-        repository.addUserFavoriteWorkout(userId, workoutId)
+    fun updateUserPhoto(imageUri: Uri) {
+        userRepository.updateUserPhoto(userId, imageUri,
+            onSuccess = { newPhotoUrl ->
+                // After a successful update, fetch the user again to reflect changes
+                fetchUser()
+            },
+            onFailure = {
+                // Handle failure
+            }
+        )
     }
 
-    // ... other methods
+    fun updateUserWorkoutIds(newWorkoutIds: List<String>) {
+        userRepository.updateUserWorkoutIds(userId, newWorkoutIds,
+            onSuccess = {
+                // After a successful update, fetch the user again to reflect changes
+                fetchUser()
+            },
+            onFailure = {
+                // Handle failure
+            }
+        )
+    }
+
+    fun updateUserFavoriteWorkoutIds(newFavoriteWorkoutIds: List<String>) {
+        userRepository.updateUserFavoriteWorkoutIds(userId, newFavoriteWorkoutIds,
+            onSuccess = {
+                // After a successful update, fetch the user again to reflect changes
+                fetchUser()
+            },
+            onFailure = {
+                // Handle failure
+            }
+        )
+    }
+
+    fun updateUserRatedWorkouts(newRatedWorkouts: Map<String, Int>) {
+        userRepository.updateUserRatedWorkouts(userId, newRatedWorkouts,
+            onSuccess = {
+                // After a successful update, fetch the user again to reflect changes
+                fetchUser()
+            },
+            onFailure = {
+                // Handle failure
+            }
+        )
+    }
 }

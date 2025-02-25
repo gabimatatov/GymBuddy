@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.gymbuddy.MainActivity
 import com.example.gymbuddy.R
 import com.example.gymbuddy.ViewModels.AuthViewModel
+import com.example.gymbuddy.GlobalVariables
+import com.example.gymbuddy.ViewModels.UserViewModel
 
 class LoginActivity : AppCompatActivity() {
 
@@ -45,8 +47,14 @@ class LoginActivity : AppCompatActivity() {
         // Observe the isUserSignedIn LiveData to determine the authentication state
         authViewModel.isUserSignedIn.observe(this) { isSignedIn ->
             if (isSignedIn) {
-                startActivity(Intent(this, MainActivity::class.java))
-                finish()
+                val userid = authViewModel.currentUser.value!!.uid
+                val userViewModel = UserViewModel(userid)
+                userViewModel.userLiveData.observe(this) { userdata ->
+                    GlobalVariables.currentUser = userdata
+                    // User is signed in, navigate to the MainActivity
+                    startActivity(Intent(this, MainActivity::class.java))
+                    finish()
+                }
             }
         }
     }
