@@ -22,24 +22,16 @@ import com.example.gymbuddy.ui.dialog.EditProfileImageDialogFragment
 import com.example.gymbuddy.ViewModels.AuthViewModel
 import com.example.gymbuddy.R
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 class ProfileFragment : Fragment(),
     EditDisplayNameDialogFragment.EditUsernameDialogListener,
     EditProfileImageDialogFragment.EditProfileImageDialogListener {
 
-    private var param1: String? = null
-    private var param2: String? = null
     private val authViewModel: AuthViewModel by viewModels()
     private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
@@ -58,7 +50,11 @@ class ProfileFragment : Fragment(),
 
         displayNameTextView.text = displayName
         emailTextView.text = email
-        userPhotoImageView.setImageURI(photoUrl?.toUri())
+        if (photoUrl.isNullOrEmpty()) {
+            userPhotoImageView.setImageResource(R.drawable.trainer_icon) // Default image
+        } else {
+            userPhotoImageView.setImageURI(photoUrl.toUri()) // Load stored image
+        }
 
         displayNameTextView.setOnClickListener {
             showEditUsernameDialog()
@@ -83,7 +79,7 @@ class ProfileFragment : Fragment(),
     override fun onDisplayNameUpdated(displayName: String) {
         authViewModel.updateDisplayName(displayName)
 
-        // Update the display name in SharedPreferences
+        // Update the display name
         sharedPreferences.edit {
             putString("displayName", displayName)
         }
@@ -104,16 +100,5 @@ class ProfileFragment : Fragment(),
         val userPhotoImageView: ImageView? = view?.findViewById(R.id.userPhotoImageView)
         userPhotoImageView?.setImageURI(imageUri.toUri())
         Log.d("ImageUpdate", "Updated profile image")
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ProfileFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
     }
 }

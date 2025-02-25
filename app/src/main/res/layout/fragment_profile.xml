@@ -22,7 +22,7 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="16dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/gym_buddy_icon" />
+            android:src="@drawable/trainer_icon" />
 
         <!-- User Name -->
         <TextView
