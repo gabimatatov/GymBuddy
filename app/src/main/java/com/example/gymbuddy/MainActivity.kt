@@ -1,5 +1,8 @@
 package com.example.gymbuddy
 
+import android.content.Context
+import android.util.Log
+import androidx.core.content.edit
 import android.content.Intent
 import android.view.Menu
 import android.view.MenuItem
@@ -29,9 +32,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val toolbar = findViewById<View>(R.id.toolbar) as Toolbar
-        toolbar.title = ""
-        setSupportActionBar(toolbar)
+        saveUserDetails()
 
         initNavigation()
 
@@ -69,8 +70,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initNavigation() {
+        val toolbar = findViewById<View>(R.id.toolbar) as Toolbar
+        setSupportActionBar(toolbar)
         // Set up Navigation component
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
         // Set up ActionBar with NavController
@@ -90,11 +94,26 @@ class MainActivity : AppCompatActivity() {
                     // Check if the selected destination is different from the current one
                     if (binding.bottomNavigationView.selectedItemId != item.itemId) {
                         navController.navigate(item.itemId)
-                        // navController.popBackStack(R.id.navigation_profile, item.itemId == R.id.navigation_profile)
+//                        navController.popBackStack(
+//                            R.id.navigation_profile,
+//                            item.itemId == R.id.navigation_profile
+//                        )
                     }
                     true
                 }
                 else -> false
+            }
+        }
+    }
+    private fun saveUserDetails() {
+        val sharedPreferences = getSharedPreferences("user_data", Context.MODE_PRIVATE)
+        authViewModel.currentUser.observe(this) { user ->
+            sharedPreferences.edit {
+                user?.let{
+                    putString("displayName", it.displayName)
+                    putString("email", it.email)
+                    putString("photoUrl", it.photoUrl?.toString())
+                }
             }
         }
     }

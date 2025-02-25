@@ -26,7 +26,7 @@
 
         <!-- User Name -->
         <TextView
-            android:id="@+id/usernameTextView"
+            android:id="@+id/displayNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -40,7 +40,7 @@
             android:id="@+id/emailTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/usernameTextView"
+            android:layout_below="@id/displayNameTextView"
             android:layout_marginTop="10dp"
             android:layout_toEndOf="@id/userPhotoImageView"
             android:text="user@example.com"
