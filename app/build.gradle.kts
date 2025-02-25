@@ -64,4 +64,7 @@ dependencies {
 
     // Room
     implementation(libs.androidx.room.ktx)
+
+    // Picasso
+    implementation(libs.com.squareup.picasso.picasso)
 }

@@ -19,9 +19,11 @@ firebaseBom = "33.7.0"
 picasso = "2.8"
 roomRuntime = "2.6.1"
 lifecycle = "2.7.0"
+squareupPicasso = "2.8"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+com-squareup-picasso-picasso = { module = "com.squareup.picasso:picasso", version.ref = "squareupPicasso" }
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
 google-firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
