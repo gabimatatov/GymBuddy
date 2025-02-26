@@ -16,13 +16,14 @@
         android:layout_marginBottom="30dp">
 
         <!-- User Photo -->
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/userPhotoImageView"
             android:layout_width="191dp"
             android:layout_height="match_parent"
             android:layout_marginEnd="16dp"
             android:scaleType="centerCrop"
-            tools:src="@drawable/trainer_icon" />
+            tools:src="@drawable/trainer_icon"
+            app:shapeAppearanceOverlay="@style/RoundedSquare" />
 
         <!-- User Name -->
         <TextView

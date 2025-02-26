@@ -1,19 +1,15 @@
 package com.example.gymbuddy.activities
 
 import android.content.Intent
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.WindowInsets
-import android.view.WindowManager
 import androidx.activity.viewModels
 import com.example.gymbuddy.MainActivity
 import com.example.gymbuddy.R
 import com.example.gymbuddy.ViewModels.AuthViewModel
-import com.example.gymbuddy.AppConfiguration
-import com.example.gymbuddy.GlobalVariables
+import com.example.gymbuddy.Objects.GlobalVariables
 import com.example.gymbuddy.ViewModels.UserViewModel
 
 class SplashActivity : AppCompatActivity() {

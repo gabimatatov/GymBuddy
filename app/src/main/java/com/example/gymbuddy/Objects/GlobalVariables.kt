@@ -1,4 +1,4 @@
-package com.example.gymbuddy
+package com.example.gymbuddy.Objects
 
 import com.example.gymbuddy.dataclass.User
 

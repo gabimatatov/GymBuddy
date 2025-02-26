@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.gymbuddy.MainActivity
 import com.example.gymbuddy.R
 import com.example.gymbuddy.ViewModels.AuthViewModel
-import com.example.gymbuddy.GlobalVariables
+import com.example.gymbuddy.Objects.GlobalVariables
 import com.example.gymbuddy.ViewModels.UserViewModel
 
 class LoginActivity : AppCompatActivity() {
