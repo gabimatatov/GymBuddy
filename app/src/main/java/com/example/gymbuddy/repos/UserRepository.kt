@@ -3,7 +3,6 @@ package com.example.gymbuddy.repos
 import android.net.Uri
 import android.util.Log
 import com.example.gymbuddy.dataclass.User
-import com.example.gymbuddy.Objects.FileUtil
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
