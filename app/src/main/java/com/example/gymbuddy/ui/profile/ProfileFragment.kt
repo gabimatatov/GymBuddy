@@ -1,6 +1,5 @@
 package com.example.gymbuddy.ui.profile
 
-import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
@@ -14,12 +13,12 @@ import android.view.ViewGroup
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.example.gymbuddy.Objects.GalleryHandler
 import com.example.gymbuddy.ui.dialog.EditDisplayNameDialogFragment
-// import com.example.gymbuddy.ui.dialog.EditProfileImageDialogFragment
+import com.example.gymbuddy.ui.dialog.EditProfileImageDialogFragment
 import com.example.gymbuddy.ViewModels.AuthViewModel
 import com.example.gymbuddy.ViewModels.UserViewModel
 import com.example.gymbuddy.R
@@ -40,7 +39,7 @@ class ProfileFragment : Fragment(),
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
-                openGallery()
+                GalleryHandler.getPhotoUriFromGallery(requireActivity(), pickImageLauncher, null)
             }
         }
 
@@ -94,16 +93,30 @@ class ProfileFragment : Fragment(),
             showEditUsernameDialog()
         }
         userPhotoImageView.setOnClickListener {
-            // Check for READ_EXTERNAL_STORAGE permission
-            if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                // Explain to the user why the permission is needed (optional)
-                // You may want to show a rationale dialog here
-            } else {
-                requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+            Log.d("ProfileFragment", "Profile image clicked")
+            GalleryHandler.getPhotoUriFromGallery(requireActivity(), pickImageLauncher, requestPermissionLauncher)
+        }
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val userPhotoImageView: ImageView = view.findViewById(R.id.userPhotoImageView)
+
+        userPhotoImageView.setOnClickListener {
+            Log.d("ProfileFragment", "Profile imagdddde clicked")
+            GalleryHandler.getPhotoUriFromGallery(requireActivity(), pickImageLauncher, requestPermissionLauncher)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == GalleryHandler.REQUEST_CODE_PICK_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
+            val selectedImageUri: Uri? = data.data
+            selectedImageUri?.let {
+                userViewModel.updateUserPhoto(it)
             }
         }
-
-        return view
     }
 
     private fun showEditUsernameDialog() {
@@ -132,8 +145,8 @@ class ProfileFragment : Fragment(),
         userData.photoUrl?.takeIf { it.isNotEmpty() }?.let { url ->
             Picasso.get()
                 .load(url)
-                .placeholder(R.drawable.gym_buddy_icon)
-                .error(R.drawable.gym_buddy_icon)
+                .placeholder(R.drawable.trainer_icon)
+                .error(R.drawable.trainer_icon)
                 .into(userPhotoImageView)
         }
     }

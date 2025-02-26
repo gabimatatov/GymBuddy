@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initNavigation() {
-        val toolbar = findViewById<View>(R.id.toolbar) as Toolbar
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         // Set up Navigation component
         val navHostFragment =
