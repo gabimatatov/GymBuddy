@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.gymbuddy.MainActivity
@@ -36,6 +37,13 @@ class SignupActivity : AppCompatActivity() {
 
             if (email.isNotEmpty() && password.isNotEmpty() && username.isNotEmpty()) {
                 authViewModel.signUp(email, password, this)
+            }
+        }
+
+        // Handel errors on signup
+        authViewModel.authError.observe(this) { errorMessage ->
+            if (!errorMessage.isNullOrEmpty()) {
+                Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
             }
         }
 
