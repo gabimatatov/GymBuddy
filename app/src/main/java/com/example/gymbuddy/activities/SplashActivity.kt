@@ -1,17 +1,16 @@
 package com.example.gymbuddy.activities
 
 import android.content.Intent
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.WindowInsets
-import android.view.WindowManager
 import androidx.activity.viewModels
 import com.example.gymbuddy.MainActivity
 import com.example.gymbuddy.R
 import com.example.gymbuddy.ViewModels.AuthViewModel
+import com.example.gymbuddy.Objects.GlobalVariables
+import com.example.gymbuddy.ViewModels.UserViewModel
 
 class SplashActivity : AppCompatActivity() {
 
@@ -21,16 +20,6 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        @Suppress("DEPRECATION")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.insetsController?.hide(WindowInsets.Type.statusBars())
-        } else {
-            window.setFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN
-            )
-        }
-
         Handler(Looper.getMainLooper()).postDelayed({
             checkUserStatus()
         }, 1000)
@@ -39,12 +28,19 @@ class SplashActivity : AppCompatActivity() {
         authViewModel.isUserSignedIn.observe(this) { isSignedIn ->
             if (isSignedIn) {
                 // User is signed in, navigate to MainActivity
-                startActivity(Intent(this, MainActivity::class.java))
+                val userid = authViewModel.currentUser.value!!.uid
+                val userViewModel = UserViewModel(userid)
+                userViewModel.userLiveData.observe(this) { userdata ->
+                    GlobalVariables.currentUser = userdata
+                    // User is signed in, navigate to the MainActivity
+                    startActivity(Intent(this, MainActivity::class.java))
+                    finish()
+                }
             } else {
                 // User is not signed in, navigate to LoginActivity
                 startActivity(Intent(this, LoginActivity::class.java))
+                finish()
             }
-            finish()
         }
     }
 }

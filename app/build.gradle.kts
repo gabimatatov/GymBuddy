@@ -64,4 +64,11 @@ dependencies {
 
     // Room
     implementation(libs.androidx.room.ktx)
+
+    // Picasso
+    implementation(libs.com.squareup.picasso.picasso)
+
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlin.stdlib)
+
 }

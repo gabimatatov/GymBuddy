@@ -1,23 +1,69 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<!-- res/layout/fragment_profile.xml -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
     tools:context=".ui.profile.ProfileFragment">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="161dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="30dp">
+
+        <!-- User Photo -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/userPhotoImageView"
+            android:layout_width="191dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="16dp"
+            android:scaleType="centerCrop"
+            tools:src="@drawable/trainer_icon"
+            app:shapeAppearanceOverlay="@style/RoundedSquare" />
+
+        <!-- User Name -->
+        <TextView
+            android:id="@+id/displayNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@id/userPhotoImageView"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:text="User Name" />
+
+        <!-- User Email -->
+        <TextView
+            android:id="@+id/emailTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/displayNameTextView"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@id/userPhotoImageView"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="14sp"
+            tools:text="user@example.com" />
+    </RelativeLayout>
+
+    <!-- My Workouts Section -->
     <TextView
-        android:id="@+id/text_profile"
+        android:id="@+id/myWorkoutsTitleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="My Workouts"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
+
+    <!-- Workout List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/myWorkoutsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginTop="8dp"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

@@ -1,65 +1,54 @@
 package com.example.gymbuddy.ViewModels
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import android.net.Uri
-import android.widget.Toast
 import com.example.gymbuddy.repos.FirebaseRepository
 import androidx.lifecycle.map
-
+import com.example.gymbuddy.activities.LoginActivity
+import com.example.gymbuddy.activities.SignupActivity
 
 class AuthViewModel : ViewModel() {
 
     private val _currentUser = MutableLiveData<FirebaseUser?>()
-    private val firebaseRepository: FirebaseRepository = FirebaseRepository(FirebaseAuth.getInstance())
     val currentUser: LiveData<FirebaseUser?> = _currentUser
     val isUserSignedIn: LiveData<Boolean> = currentUser.map { it != null }
 
+    private val firebaseRepository: FirebaseRepository = FirebaseRepository()
+
+    private val _authError = MutableLiveData<String?>()
+    val authError: LiveData<String?> = _authError
+
     init {
-        // Set up a Firebase AuthStateListener to update LiveData on authentication state change
-        FirebaseAuth.getInstance().addAuthStateListener { firebaseAuth ->
+        firebaseRepository.getInstance().addAuthStateListener { firebaseAuth ->
             _currentUser.value = firebaseAuth.currentUser
         }
     }
 
-    fun signIn(email: String, password: String, context: Context) {
+    fun signIn(email: String, password: String, loginActivity: LoginActivity) {
         firebaseRepository.signIn(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // Sign-in success
+                    _authError.value = null // Clear errors if sign-in is successful
                 } else {
-                    // If sign in fails, display a message to the user.
-                    Toast.makeText(context, "Authentication failed.", Toast.LENGTH_SHORT).show()
+                    _authError.value = task.exception?.localizedMessage
                 }
             }
     }
 
-    fun signUp(email: String, password: String, name: String, context: Context) {
-        firebaseRepository.signUp(email, password, name)
+    fun signUp(email: String, password: String, signupActivity: SignupActivity) {
+        firebaseRepository.signUp(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // Sign-up success
-                    updateDisplayName(name)
+                    _authError.value = null // Clear errors if signup is successful
                 } else {
-                    // If sign up fails, display a message to the user.
-                    Toast.makeText(context, "Authentication failed.", Toast.LENGTH_SHORT).show()
+                    _authError.value = task.exception?.localizedMessage
                 }
             }
-    }
-
-    private fun updateDisplayName(name: String) {
-        firebaseRepository.updateDisplayName(name)
     }
 
     fun signOut() {
         firebaseRepository.signOut()
-    }
-
-    fun updateUserPhoto(photoUri: Uri) {
-        firebaseRepository.updateUserPhoto(photoUri)
     }
 }

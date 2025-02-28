@@ -9,7 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="light_blue_light">#90CAF9</color>
     <color name="screen_bg">#F8F8F8</color>
-    <color name="login_button">#347baf</color>
-    <color name="light_blue">#347baf</color>
-    <color name="light_blue_dark">#347baf</color>
+    <color name="gymbuddy_blue">#347baf</color>
 </resources>
