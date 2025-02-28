@@ -8,7 +8,6 @@
     android:padding="16dp"
     tools:context=".ui.add.AddFragment">
 
-    <!-- Workout Name -->
     <EditText
         android:id="@+id/editTextWorkoutName"
         android:layout_width="0dp"
@@ -20,41 +19,47 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Workout Description -->
     <EditText
         android:id="@+id/editTextWorkoutDescription"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Description"
         android:inputType="textMultiLine"
-        android:minHeight="100dp"
+        android:minHeight="60dp"
+        android:maxLines="3"
         android:padding="12dp"
         app:layout_constraintTop_toBottomOf="@id/editTextWorkoutName"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="12dp" />
 
-    <!-- Difficulty Selection -->
-    <EditText
-        android:id="@+id/editTextDifficulty"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/textDifficultyLabel"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Difficulty (Beginner, Intermeidate, Advanced)"
-        android:inputType="text"
-        android:padding="12dp"
+        android:text="Select Difficulty:"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/editTextWorkoutDescription"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="12dp" />
 
-    <!-- Save Button -->
+    <Spinner
+        android:id="@+id/spinnerDifficulty"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/textDifficultyLabel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp" />
+
     <Button
         android:id="@+id/buttonSaveWorkout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Save Workout"
         android:padding="12dp"
-        app:layout_constraintTop_toBottomOf="@id/editTextDifficulty"
+        app:layout_constraintTop_toBottomOf="@id/spinnerDifficulty"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp" />
