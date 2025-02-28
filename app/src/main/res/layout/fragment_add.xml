@@ -23,7 +23,7 @@
         android:id="@+id/editTextWorkoutDescription"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Description"
+        android:hint="Short Description"
         android:inputType="textMultiLine"
         android:minHeight="60dp"
         android:maxLines="3"
@@ -34,13 +34,38 @@
         android:layout_marginTop="12dp" />
 
     <TextView
+        android:id="@+id/textExercisesLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="List of Exercises:"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/editTextWorkoutDescription"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="12dp" />
+
+    <EditText
+        android:id="@+id/editTextWorkoutExercises"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:hint="Describe the workout in detail..."
+        android:inputType="textMultiLine"
+        android:gravity="top"
+        android:padding="12dp"
+        android:background="@android:drawable/editbox_background"
+        app:layout_constraintTop_toBottomOf="@id/textExercisesLabel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp" />
+
+    <TextView
         android:id="@+id/textDifficultyLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Select Difficulty:"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/editTextWorkoutDescription"
+        app:layout_constraintTop_toBottomOf="@id/editTextWorkoutExercises"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="12dp" />
 
