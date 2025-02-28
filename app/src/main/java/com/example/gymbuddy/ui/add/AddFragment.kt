@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.example.gymbuddy.R
 import com.example.gymbuddy.databinding.FragmentAddBinding
 
 class AddFragment : Fragment() {
@@ -33,7 +35,7 @@ class AddFragment : Fragment() {
     }
 
     private fun setupDifficultySpinner() {
-        val difficultyOptions = resources.getStringArray(com.example.gymbuddy.R.array.difficulty_level)
+        val difficultyOptions = resources.getStringArray(R.array.difficulty_level)
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, difficultyOptions)
         binding.spinnerDifficulty.adapter = adapter
     }
@@ -51,7 +53,7 @@ class AddFragment : Fragment() {
         viewModel.workoutSaved.observe(viewLifecycleOwner) { saved ->
             if (saved) {
                 Toast.makeText(requireContext(), "Workout saved!", Toast.LENGTH_SHORT).show()
-                // Navigate back or clear fields if needed
+                findNavController().navigate(R.id.action_navigation_add_to_navigation_home)
             }
         }
 
