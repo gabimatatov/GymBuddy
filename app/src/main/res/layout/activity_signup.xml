@@ -48,7 +48,7 @@
     <Button
         android:id="@+id/btn_signup"
         android:layout_width="200dp"
-        android:backgroundTint="@color/login_button"
+        android:backgroundTint="@color/gymbuddy_blue"
         android:layout_height="wrap_content"
         android:text="Sign up" />
 
@@ -70,7 +70,7 @@
             android:id="@+id/tv_signin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/login_button"
+            android:textColor="@color/gymbuddy_blue"
             android:text="Sign in" />
 
     </LinearLayout>
