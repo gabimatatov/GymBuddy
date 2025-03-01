@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -47,25 +46,18 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupDifficultyFilter() {
-        val adapter = ArrayAdapter.createFromResource(
-            requireContext(),
-            R.array.difficulty_filter,
-            android.R.layout.simple_spinner_dropdown_item
-        )
-        binding.spinnerDifficultyFilter.adapter = adapter
+        val difficultyOptions = resources.getStringArray(R.array.difficulty_filter)
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, difficultyOptions)
+
+        binding.spinnerDifficultyFilter.setAdapter(adapter)
 
         val lastSelectedDifficulty = sharedPrefs.getString("selected_difficulty", "All Difficulties") ?: "All Difficulties"
-        val position = adapter.getPosition(lastSelectedDifficulty)
-        binding.spinnerDifficultyFilter.setSelection(position)
+        binding.spinnerDifficultyFilter.setText(lastSelectedDifficulty, false)
 
-        binding.spinnerDifficultyFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val selectedDifficulty = parent?.getItemAtPosition(position)?.toString().orEmpty()
-                sharedPrefs.edit().putString("selected_difficulty", selectedDifficulty).apply()
-                viewModel.fetchWorkouts(if (selectedDifficulty == "All Difficulties") null else selectedDifficulty)
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        binding.spinnerDifficultyFilter.setOnItemClickListener { _, _, position, _ ->
+            val selectedDifficulty = difficultyOptions[position]
+            sharedPrefs.edit().putString("selected_difficulty", selectedDifficulty).apply()
+            viewModel.fetchWorkouts(if (selectedDifficulty == "All Difficulties") null else selectedDifficulty)
         }
     }
 
