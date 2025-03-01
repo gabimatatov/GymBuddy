@@ -5,9 +5,9 @@ data class Workout(
     val name: String,
     val description: String,
     val imageUrl: String,
-    val exercises: List<String>,
-    val rating: Float,
-    val numberOfRatings: Int,
+    val exercises: String,
+    //val rating: Float,
+    //val numberOfRatings: Int,
     val ownerId: String,
     val difficulty: String
 )

@@ -15,7 +15,13 @@
         android:id="@+id/navigation_add"
         android:name="com.example.gymbuddy.ui.add.AddFragment"
         android:label="@string/menu_add"
-        tools:layout="@layout/fragment_add" />
+        tools:layout="@layout/fragment_add">
+
+        <!-- ✅ Added navigation action from AddFragment to HomeFragment -->
+        <action
+            android:id="@+id/action_navigation_add_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_chat"
