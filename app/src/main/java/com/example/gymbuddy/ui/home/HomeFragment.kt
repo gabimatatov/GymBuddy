@@ -54,6 +54,8 @@ class HomeFragment : Fragment() {
         val lastSelectedDifficulty = sharedPrefs.getString("selected_difficulty", "All Difficulties") ?: "All Difficulties"
         binding.spinnerDifficultyFilter.setText(lastSelectedDifficulty, false)
 
+        viewModel.fetchWorkouts(if (lastSelectedDifficulty == "All Difficulties") null else lastSelectedDifficulty)
+
         binding.spinnerDifficultyFilter.setOnItemClickListener { _, _, position, _ ->
             val selectedDifficulty = difficultyOptions[position]
             sharedPrefs.edit().putString("selected_difficulty", selectedDifficulty).apply()
@@ -69,6 +71,16 @@ class HomeFragment : Fragment() {
         viewModel.errorMessage.observe(viewLifecycleOwner) { message ->
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        binding.spinnerDifficultyFilter.clearFocus()
+        binding.spinnerDifficultyFilter.setAdapter(null) // Temporarily remove adapter
+        binding.spinnerDifficultyFilter.setAdapter(
+            ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, resources.getStringArray(R.array.difficulty_filter))
+        )
     }
 
     override fun onDestroyView() {

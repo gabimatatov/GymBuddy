@@ -27,14 +27,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
+        <!-- Workout Name -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/inputLayoutWorkoutName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            app:boxStrokeColor="@color/design_default_color_primary"
-            app:hintTextColor="@color/design_default_color_primary"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxStrokeColor="@color/gymbuddy_blue"
+            app:hintTextColor="@color/gymbuddy_blue"
             app:layout_constraintTop_toBottomOf="@id/textAddWorkoutTitle"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -48,14 +49,15 @@
                 android:maxLines="1"/>
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Workout Description -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/inputLayoutWorkoutDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            app:boxStrokeColor="@color/design_default_color_primary"
-            app:hintTextColor="@color/design_default_color_primary"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxStrokeColor="@color/gymbuddy_blue"
+            app:hintTextColor="@color/gymbuddy_blue"
             app:layout_constraintTop_toBottomOf="@id/inputLayoutWorkoutName"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -70,6 +72,7 @@
                 android:maxLines="3"/>
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Workout Exercises -->
         <TextView
             android:id="@+id/textExercisesLabel"
             android:layout_width="wrap_content"
@@ -87,9 +90,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            app:boxStrokeColor="@color/design_default_color_primary"
-            app:hintTextColor="@color/design_default_color_primary"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxStrokeColor="@color/gymbuddy_blue"
+            app:hintTextColor="@color/gymbuddy_blue"
             app:layout_constraintTop_toBottomOf="@id/textExercisesLabel"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -103,6 +106,7 @@
                 android:gravity="top"/>
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Difficulty Selection -->
         <TextView
             android:id="@+id/textDifficultyLabel"
             android:layout_width="wrap_content"
@@ -121,6 +125,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            app:boxStrokeColor="@color/gymbuddy_blue"
+            app:hintTextColor="@color/gymbuddy_blue"
             app:layout_constraintTop_toBottomOf="@id/textDifficultyLabel"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -133,6 +139,7 @@
                 android:text="Select difficulty..."/>
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Save Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonSaveWorkout"
             android:layout_width="match_parent"

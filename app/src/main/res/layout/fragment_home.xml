@@ -14,7 +14,7 @@
         android:id="@+id/textHomeTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Workouts"
+        android:text="Our Community Workouts"
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="#333333"
