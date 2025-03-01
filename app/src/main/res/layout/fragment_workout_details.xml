@@ -8,6 +8,20 @@
     android:padding="16dp"
     tools:context=".ui.details.WorkoutDetailsFragment">
 
+    <!-- Workout Image -->
+    <ImageView
+        android:id="@+id/imageWorkout"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/gym_buddy_icon"
+        android:contentDescription="Workout Image"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Workout Name -->
     <TextView
         android:id="@+id/textWorkoutName"
         android:layout_width="wrap_content"
@@ -15,9 +29,11 @@
         android:textSize="22sp"
         android:textStyle="bold"
         android:text="Workout Name"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/imageWorkout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Workout Description -->
     <TextView
         android:id="@+id/textWorkoutDescription"
         android:layout_width="0dp"
@@ -29,6 +45,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Workout Exercises -->
     <TextView
         android:id="@+id/textWorkoutExercises"
         android:layout_width="0dp"
@@ -40,6 +57,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Workout Difficulty -->
     <TextView
         android:id="@+id/textWorkoutDifficulty"
         android:layout_width="wrap_content"
