@@ -1,15 +1,11 @@
 package com.example.gymbuddy
 
-import android.content.Context
-import android.util.Log
-import androidx.core.content.edit
 import android.content.Intent
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
-import com.example.gymbuddy.ViewModels.AuthViewModel
+import com.example.gymbuddy.activities.AuthViewModel
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController

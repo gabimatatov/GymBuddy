@@ -1,4 +1,4 @@
-package com.example.gymbuddy.ViewModels
+package com.example.gymbuddy.ui.profile
 
 import android.net.Uri
 import androidx.lifecycle.LiveData

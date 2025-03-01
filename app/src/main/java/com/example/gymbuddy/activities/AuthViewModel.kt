@@ -1,4 +1,4 @@
-package com.example.gymbuddy.ViewModels
+package com.example.gymbuddy.activities
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.LiveData
@@ -6,8 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseUser
 import com.example.gymbuddy.repos.FirebaseRepository
 import androidx.lifecycle.map
-import com.example.gymbuddy.activities.LoginActivity
-import com.example.gymbuddy.activities.SignupActivity
 
 class AuthViewModel : ViewModel() {
 
