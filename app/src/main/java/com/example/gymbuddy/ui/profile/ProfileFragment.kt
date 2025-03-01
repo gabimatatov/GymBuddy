@@ -18,9 +18,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.example.gymbuddy.Objects.GalleryHandler
 import com.example.gymbuddy.ui.dialog.EditDisplayNameDialogFragment
-import com.example.gymbuddy.ui.dialog.EditProfileImageDialogFragment
-import com.example.gymbuddy.ViewModels.AuthViewModel
-import com.example.gymbuddy.ViewModels.UserViewModel
+import com.example.gymbuddy.activities.AuthViewModel
 import com.example.gymbuddy.R
 import com.example.gymbuddy.dataclass.User
 import com.example.gymbuddy.Objects.GlobalVariables
