@@ -1,5 +1,7 @@
 package com.example.gymbuddy.dataclass
 
+import com.google.firebase.Timestamp
+
 data class Workout(
     val workoutId: String = "",
     val name: String = "",
@@ -7,9 +9,10 @@ data class Workout(
     val imageUrl: String = "",
     val exercises: String = "",
     val ownerId: String = "",
-    val difficulty: String = ""
+    val difficulty: String = "",
     //val rating: Float,
     //val numberOfRatings: Int,
+    val timestamp: Timestamp = Timestamp.now()
 ) {
     constructor() : this("", "", "", "", "", "", "")
 }
