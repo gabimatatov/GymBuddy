@@ -1,2 +1,37 @@
-package com.example.gymbuddy.adapters
+package com.example.gymbuddy.ui.home
 
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.example.gymbuddy.dataclass.Workout
+import com.example.gymbuddy.databinding.ItemWorkoutBinding
+
+class WorkoutAdapter(private var workouts: List<Workout>) :
+    RecyclerView.Adapter<WorkoutAdapter.WorkoutViewHolder>() {
+
+    class WorkoutViewHolder(private val binding: ItemWorkoutBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(workout: Workout) {
+            binding.textWorkoutName.text = workout.name
+            binding.textWorkoutDescription.text = workout.description
+            binding.textWorkoutDifficulty.text = "Difficulty: ${workout.difficulty}"
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WorkoutViewHolder {
+        val binding = ItemWorkoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return WorkoutViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: WorkoutViewHolder, position: Int) {
+        holder.bind(workouts[position])
+    }
+
+    override fun getItemCount(): Int = workouts.size
+
+    fun updateData(newWorkouts: List<Workout>) {
+        workouts = newWorkouts
+        notifyDataSetChanged()
+    }
+}
