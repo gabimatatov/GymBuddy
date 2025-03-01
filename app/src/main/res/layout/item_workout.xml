@@ -8,28 +8,33 @@
     app:cardCornerRadius="8dp"
     android:layout_margin="8dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:padding="12dp">
 
         <TextView
             android:id="@+id/textWorkoutName"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Workout Name"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/black"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
             android:id="@+id/textWorkoutDescription"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Workout Description"
             android:textSize="14sp"
             android:textColor="@android:color/darker_gray"
+            app:layout_constraintTop_toBottomOf="@id/textWorkoutName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="4dp" />
 
         <TextView
@@ -40,8 +45,10 @@
             android:textSize="14sp"
             android:textStyle="italic"
             android:textColor="@android:color/holo_blue_dark"
+            app:layout_constraintTop_toBottomOf="@id/textWorkoutDescription"
+            app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="4dp" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>
