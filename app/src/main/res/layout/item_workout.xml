@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardElevation="4dp"
+    app:cardCornerRadius="8dp"
+    android:layout_margin="8dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp">
+
+        <ImageView
+            android:id="@+id/imageWorkout"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/gym_buddy_icon"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="24dp"
+            android:contentDescription="Workout Image"/>
+
+        <TextView
+            android:id="@+id/textWorkoutName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Workout Name"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imageWorkout"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="16dp" />
+
+        <TextView
+            android:id="@+id/textWorkoutDescription"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Workout Description"
+            android:textSize="14sp"
+            android:textColor="@android:color/darker_gray"
+            app:layout_constraintTop_toBottomOf="@id/textWorkoutName"
+            app:layout_constraintStart_toStartOf="@id/textWorkoutName"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="4dp" />
+
+        <TextView
+            android:id="@+id/textWorkoutDifficulty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Difficulty: Beginner"
+            android:textSize="14sp"
+            android:textStyle="italic"
+            android:textColor="@android:color/holo_blue_dark"
+            app:layout_constraintTop_toBottomOf="@id/textWorkoutDescription"
+            app:layout_constraintStart_toStartOf="@id/textWorkoutName"
+            android:layout_marginTop="4dp" />
+
+        <TextView
+            android:id="@+id/textWorkoutCreator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Created by: user@example.com"
+            android:textSize="12sp"
+            android:textColor="@android:color/darker_gray"
+            app:layout_constraintTop_toBottomOf="@id/textWorkoutDifficulty"
+            app:layout_constraintStart_toStartOf="@id/textWorkoutName"
+            android:layout_marginTop="4dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

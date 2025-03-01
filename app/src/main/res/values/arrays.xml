@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="difficulty_level">
+    <!-- Used for filtering workouts in HomeFragment -->
+    <string-array name="difficulty_filter">
+        <item>All Difficulties</item>
+        <item>Beginner</item>
+        <item>Intermediate</item>
+        <item>Advanced</item>
+    </string-array>
+
+    <!-- Used for selecting difficulty in AddFragment -->
+    <string-array name="difficulty_selection">
         <item>Beginner</item>
         <item>Intermediate</item>
         <item>Advanced</item>

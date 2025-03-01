@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.example.gymbuddy.dataclass.Workout
 import com.example.gymbuddy.repos.WorkoutRepository
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.Timestamp
 import java.util.UUID
 
 class AddViewModel : ViewModel() {
@@ -33,7 +34,8 @@ class AddViewModel : ViewModel() {
                 imageUrl = "",
                 exercises = exercises,
                 ownerId = email,
-                difficulty = difficulty
+                difficulty = difficulty,
+                timestamp = Timestamp.now()
             )
 
             workoutRepository.addWorkout(workout,
