@@ -16,6 +16,7 @@ class WorkoutAdapter(private var workouts: List<Workout>) :
             binding.textWorkoutName.text = workout.name
             binding.textWorkoutDescription.text = workout.description
             binding.textWorkoutDifficulty.text = "Difficulty: ${workout.difficulty}"
+            binding.textWorkoutCreator.text = "Created by: ${workout.ownerId}"
 
             binding.root.setOnClickListener {
                 val action = HomeFragmentDirections

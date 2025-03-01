@@ -62,6 +62,17 @@
             app:layout_constraintStart_toStartOf="@id/textWorkoutName"
             android:layout_marginTop="4dp" />
 
+        <TextView
+            android:id="@+id/textWorkoutCreator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Created by: user@example.com"
+            android:textSize="12sp"
+            android:textColor="@android:color/darker_gray"
+            app:layout_constraintTop_toBottomOf="@id/textWorkoutDifficulty"
+            app:layout_constraintStart_toStartOf="@id/textWorkoutName"
+            android:layout_marginTop="4dp" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>
