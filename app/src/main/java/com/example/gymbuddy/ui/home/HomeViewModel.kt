@@ -17,17 +17,13 @@ class HomeViewModel : ViewModel() {
     val errorMessage: LiveData<String> get() = _errorMessage
 
     init {
-        fetchWorkouts()
+        fetchWorkouts("All")
     }
 
-    private fun fetchWorkouts() {
-        workoutRepository.getAllWorkouts(
-            onSuccess = { workoutList ->
-                _workouts.value = workoutList
-            },
-            onFailure = { exception ->
-                _errorMessage.value = "Error fetching workouts: ${exception.message}"
-            }
+    fun fetchWorkouts(difficulty: String?) {
+        workoutRepository.getWorkoutsByDifficulty(difficulty,
+            onSuccess = { workoutList -> _workouts.value = workoutList },
+            onFailure = { exception -> _errorMessage.value = "Error fetching workouts: ${exception.message}" }
         )
     }
 }

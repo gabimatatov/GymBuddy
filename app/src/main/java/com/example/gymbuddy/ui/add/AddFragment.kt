@@ -35,7 +35,7 @@ class AddFragment : Fragment() {
     }
 
     private fun setupDifficultySpinner() {
-        val difficultyOptions = resources.getStringArray(R.array.difficulty_level)
+        val difficultyOptions = resources.getStringArray(R.array.difficulty_selection)
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, difficultyOptions)
         binding.spinnerDifficulty.adapter = adapter
     }

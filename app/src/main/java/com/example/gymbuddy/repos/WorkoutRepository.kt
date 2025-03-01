@@ -43,4 +43,24 @@ class WorkoutRepository {
                 onFailure(exception)
             }
     }
+
+    // Function to fetch all workout of specific difficulty
+    fun getWorkoutsByDifficulty(difficulty: String?, onSuccess: (List<Workout>) -> Unit, onFailure: (Exception) -> Unit) {
+        val query = if (difficulty == null) {
+            db.collection("workouts").orderBy("timestamp", Query.Direction.DESCENDING) // Get all workouts
+        } else {
+            db.collection("workouts")
+                .whereEqualTo("difficulty", difficulty)
+                .orderBy("timestamp", Query.Direction.DESCENDING)
+        }
+
+        query.get()
+            .addOnSuccessListener { result ->
+                val workouts = result.mapNotNull { it.toObject(Workout::class.java) }
+                onSuccess(workouts)
+            }
+            .addOnFailureListener { exception ->
+                onFailure(exception)
+            }
+    }
 }

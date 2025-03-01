@@ -1,13 +1,17 @@
 package com.example.gymbuddy.ui.home
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.gymbuddy.R
 import com.example.gymbuddy.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -17,12 +21,17 @@ class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModels()
     private lateinit var workoutAdapter: WorkoutAdapter
 
+    private val sharedPrefs by lazy {
+        requireContext().getSharedPreferences("GymBuddyPrefs", Context.MODE_PRIVATE)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         setupRecyclerView()
+        setupDifficultyFilter()
         observeViewModel()
 
         return binding.root
@@ -33,6 +42,29 @@ class HomeFragment : Fragment() {
         binding.recyclerViewWorkouts.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = workoutAdapter
+        }
+    }
+
+    private fun setupDifficultyFilter() {
+        val adapter = ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.difficulty_filter,
+            android.R.layout.simple_spinner_dropdown_item
+        )
+        binding.spinnerDifficultyFilter.adapter = adapter
+
+        val lastSelectedDifficulty = sharedPrefs.getString("selected_difficulty", "All Difficulties") ?: "All Difficulties"
+        val position = adapter.getPosition(lastSelectedDifficulty)
+        binding.spinnerDifficultyFilter.setSelection(position)
+
+        binding.spinnerDifficultyFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val selectedDifficulty = parent?.getItemAtPosition(position)?.toString().orEmpty()
+                sharedPrefs.edit().putString("selected_difficulty", selectedDifficulty).apply()
+                viewModel.fetchWorkouts(if (selectedDifficulty == "All Difficulties") null else selectedDifficulty)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
     }
 
