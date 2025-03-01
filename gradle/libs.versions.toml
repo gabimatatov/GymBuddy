@@ -57,3 +57,4 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 androidx-navigation-safeargs = { id = "androidx.navigation.safeargs" }
 google-services = {id = "com.google.gms.google-services", version.ref = "googleServices"}
+androidx-navigation-safe-args = { id = "androidx.navigation.safeargs", version = "2.7.5" }

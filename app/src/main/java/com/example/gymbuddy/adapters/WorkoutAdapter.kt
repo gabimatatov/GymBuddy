@@ -1,10 +1,10 @@
-package com.example.gymbuddy.ui.home
-
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.example.gymbuddy.dataclass.Workout
 import com.example.gymbuddy.databinding.ItemWorkoutBinding
+import com.example.gymbuddy.dataclass.Workout
+import com.example.gymbuddy.ui.home.HomeFragmentDirections
 
 class WorkoutAdapter(private var workouts: List<Workout>) :
     RecyclerView.Adapter<WorkoutAdapter.WorkoutViewHolder>() {
@@ -16,6 +16,17 @@ class WorkoutAdapter(private var workouts: List<Workout>) :
             binding.textWorkoutName.text = workout.name
             binding.textWorkoutDescription.text = workout.description
             binding.textWorkoutDifficulty.text = "Difficulty: ${workout.difficulty}"
+
+            binding.root.setOnClickListener {
+                val action = HomeFragmentDirections
+                    .actionNavigationHomeToWorkoutDetailsFragment(
+                        workout.name,
+                        workout.description,
+                        workout.exercises,
+                        workout.difficulty
+                    )
+                it.findNavController().navigate(action)
+            }
         }
     }
 

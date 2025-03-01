@@ -9,7 +9,26 @@
         android:id="@+id/navigation_home"
         android:name="com.example.gymbuddy.ui.home.HomeFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+
+        <!-- ✅ Added navigation to WorkoutDetailsFragment -->
+        <action
+            android:id="@+id/action_navigation_home_to_workoutDetailsFragment"
+            app:destination="@id/workoutDetailsFragment">
+            <argument
+                android:name="workoutName"
+                app:argType="string" />
+            <argument
+                android:name="workoutDescription"
+                app:argType="string" />
+            <argument
+                android:name="workoutExercises"
+                app:argType="string" />
+            <argument
+                android:name="workoutDifficulty"
+                app:argType="string" />
+        </action>
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_add"
@@ -17,7 +36,6 @@
         android:label="@string/menu_add"
         tools:layout="@layout/fragment_add">
 
-        <!-- ✅ Added navigation action from AddFragment to HomeFragment -->
         <action
             android:id="@+id/action_navigation_add_to_navigation_home"
             app:destination="@id/navigation_home" />
@@ -50,5 +68,26 @@
         android:name="com.example.gymbuddy.ui.edit.EditFragment"
         android:label="fragment_edit"
         tools:layout="@layout/fragment_edit" />
+
+    <!-- ✅ Added Workout Details Fragment -->
+    <fragment
+        android:id="@+id/workoutDetailsFragment"
+        android:name="com.example.gymbuddy.ui.details.WorkoutDetailsFragment"
+        android:label="Workout Details"
+        tools:layout="@layout/fragment_workout_details">
+
+        <argument
+            android:name="workoutName"
+            app:argType="string" />
+        <argument
+            android:name="workoutDescription"
+            app:argType="string" />
+        <argument
+            android:name="workoutExercises"
+            app:argType="string" />
+        <argument
+            android:name="workoutDifficulty"
+            app:argType="string" />
+    </fragment>
 
 </navigation>

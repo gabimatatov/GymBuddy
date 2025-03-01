@@ -1,5 +1,6 @@
 package com.example.gymbuddy.ui.home
 
+import WorkoutAdapter
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
