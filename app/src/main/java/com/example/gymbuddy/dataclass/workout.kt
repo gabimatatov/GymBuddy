@@ -1,9 +1,12 @@
 package com.example.gymbuddy.dataclass
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.firebase.Timestamp
 
+@Entity
 data class Workout(
-    val workoutId: String = "",
+    @PrimaryKey val workoutId: String = "",
     val name: String = "",
     val description: String = "",
     val imageUrl: String = "",
@@ -12,7 +15,7 @@ data class Workout(
     val difficulty: String = "",
     //val rating: Float,
     //val numberOfRatings: Int,
-    val timestamp: Timestamp = Timestamp.now()
+    val timestamp: Long = System.currentTimeMillis() // Store timestamp as Long
 ) {
     constructor() : this("", "", "", "", "", "", "")
 }

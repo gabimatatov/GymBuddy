@@ -73,16 +73,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        binding.spinnerDifficultyFilter.clearFocus()
-        binding.spinnerDifficultyFilter.setAdapter(null) // Temporarily remove adapter
-        binding.spinnerDifficultyFilter.setAdapter(
-            ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, resources.getStringArray(R.array.difficulty_filter))
-        )
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
