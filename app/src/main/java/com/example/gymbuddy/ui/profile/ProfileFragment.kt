@@ -16,12 +16,12 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import com.example.gymbuddy.Objects.GalleryHandler
+import com.example.gymbuddy.objects.GalleryHandler
 import com.example.gymbuddy.ui.dialog.EditDisplayNameDialogFragment
 import com.example.gymbuddy.activities.AuthViewModel
 import com.example.gymbuddy.R
 import com.example.gymbuddy.dataclass.User
-import com.example.gymbuddy.Objects.GlobalVariables
+import com.example.gymbuddy.objects.GlobalVariables
 import com.squareup.picasso.Picasso
 
 private const val READ_EXTERNAL_STORAGE_PERMISSION_CODE = 1

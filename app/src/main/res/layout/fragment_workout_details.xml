@@ -8,7 +8,7 @@
     android:padding="16dp"
     tools:context=".ui.details.WorkoutDetailsFragment">
 
-    <!-- Workout Image -->
+    <!-- Workout Image (Centered) -->
     <ImageView
         android:id="@+id/imageWorkout"
         android:layout_width="200dp"
@@ -21,7 +21,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="16dp" />
 
-    <!-- Workout Name -->
+    <!-- Workout Name (Aligned to Left) -->
     <TextView
         android:id="@+id/textWorkoutName"
         android:layout_width="wrap_content"
@@ -29,9 +29,21 @@
         android:textSize="22sp"
         android:textStyle="bold"
         android:text="Workout Name"
+        android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@id/imageWorkout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Workout Owner (New) -->
+    <TextView
+        android:id="@+id/textWorkoutOwner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Created by: user@example.com"
+        android:textSize="14sp"
+        android:textColor="@android:color/darker_gray"
+        android:layout_marginTop="4dp"
+        app:layout_constraintTop_toBottomOf="@id/textWorkoutName"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <!-- Workout Description -->
     <TextView
@@ -41,7 +53,7 @@
         android:text="Workout Description"
         android:textSize="16sp"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/textWorkoutName"
+        app:layout_constraintTop_toBottomOf="@id/textWorkoutOwner"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

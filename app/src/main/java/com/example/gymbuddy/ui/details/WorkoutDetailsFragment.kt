@@ -13,20 +13,19 @@ class WorkoutDetailsFragment : Fragment() {
     private var _binding: FragmentWorkoutDetailsBinding? = null
     private val binding get() = _binding!!
 
-    private val args: WorkoutDetailsFragmentArgs by navArgs() // Retrieve passed workout data
+    private val args: WorkoutDetailsFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentWorkoutDetailsBinding.inflate(inflater, container, false)
-
         displayWorkoutDetails()
-
         return binding.root
     }
 
     private fun displayWorkoutDetails() {
         binding.textWorkoutName.text = args.workoutName
+        binding.textWorkoutOwner.text = "Created by: ${args.workoutOwner}"
         binding.textWorkoutDescription.text = args.workoutDescription
         binding.textWorkoutExercises.text = args.workoutExercises
         binding.textWorkoutDifficulty.text = "Difficulty: ${args.workoutDifficulty}"

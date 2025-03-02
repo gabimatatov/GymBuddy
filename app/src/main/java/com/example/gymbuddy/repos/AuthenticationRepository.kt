@@ -1,17 +1,10 @@
 package com.example.gymbuddy.repos
 
-import android.net.Uri
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.UserProfileChangeRequest
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.UploadTask
-import java.util.*
 
-class FirebaseRepository() {
+class AuthenticationRepository() {
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 

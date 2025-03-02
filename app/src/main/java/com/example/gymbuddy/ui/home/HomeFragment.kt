@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gymbuddy.R
 import com.example.gymbuddy.databinding.FragmentHomeBinding
+import com.example.gymbuddy.dataclass.Workout
 
 class HomeFragment : Fragment() {
 
@@ -38,11 +39,17 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        workoutAdapter = WorkoutAdapter(emptyList())
+        workoutAdapter = WorkoutAdapter(emptyList()) { workout ->
+            deleteWorkout(workout)
+        }
         binding.recyclerViewWorkouts.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = workoutAdapter
         }
+    }
+
+    private fun deleteWorkout(workout: Workout) {
+        viewModel.deleteWorkout(workout)
     }
 
     private fun setupDifficultyFilter() {
@@ -71,17 +78,12 @@ class HomeFragment : Fragment() {
         viewModel.errorMessage.observe(viewLifecycleOwner) { message ->
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
         }
+
+        viewModel.loadingState.observe(viewLifecycleOwner) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        binding.spinnerDifficultyFilter.clearFocus()
-        binding.spinnerDifficultyFilter.setAdapter(null) // Temporarily remove adapter
-        binding.spinnerDifficultyFilter.setAdapter(
-            ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, resources.getStringArray(R.array.difficulty_filter))
-        )
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()

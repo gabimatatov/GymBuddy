@@ -11,7 +11,6 @@
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home">
 
-        <!-- ✅ Added navigation to WorkoutDetailsFragment -->
         <action
             android:id="@+id/action_navigation_home_to_workoutDetailsFragment"
             app:destination="@id/workoutDetailsFragment">
@@ -69,7 +68,6 @@
         android:label="fragment_edit"
         tools:layout="@layout/fragment_edit" />
 
-    <!-- ✅ Added Workout Details Fragment -->
     <fragment
         android:id="@+id/workoutDetailsFragment"
         android:name="com.example.gymbuddy.ui.details.WorkoutDetailsFragment"
@@ -88,6 +86,10 @@
         <argument
             android:name="workoutDifficulty"
             app:argType="string" />
+        <argument
+            android:name="workoutOwner"
+            app:argType="string" />
     </fragment>
+
 
 </navigation>

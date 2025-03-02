@@ -2,9 +2,11 @@ package com.example.gymbuddy.repos
 
 import android.util.Log
 import com.example.gymbuddy.dataclass.Workout
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
+import java.util.Date
 import java.util.UUID
 
 class WorkoutRepository {
@@ -29,18 +31,24 @@ class WorkoutRepository {
             }
     }
 
-    // Function to fetch all workouts
-    fun getAllWorkouts(onSuccess: (List<Workout>) -> Unit, onFailure: (Exception) -> Unit) {
+    fun getAllWorkouts(since: Long, callback: (List<Workout>) -> Unit) {
+        println("Fetching workouts updated since: $since")
+
         db.collection("workouts")
-            .orderBy("timestamp", Query.Direction.DESCENDING) // Sort by timestamp
+            .whereGreaterThanOrEqualTo("lastUpdated", since)
+            .orderBy("lastUpdated", Query.Direction.DESCENDING)
             .get()
-            .addOnSuccessListener { result ->
-                val workouts = result.mapNotNull { it.toObject(Workout::class.java) }
-                onSuccess(workouts)
-            }
-            .addOnFailureListener { exception ->
-                Log.e("WorkoutRepository", "Error fetching workouts: ${exception.message}")
-                onFailure(exception)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val workouts = task.result.mapNotNull { document ->
+                        println("Found workout in Firestore: ${document.id}")
+                        Workout.fromJSON(document.data)
+                    }
+                    callback(workouts)
+                } else {
+                    println("Firestore fetch failed: ${task.exception?.message}")
+                    callback(listOf())
+                }
             }
     }
 
@@ -63,4 +71,18 @@ class WorkoutRepository {
                 onFailure(exception)
             }
     }
+
+    fun deleteWorkout(workout: Workout, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
+        db.collection("workouts").document(workout.workoutId)
+            .delete()
+            .addOnSuccessListener {
+                println("Workout deleted from Firestore: ${workout.workoutId}")
+                onSuccess()
+            }
+            .addOnFailureListener { exception ->
+                println("Error deleting workout from Firestore: ${exception.message}")
+                onFailure(exception)
+            }
+    }
+
 }

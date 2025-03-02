@@ -6,13 +6,15 @@ import com.example.gymbuddy.databinding.ItemWorkoutBinding
 import com.example.gymbuddy.dataclass.Workout
 import com.example.gymbuddy.ui.home.HomeFragmentDirections
 
-class WorkoutAdapter(private var workouts: List<Workout>) :
-    RecyclerView.Adapter<WorkoutAdapter.WorkoutViewHolder>() {
+class WorkoutAdapter(
+    private var workouts: List<Workout>,
+    private val onDeleteWorkout: (Workout) -> Unit
+) : RecyclerView.Adapter<WorkoutAdapter.WorkoutViewHolder>() {
 
     class WorkoutViewHolder(private val binding: ItemWorkoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(workout: Workout) {
+        fun bind(workout: Workout, onDeleteWorkout: (Workout) -> Unit) {
             binding.textWorkoutName.text = workout.name
             binding.textWorkoutDescription.text = workout.description
             binding.textWorkoutDifficulty.text = "Difficulty: ${workout.difficulty}"
@@ -24,9 +26,14 @@ class WorkoutAdapter(private var workouts: List<Workout>) :
                         workout.name,
                         workout.description,
                         workout.exercises,
-                        workout.difficulty
+                        workout.difficulty,
+                        workout.ownerId
                     )
                 it.findNavController().navigate(action)
+            }
+
+            binding.buttonDeleteWorkout.setOnClickListener {
+                onDeleteWorkout(workout)
             }
         }
     }
@@ -37,7 +44,7 @@ class WorkoutAdapter(private var workouts: List<Workout>) :
     }
 
     override fun onBindViewHolder(holder: WorkoutViewHolder, position: Int) {
-        holder.bind(workouts[position])
+        holder.bind(workouts[position], onDeleteWorkout)
     }
 
     override fun getItemCount(): Int = workouts.size

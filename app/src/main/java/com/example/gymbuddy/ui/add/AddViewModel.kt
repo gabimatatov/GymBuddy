@@ -3,15 +3,16 @@ package com.example.gymbuddy.ui.add
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.gymbuddy.models.Model
 import com.example.gymbuddy.dataclass.Workout
-import com.example.gymbuddy.repos.WorkoutRepository
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.Timestamp
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.UUID
 
 class AddViewModel : ViewModel() {
 
-    private val workoutRepository = WorkoutRepository()
     private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
 
     private val _workoutSaved = MutableLiveData<Boolean>()
@@ -26,24 +27,28 @@ class AddViewModel : ViewModel() {
             return
         }
 
-        auth.currentUser?.email?.let { email ->
-            val workout = Workout(
-                workoutId = UUID.randomUUID().toString(),
-                name = name,
-                description = description,
-                imageUrl = "",
-                exercises = exercises,
-                ownerId = email,
-                difficulty = difficulty,
-                timestamp = Timestamp.now()
-            )
+        val userEmail = auth.currentUser?.email ?: "unknown_user"
+        val currentTime = System.currentTimeMillis()
 
-            workoutRepository.addWorkout(workout,
-                onSuccess = { _workoutSaved.value = true },
-                onFailure = { exception -> _errorMessage.value = exception.message }
-            )
-        } ?: run {
-            _errorMessage.value = "User not signed in!"
+        val workout = Workout(
+            workoutId = UUID.randomUUID().toString(),
+            name = name,
+            description = description,
+            imageUrl = "",
+            exercises = exercises,
+            ownerId = userEmail,
+            difficulty = difficulty,
+            timestamp = currentTime,
+            lastUpdated = currentTime
+        )
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                Model.shared.insertWorkouts(workout)
+                _workoutSaved.postValue(true)
+            } catch (e: Exception) {
+                _errorMessage.postValue("Error saving workout: ${e.message}")
+            }
         }
     }
 }
