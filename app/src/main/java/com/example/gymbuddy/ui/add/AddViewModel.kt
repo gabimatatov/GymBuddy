@@ -28,6 +28,7 @@ class AddViewModel : ViewModel() {
         }
 
         val userEmail = auth.currentUser?.email ?: "unknown_user"
+        val currentTime = System.currentTimeMillis()
 
         val workout = Workout(
             workoutId = UUID.randomUUID().toString(),
@@ -35,13 +36,15 @@ class AddViewModel : ViewModel() {
             description = description,
             imageUrl = "",
             exercises = exercises,
-            ownerId = userEmail, // Use Firebase email as the owner
-            difficulty = difficulty
+            ownerId = userEmail,
+            difficulty = difficulty,
+            timestamp = currentTime,
+            lastUpdated = currentTime
         )
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                Model.shared.insertWorkouts(workout) // Save workout locally
+                Model.shared.insertWorkouts(workout)
                 _workoutSaved.postValue(true)
             } catch (e: Exception) {
                 _errorMessage.postValue("Error saving workout: ${e.message}")

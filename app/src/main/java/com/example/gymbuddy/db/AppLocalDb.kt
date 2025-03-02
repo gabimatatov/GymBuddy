@@ -7,7 +7,7 @@ import com.example.gymbuddy.base.MyApplication
 import com.example.gymbuddy.dataclass.Workout
 import com.example.gymbuddy.dao.WorkoutDao
 
-@Database(entities = [Workout::class], version = 2)
+@Database(entities = [Workout::class], version = 3)
 abstract class AppLocalDbRepository: RoomDatabase() {
     abstract fun workoutDao(): WorkoutDao
 }

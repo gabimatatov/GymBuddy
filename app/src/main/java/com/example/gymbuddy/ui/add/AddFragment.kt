@@ -5,14 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.gymbuddy.R
 import com.example.gymbuddy.databinding.FragmentAddBinding
-import com.google.android.material.textfield.TextInputEditText
 
 class AddFragment : Fragment() {
 
@@ -45,17 +43,14 @@ class AddFragment : Fragment() {
             difficultyOptions
         )
 
-        // Get the AutoCompleteTextView from the TextInputLayout
         val difficultyDropdown = binding.spinnerDifficulty
         difficultyDropdown.setAdapter(dropdownAdapter)
 
-        // Set default selection to first item
         if (difficultyOptions.isNotEmpty()) {
             selectedDifficulty = difficultyOptions[0]
             difficultyDropdown.setText(selectedDifficulty, false)
         }
 
-        // Handle selection
         difficultyDropdown.setOnItemClickListener { _, _, position, _ ->
             selectedDifficulty = difficultyOptions[position]
         }
@@ -66,7 +61,6 @@ class AddFragment : Fragment() {
         val description = binding.editTextWorkoutDescription.text.toString().trim()
         val exercises = binding.editTextWorkoutExercises.text.toString().trim()
 
-        // Use the selected difficulty from the AutoCompleteTextView
         viewModel.saveWorkout(name, description, exercises, selectedDifficulty)
     }
 
