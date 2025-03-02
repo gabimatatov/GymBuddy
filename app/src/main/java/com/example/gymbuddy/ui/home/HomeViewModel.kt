@@ -3,8 +3,11 @@ package com.example.gymbuddy.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.gymbuddy.Model
 import com.example.gymbuddy.dataclass.Workout
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
 
@@ -26,6 +29,13 @@ class HomeViewModel : ViewModel() {
                 workoutList.filter { it.difficulty == difficulty }
             }
             _workouts.postValue(filteredList)
+        }
+    }
+
+    fun deleteWorkout(workout: Workout) {
+        viewModelScope.launch(Dispatchers.IO) {
+            Model.shared.deleteWorkout(workout)
+            fetchWorkouts(null) // Refresh the workout list after deletion
         }
     }
 }

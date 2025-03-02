@@ -9,12 +9,7 @@ import androidx.room.Query
 import com.example.gymbuddy.dataclass.Workout
 import com.example.gymbuddy.db.AppLocalDb
 import com.example.gymbuddy.db.AppLocalDbRepository
-import java.util.concurrent.Callable
 import java.util.concurrent.Executors
-
-interface getAllWorkoutsListener {
-    fun onComplete(workouts: List<Workout>)
-}
 
 class Model private constructor() {
 
@@ -27,7 +22,6 @@ class Model private constructor() {
     companion object {
         val shared = Model()
     }
-
 
     fun getAllWorkouts(callback: (List<Workout>) -> Unit) {
         executor.execute {
@@ -50,6 +44,12 @@ class Model private constructor() {
             } catch (e: Exception) {
                 println("Error inserting workout: ${e.message}")
             }
+        }
+    }
+
+    fun deleteWorkout(workout: Workout) {
+        executor.execute {
+            database.workoutDao().delete(workout)
         }
     }
 
