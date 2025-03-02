@@ -21,10 +21,6 @@ class HomeViewModel : ViewModel() {
     private val _loadingState = MutableLiveData<Boolean>()
     val loadingState: LiveData<Boolean> get() = _loadingState
 
-//    init {
-//        fetchWorkouts(null)
-//    }
-
     fun fetchWorkouts(difficulty: String?) {
         println("🔄 FetchWorkouts called with difficulty: $difficulty")
 
@@ -33,7 +29,7 @@ class HomeViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             Model.shared.getAllWorkouts { workoutList ->
                 val filteredList = if (difficulty == null || difficulty == "All Difficulties") {
-                    workoutList.distinctBy { it.workoutId } // Remove duplicates before updating LiveData
+                    workoutList.distinctBy { it.workoutId }
                 } else {
                     workoutList.filter { it.difficulty == difficulty }.distinctBy { it.workoutId }
                 }

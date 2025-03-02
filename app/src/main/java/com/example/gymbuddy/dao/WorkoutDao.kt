@@ -21,4 +21,7 @@ interface WorkoutDao {
 
     @Delete
     fun delete(workout: Workout)
+
+    @Delete
+    fun deleteWorkouts(vararg workouts: Workout)
 }

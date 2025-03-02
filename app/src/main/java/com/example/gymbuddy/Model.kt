@@ -30,31 +30,31 @@ class Model private constructor() {
         val lastUpdated = Workout.lastUpdated
 
         workoutRepository.getAllWorkouts(lastUpdated) { workoutsFromFirestore ->
+
             executor.execute {
-                var latestUpdatedTime = lastUpdated
-                val existingWorkouts = database.workoutDao().getAllWorkouts().map { it.workoutId }.toSet() // Get current IDs
+                val localWorkouts = database.workoutDao().getAllWorkouts()
+                val firestoreWorkoutIds = workoutsFromFirestore.map { it.workoutId }.toSet()
 
-                for (workout in workoutsFromFirestore) {
-                    if (!existingWorkouts.contains(workout.workoutId)) { // Prevent duplicate insert
-                        database.workoutDao().insertWorkouts(workout)
-                    }
+                // Identify workouts that exist locally but are missing in Firestore
+                val workoutsToDelete = localWorkouts.filter { it.workoutId !in firestoreWorkoutIds }
 
-                    workout.lastUpdated?.let { workoutLastUpdated ->
-                        if (latestUpdatedTime < workoutLastUpdated) {
-                            latestUpdatedTime = workoutLastUpdated
-                        }
-                    }
+                // Remove these workouts from the local database
+                if (workoutsToDelete.isNotEmpty()) {
+                    println("Deleting ${workoutsToDelete.size} missing workouts from local DB.")
+                    database.workoutDao().deleteWorkouts(*workoutsToDelete.toTypedArray())
                 }
 
+                // Insert or update Firestore workouts in local DB
+                val latestUpdatedTime = workoutsFromFirestore.maxOfOrNull { it.lastUpdated ?: lastUpdated } ?: lastUpdated
                 Workout.lastUpdated = latestUpdatedTime
+                database.workoutDao().insertWorkouts(*workoutsFromFirestore.toTypedArray())
+
                 val updatedWorkouts = database.workoutDao().getAllWorkouts()
+                println("Local DB now contains ${updatedWorkouts.size} workouts.")
                 mainHandler.post { callback(updatedWorkouts) }
             }
         }
     }
-
-
-
 
     fun getWorkoutById(id: String): Workout {
         return database.workoutDao().getWorkoutById(id)
@@ -76,7 +76,6 @@ class Model private constructor() {
             )
         }
     }
-
 
     fun deleteWorkout(workout: Workout) {
         workoutRepository.deleteWorkout(workout,
