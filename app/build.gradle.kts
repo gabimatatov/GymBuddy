@@ -66,7 +66,8 @@ dependencies {
 
     // Room
     implementation(libs.androidx.room.ktx)
-    kapt("androidx.room:room-compiler:2.6.1")
+    kapt(libs.androidx.room.compiler)
+    implementation(libs.kotlinx.metadata.jvm)
 
     // Picasso
     implementation(libs.com.squareup.picasso.picasso)

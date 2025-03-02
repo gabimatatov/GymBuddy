@@ -7,6 +7,7 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 appcompat = "1.7.0"
 kotlinStdlib = "2.1.0"
+kotlinxMetadataJvm = "0.9.0"
 kotlinxSerializationJson = "1.8.0"
 material = "1.12.0"
 activity = "1.9.3"
@@ -33,6 +34,7 @@ androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "j
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlinStdlib" }
+kotlinx-metadata-jvm = { module = "org.jetbrains.kotlinx:kotlinx-metadata-jvm", version.ref = "kotlinxMetadataJvm" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }

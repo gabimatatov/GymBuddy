@@ -10,7 +10,7 @@ import com.example.gymbuddy.dataclass.Workout
 @Dao
 interface WorkoutDao {
 
-    @Query("SELECT * FROM Workout")
+    @Query("SELECT * FROM Workout ORDER BY timestamp DESC")
     fun getAllWorkouts(): List<Workout>
 
     @Query("SELECT * FROM Workout WHERE workoutId =:id")

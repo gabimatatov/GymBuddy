@@ -53,7 +53,4 @@ class Model private constructor() {
         }
     }
 
-    fun delete(workout: Workout) {
-        database.workoutDao().delete(workout)
-    }
 }
