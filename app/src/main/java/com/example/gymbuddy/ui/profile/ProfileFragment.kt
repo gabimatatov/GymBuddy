@@ -14,8 +14,10 @@ import com.example.gymbuddy.activities.AuthViewModel
 import com.example.gymbuddy.dataclass.User
 import com.example.gymbuddy.objects.GlobalVariables
 import com.squareup.picasso.Picasso
+import com.example.gymbuddy.ui.dialog.EditDisplayNameDialogFragment
+import android.util.Log
 
-class ProfileFragment : Fragment() {
+class ProfileFragment : Fragment(), EditDisplayNameDialogFragment.EditUsernameDialogListener {
 
     private val authViewModel: AuthViewModel by viewModels()
     private lateinit var userViewModel: UserViewModel
@@ -33,6 +35,12 @@ class ProfileFragment : Fragment() {
         val displayNameTextView: TextView = view.findViewById(R.id.displayNameTextView)
         val emailTextView: TextView = view.findViewById(R.id.emailTextView)
         val userPhotoImageView: ImageView = view.findViewById(R.id.userPhotoImageView)
+
+        // Make the username clickable
+        displayNameTextView.setOnClickListener {
+            val dialogFragment = EditDisplayNameDialogFragment()
+            dialogFragment.show(childFragmentManager, "EditDisplayNameDialogFragment")
+        }
 
         authViewModel.currentUser.observe(viewLifecycleOwner, Observer { user ->
             user?.let {
@@ -65,4 +73,11 @@ class ProfileFragment : Fragment() {
             userPhotoImageView?.setImageResource(R.drawable.trainer_icon)
         }
     }
+
+    // Implement the onDisplayNameUpdated method
+    override fun onDisplayNameUpdated(displayName: String) {
+        userViewModel.updateUserName(displayName)
+        Log.d("NameUpdate", "Updated display name")
+    }
 }
+
