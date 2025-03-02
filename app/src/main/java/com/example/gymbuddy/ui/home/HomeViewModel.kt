@@ -21,44 +21,41 @@ class HomeViewModel : ViewModel() {
     private val _loadingState = MutableLiveData<Boolean>()
     val loadingState: LiveData<Boolean> get() = _loadingState
 
-    init {
-        fetchWorkouts(null)
-    }
+//    init {
+//        fetchWorkouts(null)
+//    }
 
     fun fetchWorkouts(difficulty: String?) {
-        _loadingState.postValue(true) // Show loading indicator
+        println("🔄 FetchWorkouts called with difficulty: $difficulty")
+
+        _loadingState.postValue(true)
 
         viewModelScope.launch(Dispatchers.IO) {
-            try {
-                delay(500) // Simulate 0.5 seconds delay for testing
-                Model.shared.getAllWorkouts { workoutList ->
-                    val filteredList = if (difficulty == null || difficulty == "All Difficulties") {
-                        workoutList
-                    } else {
-                        workoutList.filter { it.difficulty == difficulty }
-                    }
-                    _workouts.postValue(filteredList)
+            Model.shared.getAllWorkouts { workoutList ->
+                val filteredList = if (difficulty == null || difficulty == "All Difficulties") {
+                    workoutList.distinctBy { it.workoutId } // Remove duplicates before updating LiveData
+                } else {
+                    workoutList.filter { it.difficulty == difficulty }.distinctBy { it.workoutId }
                 }
-            } finally {
-                _loadingState.postValue(false) // Hide loading indicator
+                _workouts.postValue(filteredList)
+                _loadingState.postValue(false)
             }
         }
     }
-
 
 
     fun deleteWorkout(workout: Workout) {
-        _loadingState.postValue(true) // Show loading while deleting
+        _loadingState.postValue(true)
 
         viewModelScope.launch(Dispatchers.IO) {
-            try {
-                Model.shared.deleteWorkout(workout)
-                fetchWorkouts(null) // Refresh after deletion
-            } catch (e: Exception) {
-                _errorMessage.postValue(e.message)
-            } finally {
-                _loadingState.postValue(false) // Hide loading
-            }
+            Model.shared.deleteWorkout(workout)
+
+            // Refresh UI after deletion
+            fetchWorkouts(null)
+
+            _loadingState.postValue(false)
         }
     }
+
+
 }

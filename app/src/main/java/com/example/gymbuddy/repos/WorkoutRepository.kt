@@ -32,23 +32,25 @@ class WorkoutRepository {
     }
 
     fun getAllWorkouts(since: Long, callback: (List<Workout>) -> Unit) {
+        println("Fetching workouts updated since: $since")
+
         db.collection("workouts")
-            .whereGreaterThanOrEqualTo(Workout.LAST_UPDATED_KEY, Timestamp(Date(since)))
-            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .whereGreaterThanOrEqualTo("lastUpdated", since)
+            .orderBy("lastUpdated", Query.Direction.DESCENDING)
             .get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    val workouts: MutableList<Workout> = mutableListOf()
-                    for (document in task.result) {
-                        workouts.add(Workout.fromJSON(document.data))
+                    val workouts = task.result.mapNotNull { document ->
+                        println("Found workout in Firestore: ${document.id}")
+                        Workout.fromJSON(document.data)
                     }
                     callback(workouts)
                 } else {
+                    println("Firestore fetch failed: ${task.exception?.message}")
                     callback(listOf())
                 }
             }
     }
-
 
     // Function to fetch all workout of specific difficulty
     fun getWorkoutsByDifficulty(difficulty: String?, onSuccess: (List<Workout>) -> Unit, onFailure: (Exception) -> Unit) {
@@ -69,4 +71,18 @@ class WorkoutRepository {
                 onFailure(exception)
             }
     }
+
+    fun deleteWorkout(workout: Workout, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
+        db.collection("workouts").document(workout.workoutId)
+            .delete()
+            .addOnSuccessListener {
+                println("Workout deleted from Firestore: ${workout.workoutId}")
+                onSuccess()
+            }
+            .addOnFailureListener { exception ->
+                println("Error deleting workout from Firestore: ${exception.message}")
+                onFailure(exception)
+            }
+    }
+
 }
