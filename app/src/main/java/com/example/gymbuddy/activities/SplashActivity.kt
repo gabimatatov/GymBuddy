@@ -8,7 +8,7 @@ import android.os.Looper
 import androidx.activity.viewModels
 import com.example.gymbuddy.MainActivity
 import com.example.gymbuddy.R
-import com.example.gymbuddy.Objects.GlobalVariables
+import com.example.gymbuddy.objects.GlobalVariables
 import com.example.gymbuddy.ui.profile.UserViewModel
 
 class SplashActivity : AppCompatActivity() {

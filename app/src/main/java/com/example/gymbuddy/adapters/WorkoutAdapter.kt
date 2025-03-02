@@ -8,7 +8,7 @@ import com.example.gymbuddy.ui.home.HomeFragmentDirections
 
 class WorkoutAdapter(
     private var workouts: List<Workout>,
-    private val onDeleteWorkout: (Workout) -> Unit // Delete callback
+    private val onDeleteWorkout: (Workout) -> Unit
 ) : RecyclerView.Adapter<WorkoutAdapter.WorkoutViewHolder>() {
 
     class WorkoutViewHolder(private val binding: ItemWorkoutBinding) :
@@ -26,7 +26,8 @@ class WorkoutAdapter(
                         workout.name,
                         workout.description,
                         workout.exercises,
-                        workout.difficulty
+                        workout.difficulty,
+                        workout.ownerId
                     )
                 it.findNavController().navigate(action)
             }

@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gymbuddy.Model
+import com.example.gymbuddy.models.Model
 import com.example.gymbuddy.dataclass.Workout
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers

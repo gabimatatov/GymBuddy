@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseUser
-import com.example.gymbuddy.repos.FirebaseRepository
+import com.example.gymbuddy.repos.AuthenticationRepository
 import androidx.lifecycle.map
 
 class AuthViewModel : ViewModel() {
@@ -13,7 +13,7 @@ class AuthViewModel : ViewModel() {
     val currentUser: LiveData<FirebaseUser?> = _currentUser
     val isUserSignedIn: LiveData<Boolean> = currentUser.map { it != null }
 
-    private val firebaseRepository: FirebaseRepository = FirebaseRepository()
+    private val firebaseRepository: AuthenticationRepository = AuthenticationRepository()
 
     private val _authError = MutableLiveData<String?>()
     val authError: LiveData<String?> = _authError

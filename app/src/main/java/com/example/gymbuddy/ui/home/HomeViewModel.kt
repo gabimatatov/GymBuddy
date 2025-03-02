@@ -4,10 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gymbuddy.Model
+import com.example.gymbuddy.models.Model
 import com.example.gymbuddy.dataclass.Workout
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
@@ -22,7 +21,7 @@ class HomeViewModel : ViewModel() {
     val loadingState: LiveData<Boolean> get() = _loadingState
 
     fun fetchWorkouts(difficulty: String?) {
-        println("🔄 FetchWorkouts called with difficulty: $difficulty")
+        println("FetchWorkouts called with difficulty: $difficulty")
 
         _loadingState.postValue(true)
 
@@ -39,7 +38,6 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-
     fun deleteWorkout(workout: Workout) {
         _loadingState.postValue(true)
 
@@ -52,6 +50,5 @@ class HomeViewModel : ViewModel() {
             _loadingState.postValue(false)
         }
     }
-
 
 }

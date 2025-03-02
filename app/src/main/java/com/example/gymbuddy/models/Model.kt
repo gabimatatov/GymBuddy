@@ -1,11 +1,7 @@
-package com.example.gymbuddy
+package com.example.gymbuddy.models
 
 import android.os.Looper
 import androidx.core.os.HandlerCompat
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
 import com.example.gymbuddy.dataclass.Workout
 import com.example.gymbuddy.db.AppLocalDb
 import com.example.gymbuddy.db.AppLocalDbRepository
