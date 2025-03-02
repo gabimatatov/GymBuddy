@@ -16,6 +16,7 @@ import com.example.gymbuddy.objects.GlobalVariables
 import com.squareup.picasso.Picasso
 import com.example.gymbuddy.ui.dialog.EditDisplayNameDialogFragment
 import android.util.Log
+import android.widget.Toast
 
 class ProfileFragment : Fragment(), EditDisplayNameDialogFragment.EditUsernameDialogListener {
 
@@ -78,6 +79,8 @@ class ProfileFragment : Fragment(), EditDisplayNameDialogFragment.EditUsernameDi
     override fun onDisplayNameUpdated(displayName: String) {
         userViewModel.updateUserName(displayName)
         Log.d("NameUpdate", "Updated display name")
+
+        Toast.makeText(requireContext(), "Username Updated!", Toast.LENGTH_SHORT).show()
     }
 }
 
