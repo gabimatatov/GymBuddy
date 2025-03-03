@@ -28,7 +28,7 @@ class AuthViewModel : ViewModel() {
         firebaseRepository.signIn(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    _authError.value = null // Clear errors if sign-in is successful
+                    _authError.value = null
                 } else {
                     _authError.value = task.exception?.localizedMessage
                 }
@@ -39,7 +39,7 @@ class AuthViewModel : ViewModel() {
         firebaseRepository.signUp(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    _authError.value = null // Clear errors if signup is successful
+                    _authError.value = null
                 } else {
                     _authError.value = task.exception?.localizedMessage
                 }

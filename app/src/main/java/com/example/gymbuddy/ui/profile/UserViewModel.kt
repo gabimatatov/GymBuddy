@@ -1,6 +1,6 @@
 package com.example.gymbuddy.ui.profile
 
-import android.net.Uri
+import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -55,14 +55,26 @@ class UserViewModel(private val userId: String) : ViewModel() {
         )
     }
 
-    fun updateUserPhoto(imageUri: Uri) {
-        userRepository.updateUserPhoto(userId, imageUri,
+    fun updateUserPhoto(bitmap: Bitmap) {
+        userRepository.updateUserPhoto(userId, bitmap,
             onSuccess = { newPhotoUrl ->
                 // After a successful update, fetch the user again to reflect changes
                 fetchUser()
             },
             onFailure = {
                 // Handle failure
+            }
+        )
+    }
+
+    fun deleteUserPhoto() {
+        userRepository.deleteUserPhoto(userId,
+            onSuccess = {
+                // After successful deletion, update the UI and show success toast
+                fetchUser()
+            },
+            onFailure = {
+
             }
         )
     }
@@ -81,18 +93,6 @@ class UserViewModel(private val userId: String) : ViewModel() {
 
     fun updateUserFavoriteWorkoutIds(newFavoriteWorkoutIds: List<String>) {
         userRepository.updateUserFavoriteWorkoutIds(userId, newFavoriteWorkoutIds,
-            onSuccess = {
-                // After a successful update, fetch the user again to reflect changes
-                fetchUser()
-            },
-            onFailure = {
-                // Handle failure
-            }
-        )
-    }
-
-    fun updateUserRatedWorkouts(newRatedWorkouts: Map<String, Int>) {
-        userRepository.updateUserRatedWorkouts(userId, newRatedWorkouts,
             onSuccess = {
                 // After a successful update, fetch the user again to reflect changes
                 fetchUser()

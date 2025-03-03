@@ -1,5 +1,6 @@
 package com.example.gymbuddy.repos
 
+import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import com.example.gymbuddy.dataclass.User
@@ -7,6 +8,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import android.content.Context
+import com.example.gymbuddy.base.MyApplication.Globals.context
 import java.util.*
 
 class UserRepository {
@@ -152,47 +158,89 @@ class UserRepository {
     }
 
     // Function to update user photo URL in Firestore
-    fun updateUserPhoto(userId: String, imageUri: Uri, onSuccess: (String) -> Unit, onFailure: () -> Unit) {
-        uploadImage(imageUri,
-            onSuccess = { imageUrl ->
-                // Update the user document with the new photoUrl
-                db.collection("users")
-                    .document(userId)
-                    .update("photoUrl", imageUrl)
-                    .addOnSuccessListener {
-                        // Photo URL updated successfully
-                        onSuccess(imageUrl)
-                    }
-                    .addOnFailureListener { exception ->
-                        // Handle failure
-                        Log.d("updateUserPhoto", "failed to update photoUrl: ${exception.message}")
-                        onFailure()
-                    }
-            },
-            onFailure = onFailure
-        )
+    fun updateUserPhoto(userId: String, bitmap: Bitmap, onSuccess: (String) -> Unit, onFailure: () -> Unit) {
+        // Save the Bitmap as a file
+        val file = saveBitmapToFile(bitmap)
+
+        // Upload the file to Firebase Storage
+        uploadImage(file, onSuccess = { imageUrl ->
+            // Update the user document with the new photoUrl
+            db.collection("users")
+                .document(userId)
+                .update("photoUrl", imageUrl)
+                .addOnSuccessListener {
+                    // Photo URL updated successfully
+                    onSuccess(imageUrl)
+                }
+                .addOnFailureListener { exception ->
+                    // Handle failure
+                    Log.d("updateUserPhoto", "failed to update photoUrl: ${exception.message}")
+                    onFailure()
+                }
+        }, onFailure = onFailure)
+    }
+
+    // Function to save Bitmap to a file in internal storage
+    private fun saveBitmapToFile(bitmap: Bitmap): File {
+        val file = File(context?.cacheDir, "${UUID.randomUUID()}.jpg")
+        try {
+            FileOutputStream(file).use { outputStream ->
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+            }
+        } catch (e: IOException) {
+            Log.e("UserRepository", "Error saving bitmap to file: ${e.message}")
+        }
+        return file
     }
 
     // Function to upload an image to Firestore Storage and get the URL
-    private fun uploadImage(imageUri: Uri, onSuccess: (String) -> Unit, onFailure: () -> Unit) {
+// Function to upload the file to Firebase Storage
+    private fun uploadImage(file: File, onSuccess: (String) -> Unit, onFailure: () -> Unit) {
         val storageRef: StorageReference = storage.reference
-        val imageFileName = UUID.randomUUID().toString() // Generate a unique filename for the image
-        val imageRef: StorageReference = storageRef.child("user_images/$imageFileName")
+        val imageRef: StorageReference = storageRef.child("userImages/${file.name}")
 
-        // Upload the image to Firebase Storage
-        imageRef.putFile(imageUri)
+        imageRef.putFile(Uri.fromFile(file))
             .addOnSuccessListener { taskSnapshot ->
-                // Image uploaded successfully
                 imageRef.downloadUrl.addOnSuccessListener { uri ->
-                    // Get the download URL of the uploaded image
                     val imageUrl = uri.toString()
                     onSuccess(imageUrl)
                 }
             }
             .addOnFailureListener { exception ->
-                // Handle failure
                 Log.d("uploadImage", "failed: ${exception.message}")
                 onFailure()
             }
+    }
+
+    fun deleteUserPhoto(userId: String, onSuccess: (User) -> Unit, onFailure: () -> Unit) {
+        val userDocRef = db.collection("users").document(userId)
+
+        // Get the current photo URL
+        userDocRef.get().addOnSuccessListener { document ->
+            val photoUrl = document.getString("photoUrl")
+
+            if (!photoUrl.isNullOrEmpty()) {
+                // Delete the image from Firebase Storage
+                val storageRef = storage.getReferenceFromUrl(photoUrl)
+                storageRef.delete().addOnSuccessListener {
+                    // Deleted from Storage, update the Firestore document to remove the photoUrl
+                    userDocRef.update("photoUrl", "")
+                        .addOnSuccessListener {
+                            // Success, return updated user data
+                            val updatedUser = User(userId, document.getString("displayName") ?: "")
+                            onSuccess(updatedUser)
+                        }
+                        .addOnFailureListener {
+                            onFailure()
+                        }
+                }.addOnFailureListener {
+                    onFailure()
+                }
+            } else {
+                onSuccess(User(userId))
+            }
+        }.addOnFailureListener {
+            onFailure()
+        }
     }
 }

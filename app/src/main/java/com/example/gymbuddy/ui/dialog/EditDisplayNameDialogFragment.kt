@@ -20,12 +20,12 @@ class EditDisplayNameDialogFragment : DialogFragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         try {
+            // Ensure the parent fragment implements the listener
             listener = parentFragment as EditUsernameDialogListener
         } catch (e: ClassCastException) {
             throw ClassCastException("$context must implement EditUsernameDialogListener")
         }
     }
-
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireContext())
@@ -36,7 +36,12 @@ class EditDisplayNameDialogFragment : DialogFragment() {
         builder.setView(view)
             .setTitle("Edit Username")
             .setPositiveButton("Save") { _, _ ->
-                val username = editTextUsername.text.toString()
+                var username = editTextUsername.text.toString()
+
+                // Trim leading/trailing spaces and new lines
+                username = username.trim()
+
+                // Pass the trimmed username to the listener
                 listener.onDisplayNameUpdated(username)
             }
             .setNegativeButton("Cancel", null)
