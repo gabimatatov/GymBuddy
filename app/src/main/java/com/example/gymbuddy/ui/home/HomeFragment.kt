@@ -13,7 +13,6 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gymbuddy.R
 import com.example.gymbuddy.databinding.FragmentHomeBinding
-import com.example.gymbuddy.dataclass.Workout
 
 class HomeFragment : Fragment() {
 
@@ -39,17 +38,11 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        workoutAdapter = WorkoutAdapter(emptyList()) { workout ->
-            deleteWorkout(workout)
-        }
+        workoutAdapter = WorkoutAdapter(emptyList())
         binding.recyclerViewWorkouts.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = workoutAdapter
         }
-    }
-
-    private fun deleteWorkout(workout: Workout) {
-        viewModel.deleteWorkout(workout)
     }
 
     private fun setupDifficultyFilter() {
@@ -83,7 +76,6 @@ class HomeFragment : Fragment() {
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
