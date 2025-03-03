@@ -17,7 +17,13 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        // ✅ Load API Key from local.properties
+        val apiKey: String? = project.findProperty("GEMINI_API_KEY") as String?
+        buildConfigField("String", "GEMINI_API_KEY", "\"${apiKey ?: ""}\"")
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+
     }
 
     buildTypes {
@@ -38,6 +44,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -77,4 +84,7 @@ dependencies {
 
     implementation(libs.androidx.swiperefreshlayout)
 
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.logging.interceptor)
 }
