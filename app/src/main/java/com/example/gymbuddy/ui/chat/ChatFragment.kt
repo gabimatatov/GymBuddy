@@ -26,11 +26,11 @@ class ChatFragment : Fragment() {
             val userMessage = binding.editTextMessage.text.toString().trim()
 
             if (userMessage.isNotEmpty()) {
-                binding.textViewResponse.text = "Thinking..." // Show loading state
+                binding.textViewResponse.text = "GymBuddy is Thinking..." // Show loading state
                 chatViewModel.sendMessage(userMessage) { response ->
                     binding.textViewResponse.text = response // Update response
                 }
-                binding.editTextMessage.text.clear() // Clear input box
+                binding.editTextMessage.text?.clear() // Clear input box
             } else {
                 Toast.makeText(requireContext(), "Please enter a question", Toast.LENGTH_SHORT).show()
             }
