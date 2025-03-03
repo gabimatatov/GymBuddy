@@ -35,7 +35,7 @@ class HomeFragment : Fragment() {
         setupSwipeToRefresh()
         observeViewModel()
 
-        return binding.root // ✅ Return the root of the fragment
+        return binding.root
     }
 
     private fun setupRecyclerView() {
