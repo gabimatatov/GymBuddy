@@ -13,6 +13,9 @@ class UserViewModel(private val userId: String) : ViewModel() {
     private val _userLiveData: MutableLiveData<User> = MutableLiveData()
     val userLiveData: LiveData<User> get() = _userLiveData
 
+    private val _toastMessage = MutableLiveData<String?>()
+    val toastMessage: LiveData<String?> = _toastMessage
+
     init {
         // Initialize user document on initialization
         userRepository.initializeUserDocument(userId)
@@ -48,9 +51,11 @@ class UserViewModel(private val userId: String) : ViewModel() {
             onSuccess = {
                 // After a successful update, fetch the user again to reflect changes
                 fetchUser()
+                _toastMessage.value = null
             },
             onFailure = {
                 // Handle failure
+                _toastMessage.value = "Failed to update username"
             }
         )
     }

@@ -77,10 +77,13 @@ class ProfileFragment : Fragment(), EditDisplayNameDialogFragment.EditUsernameDi
 
     // Implement the onDisplayNameUpdated method
     override fun onDisplayNameUpdated(displayName: String) {
-        userViewModel.updateUserName(displayName)
-        Log.d("NameUpdate", "Updated display name")
-
-        Toast.makeText(requireContext(), "Username Updated!", Toast.LENGTH_SHORT).show()
+        if (displayName.isNotEmpty()) {
+            userViewModel.updateUserName(displayName)
+            Log.d("NameUpdate", "Updated display name")
+            Toast.makeText(requireContext(), "Username Updated!", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(requireContext(), "Invalid username!", Toast.LENGTH_SHORT).show()
+        }
     }
 }
 
