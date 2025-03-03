@@ -1,7 +1,10 @@
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gymbuddy.BuildConfig
+import com.example.gymbuddy.networking.Content
+import com.example.gymbuddy.networking.GeminiRequest
+import com.example.gymbuddy.networking.Part
+import com.example.gymbuddy.networking.RetrofitInstance
 import kotlinx.coroutines.launch
 
 

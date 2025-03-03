@@ -1,8 +1,9 @@
+package com.example.gymbuddy.networking
+
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 import com.example.gymbuddy.BuildConfig
-import com.example.gymbuddy.networking.GeminiInterceptor
 import okhttp3.OkHttpClient
 
 
@@ -18,7 +19,7 @@ object RetrofitInstance {
     val api: GeminiApi by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .client(okHttpClient)  // Add the client with interceptor
+            .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(GeminiApi::class.java)
