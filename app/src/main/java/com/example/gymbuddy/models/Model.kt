@@ -87,18 +87,21 @@ class Model private constructor() {
         )
     }
 
-    fun deleteWorkoutById(workoutId: String) {
+    fun deleteWorkoutById(workoutId: String, callback: (Boolean) -> Unit) {
         executor.execute {
-            workoutRepository.deleteWorkout(workoutId,
-                onSuccess = {
-                    database.workoutDao().deleteWorkoutById(workoutId)
-                },
-                onFailure = { exception ->
-                    println("Error deleting workout: ${exception.message}")
-                }
-            )
+            try {
+                database.workoutDao().deleteWorkoutById(workoutId)
+                workoutRepository.deleteWorkout(workoutId, onSuccess = {
+                    callback(true)
+                }, onFailure = {
+                    callback(false)
+                })
+            } catch (e: Exception) {
+                callback(false)
+            }
         }
     }
+
 
 
 }

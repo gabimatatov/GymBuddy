@@ -4,11 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.gymbuddy.databinding.FragmentWorkoutDetailsBinding
-import com.google.firebase.auth.FirebaseAuth
 
 class WorkoutDetailsFragment : Fragment() {
 
@@ -38,9 +39,23 @@ class WorkoutDetailsFragment : Fragment() {
         }
 
         binding.buttonDeleteWorkout.setOnClickListener {
-            viewModel.deleteWorkout(args.workoutId)
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+            showDeleteConfirmationDialog()
         }
+
+        viewModel.deleteSuccess.observe(viewLifecycleOwner) { success ->
+            if (success) {
+                findNavController().navigateUp()
+            }
+        }
+    }
+
+    private fun showDeleteConfirmationDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Delete Workout")
+            .setMessage("Are you sure you want to delete this workout?")
+            .setPositiveButton("Delete") { _, _ -> viewModel.deleteWorkout(args.workoutId) }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     override fun onDestroyView() {

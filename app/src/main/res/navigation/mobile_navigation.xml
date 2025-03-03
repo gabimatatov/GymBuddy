@@ -77,22 +77,28 @@
         <argument
             android:name="workoutId"
             app:argType="string" />
+
         <argument
             android:name="workoutName"
             app:argType="string" />
+
         <argument
             android:name="workoutDescription"
             app:argType="string" />
+
         <argument
             android:name="workoutExercises"
             app:argType="string" />
+
         <argument
             android:name="workoutDifficulty"
             app:argType="string" />
+
         <argument
             android:name="workoutOwner"
             app:argType="string" />
     </fragment>
+
 
 
 </navigation>

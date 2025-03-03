@@ -23,12 +23,12 @@ class WorkoutAdapter(
             binding.root.setOnClickListener {
                 val action = HomeFragmentDirections
                     .actionNavigationHomeToWorkoutDetailsFragment(
-                        workout.workoutId,
-                        workout.name,
-                        workout.description,
-                        workout.exercises,
-                        workout.difficulty,
-                        workout.ownerId
+                        workoutId = workout.workoutId, // ✅ Pass correct workoutId
+                        workoutName = workout.name,
+                        workoutDescription = workout.description,
+                        workoutExercises = workout.exercises,
+                        workoutDifficulty = workout.difficulty,
+                        workoutOwner = workout.ownerId
                     )
                 it.findNavController().navigate(action)
             }
@@ -55,3 +55,4 @@ class WorkoutAdapter(
         notifyDataSetChanged()
     }
 }
+

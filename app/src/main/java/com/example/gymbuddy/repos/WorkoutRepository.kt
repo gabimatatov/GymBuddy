@@ -92,5 +92,4 @@ class WorkoutRepository {
             .addOnFailureListener { onFailure(it) }
     }
 
-
 }
