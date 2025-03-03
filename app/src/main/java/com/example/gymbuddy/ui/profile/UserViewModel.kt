@@ -1,7 +1,6 @@
 package com.example.gymbuddy.ui.profile
 
 import android.graphics.Bitmap
-import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,9 +12,6 @@ class UserViewModel(private val userId: String) : ViewModel() {
     private val userRepository = UserRepository()
     private val _userLiveData: MutableLiveData<User> = MutableLiveData()
     val userLiveData: LiveData<User> get() = _userLiveData
-
-    private val _toastMessage = MutableLiveData<String?>()
-    val toastMessage: LiveData<String?> = _toastMessage
 
     init {
         // Initialize user document on initialization
@@ -52,11 +48,9 @@ class UserViewModel(private val userId: String) : ViewModel() {
             onSuccess = {
                 // After a successful update, fetch the user again to reflect changes
                 fetchUser()
-                _toastMessage.value = null
             },
             onFailure = {
                 // Handle failure
-                _toastMessage.value = "Failed to update username"
             }
         )
     }
@@ -87,18 +81,6 @@ class UserViewModel(private val userId: String) : ViewModel() {
 
     fun updateUserFavoriteWorkoutIds(newFavoriteWorkoutIds: List<String>) {
         userRepository.updateUserFavoriteWorkoutIds(userId, newFavoriteWorkoutIds,
-            onSuccess = {
-                // After a successful update, fetch the user again to reflect changes
-                fetchUser()
-            },
-            onFailure = {
-                // Handle failure
-            }
-        )
-    }
-
-    fun updateUserRatedWorkouts(newRatedWorkouts: Map<String, Int>) {
-        userRepository.updateUserRatedWorkouts(userId, newRatedWorkouts,
             onSuccess = {
                 // After a successful update, fetch the user again to reflect changes
                 fetchUser()

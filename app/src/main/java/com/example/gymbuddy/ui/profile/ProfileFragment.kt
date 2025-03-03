@@ -114,7 +114,7 @@ class ProfileFragment : Fragment(), EditDisplayNameDialogFragment.EditUsernameDi
         }
     }
 
-    // Upload the Bitmap to Firebase without converting to Uri
+    // Upload the Bitmap to Firebase
     private fun uploadImageToFirebase(bitmap: Bitmap) {
         userViewModel.updateUserPhoto(bitmap)
         Toast.makeText(requireContext(), "Uploading photo...", Toast.LENGTH_SHORT).show()
