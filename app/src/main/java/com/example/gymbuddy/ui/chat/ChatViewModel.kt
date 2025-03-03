@@ -6,8 +6,6 @@ import kotlinx.coroutines.launch
 
 
 class ChatViewModel : ViewModel() {
-    private val apiKey = BuildConfig.GEMINI_API_KEY
-
     fun sendMessage(userMessage: String, onResponse: (String) -> Unit) {
         val prompt = """
             You are GymBuddy, a friendly and knowledgeable assistant focused on sports and workouts. 
@@ -24,7 +22,7 @@ class ChatViewModel : ViewModel() {
 
         val request = GeminiRequest(
             contents = listOf(
-                Content(role = "user", parts = listOf(Part(prompt))) // Structured prompt
+                Content(parts = listOf(Part(prompt)))
             )
         )
 
@@ -32,7 +30,8 @@ class ChatViewModel : ViewModel() {
             try {
                 Log.d("ChatViewModel", "Sending request: $request")
 
-                val response = RetrofitInstance.api.getGeminiResponse(apiKey, request)
+                // No longer need to pass the API key here
+                val response = RetrofitInstance.api.getGeminiResponse(request)
                 Log.d("ChatViewModel", "API Response: $response")
 
                 val reply = response.candidates.firstOrNull()?.content?.parts?.firstOrNull()?.text
