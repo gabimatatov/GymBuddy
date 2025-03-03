@@ -1,27 +1,45 @@
 package com.example.gymbuddy.ui.profile
 
+import android.Manifest
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.example.gymbuddy.R
 import com.example.gymbuddy.activities.AuthViewModel
 import com.example.gymbuddy.dataclass.User
-import com.example.gymbuddy.objects.GlobalVariables
-import com.squareup.picasso.Picasso
 import com.example.gymbuddy.ui.dialog.EditDisplayNameDialogFragment
-import android.util.Log
-import android.widget.Toast
+import com.squareup.picasso.Picasso
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.util.*
 
 class ProfileFragment : Fragment(), EditDisplayNameDialogFragment.EditUsernameDialogListener {
 
     private val authViewModel: AuthViewModel by viewModels()
     private lateinit var userViewModel: UserViewModel
+    private lateinit var userPhotoImageView: ImageView
+
+    companion object {
+        private const val CAMERA_REQUEST_CODE = 1001
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,12 +53,15 @@ class ProfileFragment : Fragment(), EditDisplayNameDialogFragment.EditUsernameDi
 
         val displayNameTextView: TextView = view.findViewById(R.id.displayNameTextView)
         val emailTextView: TextView = view.findViewById(R.id.emailTextView)
-        val userPhotoImageView: ImageView = view.findViewById(R.id.userPhotoImageView)
+        userPhotoImageView = view.findViewById(R.id.userPhotoImageView)
 
-        // Make the username clickable
         displayNameTextView.setOnClickListener {
             val dialogFragment = EditDisplayNameDialogFragment()
             dialogFragment.show(childFragmentManager, "EditDisplayNameDialogFragment")
+        }
+
+        userPhotoImageView.setOnClickListener {
+            checkCameraPermission()
         }
 
         authViewModel.currentUser.observe(viewLifecycleOwner, Observer { user ->
@@ -56,26 +77,64 @@ class ProfileFragment : Fragment(), EditDisplayNameDialogFragment.EditUsernameDi
         })
     }
 
+    // Check for camera permission before opening the camera
+    private fun checkCameraPermission() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
+            == PackageManager.PERMISSION_GRANTED
+        ) {
+            openCamera()
+        } else {
+            requestCameraPermission.launch(Manifest.permission.CAMERA)
+        }
+    }
+
+    // Handle the permission result
+    private val requestCameraPermission =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                openCamera()
+            } else {
+                Toast.makeText(requireContext(), "Camera permission is required!", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+    private fun openCamera() {
+        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            val photo = data?.extras?.get("data") as Bitmap?
+            photo?.let {
+                // Pass the Bitmap directly to the ViewModel
+                uploadImageToFirebase(it)
+            }
+        }
+    }
+
+    // Upload the Bitmap to Firebase without converting to Uri
+    private fun uploadImageToFirebase(bitmap: Bitmap) {
+        userViewModel.updateUserPhoto(bitmap)
+        Toast.makeText(requireContext(), "Uploading photo...", Toast.LENGTH_SHORT).show()
+    }
+
     private fun updateUI(userData: User) {
         val displayNameTextView: TextView? = view?.findViewById(R.id.displayNameTextView)
         val emailTextView: TextView? = view?.findViewById(R.id.emailTextView)
-        val userPhotoImageView: ImageView? = view?.findViewById(R.id.userPhotoImageView)
 
         displayNameTextView?.text = userData.name.ifEmpty { "No Name" }
         emailTextView?.text = authViewModel.currentUser.value?.email
 
-        // Load user photo using Picasso, show default if empty
         val photoUrl = userData.photoUrl.takeIf { it.isNotEmpty() }
         if (photoUrl != null) {
-            Picasso.get()
-                .load(photoUrl)
-                .into(userPhotoImageView)
+            Picasso.get().load(photoUrl).into(userPhotoImageView)
         } else {
-            userPhotoImageView?.setImageResource(R.drawable.trainer_icon)
+            userPhotoImageView.setImageResource(R.drawable.trainer_icon)
         }
     }
 
-    // Implement the onDisplayNameUpdated method
     override fun onDisplayNameUpdated(displayName: String) {
         if (displayName.isNotEmpty()) {
             userViewModel.updateUserName(displayName)
@@ -86,4 +145,3 @@ class ProfileFragment : Fragment(), EditDisplayNameDialogFragment.EditUsernameDi
         }
     }
 }
-

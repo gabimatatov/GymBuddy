@@ -1,5 +1,6 @@
 package com.example.gymbuddy.ui.profile
 
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -60,8 +61,8 @@ class UserViewModel(private val userId: String) : ViewModel() {
         )
     }
 
-    fun updateUserPhoto(imageUri: Uri) {
-        userRepository.updateUserPhoto(userId, imageUri,
+    fun updateUserPhoto(bitmap: Bitmap) {
+        userRepository.updateUserPhoto(userId, bitmap,
             onSuccess = { newPhotoUrl ->
                 // After a successful update, fetch the user again to reflect changes
                 fetchUser()
