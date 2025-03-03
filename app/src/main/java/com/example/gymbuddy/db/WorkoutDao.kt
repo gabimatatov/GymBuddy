@@ -24,4 +24,8 @@ interface WorkoutDao {
 
     @Delete
     fun deleteWorkouts(vararg workouts: Workout)
+
+    @Query("DELETE FROM Workout WHERE workoutId = :workoutId")
+    fun deleteWorkoutById(workoutId: String)
+
 }

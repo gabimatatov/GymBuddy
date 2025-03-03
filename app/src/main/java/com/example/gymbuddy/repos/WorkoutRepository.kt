@@ -85,4 +85,12 @@ class WorkoutRepository {
             }
     }
 
+    fun deleteWorkout(workoutId: String, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
+        db.collection("workouts").document(workoutId)
+            .delete()
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { onFailure(it) }
+    }
+
+
 }

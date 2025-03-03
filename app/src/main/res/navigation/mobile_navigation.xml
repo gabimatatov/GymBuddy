@@ -75,6 +75,9 @@
         tools:layout="@layout/fragment_workout_details">
 
         <argument
+            android:name="workoutId"
+            app:argType="string" />
+        <argument
             android:name="workoutName"
             app:argType="string" />
         <argument

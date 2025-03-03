@@ -87,4 +87,18 @@ class Model private constructor() {
         )
     }
 
+    fun deleteWorkoutById(workoutId: String) {
+        executor.execute {
+            workoutRepository.deleteWorkout(workoutId,
+                onSuccess = {
+                    database.workoutDao().deleteWorkoutById(workoutId)
+                },
+                onFailure = { exception ->
+                    println("Error deleting workout: ${exception.message}")
+                }
+            )
+        }
+    }
+
+
 }

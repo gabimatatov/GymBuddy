@@ -23,6 +23,7 @@ class WorkoutAdapter(
             binding.root.setOnClickListener {
                 val action = HomeFragmentDirections
                     .actionNavigationHomeToWorkoutDetailsFragment(
+                        workout.workoutId,
                         workout.name,
                         workout.description,
                         workout.exercises,
