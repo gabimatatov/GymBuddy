@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -17,19 +16,15 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import android.widget.Button
 import com.example.gymbuddy.R
 import com.example.gymbuddy.activities.AuthViewModel
 import com.example.gymbuddy.dataclass.User
 import com.example.gymbuddy.ui.dialog.EditDisplayNameDialogFragment
 import com.squareup.picasso.Picasso
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.util.*
 
 class ProfileFragment : Fragment(), EditDisplayNameDialogFragment.EditUsernameDialogListener {
 
@@ -53,7 +48,13 @@ class ProfileFragment : Fragment(), EditDisplayNameDialogFragment.EditUsernameDi
 
         val displayNameTextView: TextView = view.findViewById(R.id.displayNameTextView)
         val emailTextView: TextView = view.findViewById(R.id.emailTextView)
+        val deleteImageButton: Button = view.findViewById(R.id.deleteImageButton)
         userPhotoImageView = view.findViewById(R.id.userPhotoImageView)
+
+        deleteImageButton.setOnClickListener {
+            userViewModel.deleteUserPhoto()
+        }
+
 
         displayNameTextView.setOnClickListener {
             val dialogFragment = EditDisplayNameDialogFragment()
@@ -114,10 +115,11 @@ class ProfileFragment : Fragment(), EditDisplayNameDialogFragment.EditUsernameDi
         }
     }
 
+
     // Upload the Bitmap to Firebase
     private fun uploadImageToFirebase(bitmap: Bitmap) {
         userViewModel.updateUserPhoto(bitmap)
-        Toast.makeText(requireContext(), "Uploading photo...", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "Photo Updated", Toast.LENGTH_SHORT).show()
     }
 
     private fun updateUI(userData: User) {

@@ -211,4 +211,36 @@ class UserRepository {
                 onFailure()
             }
     }
+
+    fun deleteUserPhoto(userId: String, onSuccess: (User) -> Unit, onFailure: () -> Unit) {
+        val userDocRef = db.collection("users").document(userId)
+
+        // Get the current photo URL
+        userDocRef.get().addOnSuccessListener { document ->
+            val photoUrl = document.getString("photoUrl")
+
+            if (!photoUrl.isNullOrEmpty()) {
+                // Delete the image from Firebase Storage
+                val storageRef = storage.getReferenceFromUrl(photoUrl)
+                storageRef.delete().addOnSuccessListener {
+                    // Deleted from Storage, update the Firestore document to remove the photoUrl
+                    userDocRef.update("photoUrl", "")
+                        .addOnSuccessListener {
+                            // Success, return updated user data
+                            val updatedUser = User(userId, document.getString("displayName") ?: "")
+                            onSuccess(updatedUser)
+                        }
+                        .addOnFailureListener {
+                            onFailure()
+                        }
+                }.addOnFailureListener {
+                    onFailure()
+                }
+            } else {
+                onSuccess(User(userId))
+            }
+        }.addOnFailureListener {
+            onFailure()
+        }
+    }
 }

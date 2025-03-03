@@ -67,6 +67,18 @@ class UserViewModel(private val userId: String) : ViewModel() {
         )
     }
 
+    fun deleteUserPhoto() {
+        userRepository.deleteUserPhoto(userId,
+            onSuccess = {
+                // After successful deletion, update the UI and show success toast
+                fetchUser()
+            },
+            onFailure = {
+
+            }
+        )
+    }
+
     fun updateUserWorkoutIds(newWorkoutIds: List<String>) {
         userRepository.updateUserWorkoutIds(userId, newWorkoutIds,
             onSuccess = {
