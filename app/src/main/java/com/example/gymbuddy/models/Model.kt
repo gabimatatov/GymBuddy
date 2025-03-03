@@ -6,6 +6,7 @@ import com.example.gymbuddy.dataclass.Workout
 import com.example.gymbuddy.db.AppLocalDb
 import com.example.gymbuddy.db.AppLocalDbRepository
 import com.example.gymbuddy.repos.WorkoutRepository
+import com.google.firebase.firestore.FirebaseFirestore
 import java.util.concurrent.Executors
 
 class Model private constructor() {
@@ -83,6 +84,49 @@ class Model private constructor() {
             },
             onFailure = { exception ->
                 println("Error deleting workout from Firestore: ${exception.message}")
+            }
+        )
+    }
+
+    fun deleteWorkoutById(workoutId: String, callback: (Boolean) -> Unit) {
+        executor.execute {
+            try {
+                database.workoutDao().deleteWorkoutById(workoutId)
+                workoutRepository.deleteWorkout(workoutId, onSuccess = {
+                    callback(true)
+                }, onFailure = {
+                    callback(false)
+                })
+            } catch (e: Exception) {
+                callback(false)
+            }
+        }
+    }
+
+    fun updateWorkout(
+        workoutId: String, name: String, description: String, exercises: String, difficulty: String, callback: (Boolean) -> Unit
+    ) {
+        val updatedWorkout = hashMapOf(
+            "name" to name,
+            "description" to description,
+            "exercises" to exercises,
+            "difficulty" to difficulty,
+            "lastUpdated" to System.currentTimeMillis()
+        )
+
+        workoutRepository.updateWorkout(workoutId, updatedWorkout,
+            onSuccess = {
+                executor.execute {
+                    database.workoutDao().updateWorkout(
+                        workoutId, name, description, exercises, difficulty, System.currentTimeMillis()
+                    )
+                    println("Workout updated in Firestore and locally: $workoutId")
+                    callback(true)
+                }
+            },
+            onFailure = {
+                println("Failed to update workout in Firestore: $workoutId")
+                callback(false)
             }
         )
     }

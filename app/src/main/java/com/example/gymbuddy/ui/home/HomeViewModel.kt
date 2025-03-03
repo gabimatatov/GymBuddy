@@ -37,18 +37,4 @@ class HomeViewModel : ViewModel() {
             }
         }
     }
-
-    fun deleteWorkout(workout: Workout) {
-        _loadingState.postValue(true)
-
-        viewModelScope.launch(Dispatchers.IO) {
-            Model.shared.deleteWorkout(workout)
-
-            // Refresh UI after deletion
-            fetchWorkouts(null)
-
-            _loadingState.postValue(false)
-        }
-    }
-
 }

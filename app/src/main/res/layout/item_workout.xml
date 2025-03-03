@@ -35,7 +35,7 @@
             android:textColor="@android:color/black"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/imageWorkout"
-            app:layout_constraintEnd_toStartOf="@id/buttonDeleteWorkout"
+            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginStart="16dp" />
 
         <TextView
@@ -47,7 +47,7 @@
             android:textColor="@android:color/darker_gray"
             app:layout_constraintTop_toBottomOf="@id/textWorkoutName"
             app:layout_constraintStart_toStartOf="@id/textWorkoutName"
-            app:layout_constraintEnd_toStartOf="@id/buttonDeleteWorkout"
+            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="4dp" />
 
         <TextView
@@ -73,17 +73,6 @@
             app:layout_constraintStart_toStartOf="@id/textWorkoutName"
             android:layout_marginTop="4dp" />
 
-        <ImageButton
-            android:id="@+id/buttonDeleteWorkout"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@android:drawable/ic_menu_delete"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Delete Workout"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginEnd="8dp"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>
