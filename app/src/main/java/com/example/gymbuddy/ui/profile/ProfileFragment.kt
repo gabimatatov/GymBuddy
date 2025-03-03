@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import android.widget.Button
+import androidx.appcompat.app.AlertDialog
 import com.example.gymbuddy.R
 import com.example.gymbuddy.activities.AuthViewModel
 import com.example.gymbuddy.dataclass.User
@@ -52,7 +53,7 @@ class ProfileFragment : Fragment(), EditDisplayNameDialogFragment.EditUsernameDi
         userPhotoImageView = view.findViewById(R.id.userPhotoImageView)
 
         deleteImageButton.setOnClickListener {
-            userViewModel.deleteUserPhoto()
+            showDeleteConfirmationDialog()
         }
 
 
@@ -115,7 +116,6 @@ class ProfileFragment : Fragment(), EditDisplayNameDialogFragment.EditUsernameDi
         }
     }
 
-
     // Upload the Bitmap to Firebase
     private fun uploadImageToFirebase(bitmap: Bitmap) {
         userViewModel.updateUserPhoto(bitmap)
@@ -145,5 +145,15 @@ class ProfileFragment : Fragment(), EditDisplayNameDialogFragment.EditUsernameDi
         } else {
             Toast.makeText(requireContext(), "Invalid username!", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    // Delete Confirmation
+    private fun showDeleteConfirmationDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Delete Workout")
+            .setMessage("Are you sure you want to delete this workout?")
+            .setPositiveButton("Delete") { _, _ -> userViewModel.deleteUserPhoto() }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 }
