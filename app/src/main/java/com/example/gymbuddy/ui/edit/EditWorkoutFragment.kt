@@ -62,7 +62,7 @@ class EditWorkoutFragment : Fragment() {
         viewModel.updateSuccess.observe(viewLifecycleOwner) { success ->
             if (success) {
                 Toast.makeText(requireContext(), "Workout updated successfully!", Toast.LENGTH_SHORT).show()
-                findNavController().navigateUp()
+                findNavController().navigate(R.id.navigation_home)
             }
         }
 
