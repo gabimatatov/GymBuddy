@@ -75,4 +75,6 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlin.stdlib)
 
+    implementation(libs.androidx.swiperefreshlayout)
+
 }

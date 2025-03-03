@@ -32,9 +32,10 @@ class HomeFragment : Fragment() {
 
         setupRecyclerView()
         setupDifficultyFilter()
+        setupSwipeToRefresh()
         observeViewModel()
 
-        return binding.root
+        return binding.root // ✅ Return the root of the fragment
     }
 
     private fun setupRecyclerView() {
@@ -53,34 +54,40 @@ class HomeFragment : Fragment() {
         val lastSelectedDifficulty = sharedPrefs.getString("selected_difficulty", "All Difficulties") ?: "All Difficulties"
         binding.spinnerDifficultyFilter.setText(lastSelectedDifficulty, false)
 
-        // Ensure that the correct difficulty is selected on return
         val difficultyToFilter = if (lastSelectedDifficulty == "All Difficulties") null else lastSelectedDifficulty
         viewModel.fetchWorkouts(difficultyToFilter)
 
         binding.spinnerDifficultyFilter.setOnItemClickListener { _, _, position, _ ->
             val selectedDifficulty = difficultyOptions[position]
-
-            // Save the selection
             sharedPrefs.edit().putString("selected_difficulty", selectedDifficulty).apply()
-
-            // Fetch workouts based on the selected difficulty
             val difficultyToFetch = if (selectedDifficulty == "All Difficulties") null else selectedDifficulty
             viewModel.fetchWorkouts(difficultyToFetch)
         }
     }
 
+    private fun setupSwipeToRefresh() {
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            val lastSelectedDifficulty = sharedPrefs.getString("selected_difficulty", "All Difficulties") ?: "All Difficulties"
+            val difficultyToFetch = if (lastSelectedDifficulty == "All Difficulties") null else lastSelectedDifficulty
+
+            viewModel.fetchWorkouts(difficultyToFetch)
+        }
+    }
 
     private fun observeViewModel() {
         viewModel.workouts.observe(viewLifecycleOwner) { workouts ->
             workoutAdapter.updateData(workouts)
+            binding.swipeRefreshLayout.isRefreshing = false
         }
 
         viewModel.errorMessage.observe(viewLifecycleOwner) { message ->
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+            binding.swipeRefreshLayout.isRefreshing = false
         }
 
         viewModel.loadingState.observe(viewLifecycleOwner) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            if (!isLoading) binding.swipeRefreshLayout.isRefreshing = false
         }
     }
 
@@ -97,7 +104,7 @@ class HomeFragment : Fragment() {
     private fun refreshDifficultyFilter() {
         val difficultyOptions = resources.getStringArray(R.array.difficulty_filter)
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, difficultyOptions)
-        binding.spinnerDifficultyFilter.setAdapter(adapter) // ✅ Reset the full list
+        binding.spinnerDifficultyFilter.setAdapter(adapter)
 
         val lastSelectedDifficulty = sharedPrefs.getString("selected_difficulty", "All Difficulties") ?: "All Difficulties"
         binding.spinnerDifficultyFilter.setText(lastSelectedDifficulty, false)
@@ -105,5 +112,4 @@ class HomeFragment : Fragment() {
         val difficultyToFetch = if (lastSelectedDifficulty == "All Difficulties") null else lastSelectedDifficulty
         viewModel.fetchWorkouts(difficultyToFetch)
     }
-
 }
