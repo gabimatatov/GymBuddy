@@ -11,10 +11,9 @@ data class Candidate(val content: Content)
 
 interface GeminiApi {
     @Headers("Content-Type: application/json")
-    @POST("v1beta/models/gemini-1.5-pro:generateContent") // Use the correct model
+    @POST("v1beta/models/gemini-2.0-flash:generateContent")
     suspend fun getGeminiResponse(
-        @Query("key") apiKey: String, // Ensure API key is passed correctly
+        @Query("key") apiKey: String,
         @Body request: GeminiRequest
     ): GeminiResponse
 }
-
