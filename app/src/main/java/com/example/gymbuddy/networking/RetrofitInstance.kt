@@ -8,7 +8,7 @@ import okhttp3.OkHttpClient
 
 
 object RetrofitInstance {
-    private const val BASE_URL = "https://generativelanguage.googleapis.com/"
+    private const val BASE_URL = BuildConfig.GEMINI_BASE_URL
 
     private val okHttpClient by lazy {
         OkHttpClient.Builder()

@@ -16,14 +16,13 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
-        // ✅ Load API Key from local.properties
+        
         val apiKey: String? = project.findProperty("GEMINI_API_KEY") as String?
         buildConfigField("String", "GEMINI_API_KEY", "\"${apiKey ?: ""}\"")
 
+        buildConfigField("String", "GEMINI_BASE_URL", "\"https://generativelanguage.googleapis.com/\"")
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-
     }
 
     buildTypes {
