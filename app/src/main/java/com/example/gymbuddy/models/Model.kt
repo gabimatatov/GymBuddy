@@ -6,6 +6,7 @@ import com.example.gymbuddy.dataclass.Workout
 import com.example.gymbuddy.db.AppLocalDb
 import com.example.gymbuddy.db.AppLocalDbRepository
 import com.example.gymbuddy.repos.WorkoutRepository
+import com.google.firebase.firestore.FirebaseFirestore
 import java.util.concurrent.Executors
 
 class Model private constructor() {
@@ -100,6 +101,23 @@ class Model private constructor() {
                 callback(false)
             }
         }
+    }
+
+    fun updateWorkout(
+        workoutId: String, name: String, description: String, exercises: String, difficulty: String, callback: (Boolean) -> Unit
+    ) {
+        val updatedWorkout = hashMapOf(
+            "name" to name,
+            "description" to description,
+            "exercises" to exercises,
+            "difficulty" to difficulty,
+            "lastUpdated" to System.currentTimeMillis()
+        )
+
+        FirebaseFirestore.getInstance().collection("workouts").document(workoutId)
+            .update(updatedWorkout as Map<String, Any>)
+            .addOnSuccessListener { callback(true) }
+            .addOnFailureListener { callback(false) }
     }
 
 

@@ -36,10 +36,15 @@ class WorkoutDetailsFragment : Fragment() {
 
         viewModel.isOwner.observe(viewLifecycleOwner) { isOwner ->
             binding.buttonDeleteWorkout.visibility = if (isOwner) View.VISIBLE else View.GONE
+            binding.buttonEditWorkout.visibility = if (isOwner) View.VISIBLE else View.GONE
         }
 
         binding.buttonDeleteWorkout.setOnClickListener {
             showDeleteConfirmationDialog()
+        }
+
+        binding.buttonEditWorkout.setOnClickListener {
+            navigateToEditWorkout()
         }
 
         viewModel.deleteSuccess.observe(viewLifecycleOwner) { success ->
@@ -56,6 +61,19 @@ class WorkoutDetailsFragment : Fragment() {
             .setPositiveButton("Delete") { _, _ -> viewModel.deleteWorkout(args.workoutId) }
             .setNegativeButton("Cancel", null)
             .show()
+    }
+
+    private fun navigateToEditWorkout() {
+        val action = WorkoutDetailsFragmentDirections
+            .actionWorkoutDetailsFragmentToEditWorkoutFragment(
+                workoutId = args.workoutId,
+                workoutName = args.workoutName,
+                workoutDescription = args.workoutDescription,
+                workoutExercises = args.workoutExercises,
+                workoutDifficulty = args.workoutDifficulty,
+                workoutOwner = args.workoutOwner
+            )
+        findNavController().navigate(action)
     }
 
     override fun onDestroyView() {
