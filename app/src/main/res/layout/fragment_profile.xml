@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -5,70 +6,92 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
     tools:context=".ui.profile.ProfileFragment">
 
-    <RelativeLayout
+    <!-- User Details Card Container with Shadow - Full Width and Height -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/userDetailsCardView"
         android:layout_width="match_parent"
-        android:layout_height="161dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="5dp">
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="6dp"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="false">
 
-        <!-- User Photo -->
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/userPhotoImageView"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_marginEnd="16dp"
-            android:scaleType="centerCrop"
-            tools:src="@drawable/trainer_icon"
-            app:shapeAppearanceOverlay="@style/RoundedSquare" />
-
-        <!-- User Details Container -->
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@id/userPhotoImageView"
-            android:gravity="center_vertical">
+            android:padding="16dp">
 
-            <!-- User Name -->
+            <!-- Profile Headline - Inside Card -->
             <TextView
-                android:id="@+id/displayNameTextView"
-                android:layout_width="wrap_content"
+                android:id="@+id/profileHeadlineTextView"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
+                android:text="My Profile"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
                 android:textStyle="bold"
-                tools:text="User Name" />
+                android:paddingBottom="10dp"/>
 
-            <!-- User Email -->
-            <TextView
-                android:id="@+id/emailTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="14sp"
-                tools:text="user@example.com" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="161dp">
+
+                <!-- User Photo -->
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/userPhotoImageView"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_marginEnd="16dp"
+                    android:scaleType="centerCrop"
+                    tools:src="@drawable/trainer_icon"
+                    app:shapeAppearanceOverlay="@style/RoundedSquare" />
+
+                <!-- User Details Container -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/userPhotoImageView"
+                    android:gravity="center_vertical">
+
+                    <!-- User Name -->
+                    <TextView
+                        android:id="@+id/displayNameTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        tools:text="User Name" />
+
+                    <!-- User Email -->
+                    <TextView
+                        android:id="@+id/emailTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#555555"
+                        android:textSize="14sp"
+                        android:layout_marginTop="4dp"
+                        tools:text="user@example.com" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <!-- Delete Image Button -->
+            <Button
+                android:id="@+id/deleteImageButton"
+                android:layout_width="150dp"
+                android:layout_height="35dp"
+                android:textSize="12sp"
+                android:layout_marginTop="8dp"
+                android:text="Delete Image" />
         </LinearLayout>
-    </RelativeLayout>
-
-    <!-- Delete Image Button -->
-    <Button
-        android:id="@+id/deleteImageButton"
-        android:layout_width="150dp"
-        android:layout_height="35dp"
-        android:textSize="12sp"
-        android:text="Delete Image" />
-
-    <!-- Divider Line -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp" />
+    </androidx.cardview.widget.CardView>
 
     <!-- My Workouts Section -->
     <TextView
@@ -76,13 +99,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="My Workouts"
+        android:textColor="@android:color/black"
         android:textSize="22sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"/>
 
     <!-- Workout List -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/myWorkoutsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"/>
 </LinearLayout>
