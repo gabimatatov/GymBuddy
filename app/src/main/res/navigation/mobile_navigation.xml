@@ -64,7 +64,7 @@
 
     <fragment
         android:id="@+id/editFragment"
-        android:name="com.example.gymbuddy.ui.edit.EditFragment"
+        android:name="com.example.gymbuddy.ui.edit.EditWorkoutFragment"
         android:label="fragment_edit"
         tools:layout="@layout/fragment_edit" />
 
@@ -74,6 +74,39 @@
         android:label="Workout Details"
         tools:layout="@layout/fragment_workout_details">
 
+        <argument
+            android:name="workoutId"
+            app:argType="string" />
+
+        <argument
+            android:name="workoutName"
+            app:argType="string" />
+
+        <argument
+            android:name="workoutDescription"
+            app:argType="string" />
+
+        <argument
+            android:name="workoutExercises"
+            app:argType="string" />
+
+        <argument
+            android:name="workoutDifficulty"
+            app:argType="string" />
+
+        <argument
+            android:name="workoutOwner"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/editWorkoutFragment"
+        android:name="com.example.gymbuddy.ui.edit.EditWorkoutFragment"
+        android:label="Edit Workout"
+        tools:layout="@layout/fragment_edit_workout">
+        <argument
+            android:name="workoutId"
+            app:argType="string" />
         <argument
             android:name="workoutName"
             app:argType="string" />
@@ -86,10 +119,19 @@
         <argument
             android:name="workoutDifficulty"
             app:argType="string" />
-        <argument
-            android:name="workoutOwner"
-            app:argType="string" />
     </fragment>
+
+    <action
+        android:id="@+id/action_workoutDetailsFragment_to_editWorkoutFragment"
+        app:destination="@id/editWorkoutFragment">
+        <argument android:name="workoutId" app:argType="string" />
+        <argument android:name="workoutName" app:argType="string" />
+        <argument android:name="workoutDescription" app:argType="string" />
+        <argument android:name="workoutExercises" app:argType="string" />
+        <argument android:name="workoutDifficulty" app:argType="string" />
+        <argument android:name="workoutOwner" app:argType="string" />
+    </action>
+
 
 
 </navigation>

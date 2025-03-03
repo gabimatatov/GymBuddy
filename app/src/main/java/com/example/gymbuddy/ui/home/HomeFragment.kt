@@ -13,7 +13,6 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gymbuddy.R
 import com.example.gymbuddy.databinding.FragmentHomeBinding
-import com.example.gymbuddy.dataclass.Workout
 
 class HomeFragment : Fragment() {
 
@@ -33,60 +32,84 @@ class HomeFragment : Fragment() {
 
         setupRecyclerView()
         setupDifficultyFilter()
+        setupSwipeToRefresh()
         observeViewModel()
 
         return binding.root
     }
 
     private fun setupRecyclerView() {
-        workoutAdapter = WorkoutAdapter(emptyList()) { workout ->
-            deleteWorkout(workout)
-        }
+        workoutAdapter = WorkoutAdapter(emptyList())
         binding.recyclerViewWorkouts.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = workoutAdapter
         }
     }
 
-    private fun deleteWorkout(workout: Workout) {
-        viewModel.deleteWorkout(workout)
-    }
-
     private fun setupDifficultyFilter() {
         val difficultyOptions = resources.getStringArray(R.array.difficulty_filter)
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, difficultyOptions)
-
         binding.spinnerDifficultyFilter.setAdapter(adapter)
 
         val lastSelectedDifficulty = sharedPrefs.getString("selected_difficulty", "All Difficulties") ?: "All Difficulties"
         binding.spinnerDifficultyFilter.setText(lastSelectedDifficulty, false)
 
-        viewModel.fetchWorkouts(if (lastSelectedDifficulty == "All Difficulties") null else lastSelectedDifficulty)
+        val difficultyToFilter = if (lastSelectedDifficulty == "All Difficulties") null else lastSelectedDifficulty
+        viewModel.fetchWorkouts(difficultyToFilter)
 
         binding.spinnerDifficultyFilter.setOnItemClickListener { _, _, position, _ ->
             val selectedDifficulty = difficultyOptions[position]
             sharedPrefs.edit().putString("selected_difficulty", selectedDifficulty).apply()
-            viewModel.fetchWorkouts(if (selectedDifficulty == "All Difficulties") null else selectedDifficulty)
+            val difficultyToFetch = if (selectedDifficulty == "All Difficulties") null else selectedDifficulty
+            viewModel.fetchWorkouts(difficultyToFetch)
+        }
+    }
+
+    private fun setupSwipeToRefresh() {
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            val lastSelectedDifficulty = sharedPrefs.getString("selected_difficulty", "All Difficulties") ?: "All Difficulties"
+            val difficultyToFetch = if (lastSelectedDifficulty == "All Difficulties") null else lastSelectedDifficulty
+
+            viewModel.fetchWorkouts(difficultyToFetch)
         }
     }
 
     private fun observeViewModel() {
         viewModel.workouts.observe(viewLifecycleOwner) { workouts ->
             workoutAdapter.updateData(workouts)
+            binding.swipeRefreshLayout.isRefreshing = false
         }
 
         viewModel.errorMessage.observe(viewLifecycleOwner) { message ->
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+            binding.swipeRefreshLayout.isRefreshing = false
         }
 
         viewModel.loadingState.observe(viewLifecycleOwner) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            if (!isLoading) binding.swipeRefreshLayout.isRefreshing = false
         }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        refreshDifficultyFilter()
+    }
+
+    private fun refreshDifficultyFilter() {
+        val difficultyOptions = resources.getStringArray(R.array.difficulty_filter)
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, difficultyOptions)
+        binding.spinnerDifficultyFilter.setAdapter(adapter)
+
+        val lastSelectedDifficulty = sharedPrefs.getString("selected_difficulty", "All Difficulties") ?: "All Difficulties"
+        binding.spinnerDifficultyFilter.setText(lastSelectedDifficulty, false)
+
+        val difficultyToFetch = if (lastSelectedDifficulty == "All Difficulties") null else lastSelectedDifficulty
+        viewModel.fetchWorkouts(difficultyToFetch)
     }
 }

@@ -21,7 +21,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="16dp" />
 
-    <!-- Workout Name (Aligned to Left) -->
+    <!-- Workout Name -->
     <TextView
         android:id="@+id/textWorkoutName"
         android:layout_width="wrap_content"
@@ -33,7 +33,7 @@
         app:layout_constraintTop_toBottomOf="@id/imageWorkout"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- Workout Owner (New) -->
+    <!-- Workout Owner -->
     <TextView
         android:id="@+id/textWorkoutOwner"
         android:layout_width="wrap_content"
@@ -81,5 +81,51 @@
         android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@id/textWorkoutExercises"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Spacer View -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/textWorkoutDifficulty"
+        app:layout_constraintBottom_toTopOf="@id/buttonContainer"
+        android:layout_weight="1"/>
+
+    <!-- Buttons at the Bottom -->
+    <LinearLayout
+        android:id="@+id/buttonContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonDeleteWorkout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="DELETE"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:cornerRadius="8dp"
+            android:visibility="gone"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonEditWorkout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="EDIT"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:cornerRadius="8dp"
+            android:visibility="gone"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"/>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

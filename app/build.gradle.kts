@@ -16,6 +16,11 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
+        
+        val apiKey: String? = project.findProperty("GEMINI_API_KEY") as String?
+        buildConfigField("String", "GEMINI_API_KEY", "\"${apiKey ?: ""}\"")
+
+        buildConfigField("String", "GEMINI_BASE_URL", "\"https://generativelanguage.googleapis.com/\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -38,6 +43,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -75,4 +81,9 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlin.stdlib)
 
+    implementation(libs.androidx.swiperefreshlayout)
+
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.logging.interceptor)
 }
