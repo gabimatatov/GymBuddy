@@ -114,12 +114,21 @@ class Model private constructor() {
             "lastUpdated" to System.currentTimeMillis()
         )
 
-        FirebaseFirestore.getInstance().collection("workouts").document(workoutId)
-            .update(updatedWorkout as Map<String, Any>)
-            .addOnSuccessListener { callback(true) }
-            .addOnFailureListener { callback(false) }
+        workoutRepository.updateWorkout(workoutId, updatedWorkout,
+            onSuccess = {
+                executor.execute {
+                    database.workoutDao().updateWorkout(
+                        workoutId, name, description, exercises, difficulty, System.currentTimeMillis()
+                    )
+                    println("Workout updated in Firestore and locally: $workoutId")
+                    callback(true)
+                }
+            },
+            onFailure = {
+                println("Failed to update workout in Firestore: $workoutId")
+                callback(false)
+            }
+        )
     }
-
-
 
 }

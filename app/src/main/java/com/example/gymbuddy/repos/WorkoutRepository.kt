@@ -92,4 +92,18 @@ class WorkoutRepository {
             .addOnFailureListener { onFailure(it) }
     }
 
+    fun updateWorkout(workoutId: String, updatedWorkout: Map<String, Any>, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
+        db.collection("workouts").document(workoutId)
+            .update(updatedWorkout)
+            .addOnSuccessListener {
+                println("Workout updated in Firestore: $workoutId")
+                onSuccess()
+            }
+            .addOnFailureListener { exception ->
+                println("Failed to update workout in Firestore: ${exception.message}")
+                onFailure(exception)
+            }
+    }
+
+
 }
