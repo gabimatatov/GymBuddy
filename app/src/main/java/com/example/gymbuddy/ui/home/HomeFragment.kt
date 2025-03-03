@@ -48,20 +48,27 @@ class HomeFragment : Fragment() {
     private fun setupDifficultyFilter() {
         val difficultyOptions = resources.getStringArray(R.array.difficulty_filter)
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, difficultyOptions)
-
         binding.spinnerDifficultyFilter.setAdapter(adapter)
 
         val lastSelectedDifficulty = sharedPrefs.getString("selected_difficulty", "All Difficulties") ?: "All Difficulties"
         binding.spinnerDifficultyFilter.setText(lastSelectedDifficulty, false)
 
-        viewModel.fetchWorkouts(if (lastSelectedDifficulty == "All Difficulties") null else lastSelectedDifficulty)
+        // Ensure that the correct difficulty is selected on return
+        val difficultyToFilter = if (lastSelectedDifficulty == "All Difficulties") null else lastSelectedDifficulty
+        viewModel.fetchWorkouts(difficultyToFilter)
 
         binding.spinnerDifficultyFilter.setOnItemClickListener { _, _, position, _ ->
             val selectedDifficulty = difficultyOptions[position]
+
+            // Save the selection
             sharedPrefs.edit().putString("selected_difficulty", selectedDifficulty).apply()
-            viewModel.fetchWorkouts(if (selectedDifficulty == "All Difficulties") null else selectedDifficulty)
+
+            // Fetch workouts based on the selected difficulty
+            val difficultyToFetch = if (selectedDifficulty == "All Difficulties") null else selectedDifficulty
+            viewModel.fetchWorkouts(difficultyToFetch)
         }
     }
+
 
     private fun observeViewModel() {
         viewModel.workouts.observe(viewLifecycleOwner) { workouts ->
@@ -81,4 +88,22 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    override fun onResume() {
+        super.onResume()
+        refreshDifficultyFilter()
+    }
+
+    private fun refreshDifficultyFilter() {
+        val difficultyOptions = resources.getStringArray(R.array.difficulty_filter)
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, difficultyOptions)
+        binding.spinnerDifficultyFilter.setAdapter(adapter) // ✅ Reset the full list
+
+        val lastSelectedDifficulty = sharedPrefs.getString("selected_difficulty", "All Difficulties") ?: "All Difficulties"
+        binding.spinnerDifficultyFilter.setText(lastSelectedDifficulty, false)
+
+        val difficultyToFetch = if (lastSelectedDifficulty == "All Difficulties") null else lastSelectedDifficulty
+        viewModel.fetchWorkouts(difficultyToFetch)
+    }
+
 }
