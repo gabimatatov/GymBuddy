@@ -31,16 +31,13 @@ class Model private constructor() {
                 val localWorkouts = database.workoutDao().getAllWorkouts()
                 val firestoreWorkoutIds = workoutsFromFirestore.map { it.workoutId }.toSet()
 
-                // Identify workouts that exist locally but are missing in Firestore
                 val workoutsToDelete = localWorkouts.filter { it.workoutId !in firestoreWorkoutIds }
 
-                // Remove these workouts from the local database
                 if (workoutsToDelete.isNotEmpty()) {
                     println("Deleting ${workoutsToDelete.size} missing workouts from local DB.")
                     database.workoutDao().deleteWorkouts(*workoutsToDelete.toTypedArray())
                 }
 
-                // Insert or update Firestore workouts in local DB
                 val latestUpdatedTime = workoutsFromFirestore.maxOfOrNull { it.lastUpdated ?: lastUpdated } ?: lastUpdated
                 Workout.lastUpdated = latestUpdatedTime
                 database.workoutDao().insertWorkouts(*workoutsFromFirestore.toTypedArray())
@@ -118,16 +115,13 @@ class Model private constructor() {
                 val localWorkouts = database.workoutDao().getAllWorkouts()
                 val firestoreWorkoutIds = workoutsFromFirestore.map { it.workoutId }.toSet()
 
-                // Identify workouts that exist locally but are missing in Firestore
                 val workoutsToDelete = localWorkouts.filter { it.workoutId !in firestoreWorkoutIds }
 
-                // Remove these workouts from the local database
                 if (workoutsToDelete.isNotEmpty()) {
                     println("Deleting ${workoutsToDelete.size} missing workouts from local DB.")
                     database.workoutDao().deleteWorkouts(*workoutsToDelete.toTypedArray())
                 }
 
-                // Insert or update Firestore workouts in local DB
                 database.workoutDao().insertWorkouts(*workoutsFromFirestore.toTypedArray())
 
                 val updatedWorkouts = database.workoutDao().getAllWorkouts()

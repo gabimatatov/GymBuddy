@@ -19,11 +19,11 @@ data class Workout(
     val timestamp: Long = 0L,
     val lastUpdated: Long? = null
 ) {
-    // 🔹 Required no-argument constructor for Firestore
+    // Required no-argument constructor for Firestore
     constructor() : this("", "", "", "", "", "", "", 0L, null)
 
     companion object {
-        // 🔹 SharedPreferences for local last update tracking
+        // SharedPreferences for local last update tracking
         var lastUpdated: Long
             get() = MyApplication.Globals.context?.getSharedPreferences("TAG", Context.MODE_PRIVATE)
                 ?.getLong(LOCAL_LAST_UPDATED, 0) ?: 0
@@ -34,7 +34,7 @@ data class Workout(
                     }
             }
 
-        // 🔹 Firestore keys
+        // Firestore keys
         const val ID_KEY = "workoutId"
         const val NAME_KEY = "name"
         const val DESCRIPTION_KEY = "description"
@@ -46,7 +46,7 @@ data class Workout(
         const val LAST_UPDATED_KEY = "lastUpdated"
         const val LOCAL_LAST_UPDATED = "localWorkoutLastUpdated"
 
-        // 🔹 Convert Firestore JSON → Workout Object
+        // Convert Firestore JSON → Workout Object
         fun fromJSON(json: Map<String, Any>): Workout {
             val id = json[ID_KEY] as? String ?: ""
             val name = json[NAME_KEY] as? String ?: ""
@@ -57,7 +57,7 @@ data class Workout(
             val difficulty = json[DIFFICULTY_KEY] as? String ?: ""
             val timestamp = (json[TIMESTAMP_KEY] as? Long) ?: System.currentTimeMillis()
 
-            // 🔥 Convert Firestore `Timestamp` to `Long`
+            // Convert Firestore `Timestamp` to `Long`
             val firestoreTimestamp = json[LAST_UPDATED_KEY] as? Timestamp
             val lastUpdatedLong = firestoreTimestamp?.toDate()?.time
 
@@ -75,7 +75,7 @@ data class Workout(
         }
     }
 
-    // 🔹 Convert Workout Object → JSON for Firestore
+    // Convert Workout Object → JSON for Firestore
     val json: Map<String, Any>
         get() = hashMapOf(
             ID_KEY to workoutId,

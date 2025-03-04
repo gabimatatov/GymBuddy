@@ -33,7 +33,7 @@ class SignupActivity : AppCompatActivity() {
             val password = passwordEditText.text.toString().trim()
             val username = usernameEditText.text.toString().trim()
 
-            // ✅ Input Validation Before Signup
+            // Input Validation Before Signup
             when {
                 email.isEmpty() -> {
                     emailEditText.error = "Email is required"
@@ -61,20 +61,20 @@ class SignupActivity : AppCompatActivity() {
             }
         }
 
-        // ✅ Observe Signup Errors and Show in Toast
+        // Observe Signup Errors and Show in Toast
         authViewModel.authError.observe(this) { errorMessage ->
             if (!errorMessage.isNullOrEmpty()) {
                 Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
             }
         }
 
-        // ✅ Navigate to LoginActivity
+        // Navigate to LoginActivity
         signInTextView.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
 
-        // ✅ Observe Authentication State (Navigate to MainActivity if Signed In)
+        // Observe Authentication State (Navigate to MainActivity if Signed In)
         authViewModel.isUserSignedIn.observe(this) { isSignedIn ->
             if (isSignedIn) {
                 val username = usernameEditText.text.toString().trim()

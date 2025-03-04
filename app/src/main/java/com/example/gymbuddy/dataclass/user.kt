@@ -8,9 +8,8 @@ data class User(
     val email: String = "",
     val name: String = "",
     val photoUrl: String = "",
-    val workoutIds: List<String> = emptyList(),
     val favoriteWorkoutIds: List<String> = emptyList(),
 ) {
     // Add a no-argument constructor
-    constructor() : this("", "", "","", emptyList(), emptyList())
+    constructor() : this("", "", "","", emptyList())
 }
