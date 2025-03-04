@@ -40,8 +40,8 @@ class ProfileViewModel(private val userId: String, private val email: String) : 
     }
 
     private fun fetchUserWorkouts() {
-        Log.d("ProfileViewModel", "Fetching workouts for user: $userId")
-        workoutRepository.getUserWorkouts(userId,
+        Log.d("ProfileViewModel", "Fetching workouts for user: $email")
+        workoutRepository.getUserWorkouts(email,
             onSuccess = { workouts ->
                 Log.d("ProfileViewModel", "Fetched ${workouts.size} workouts")
                 _userWorkouts.postValue(workouts)
