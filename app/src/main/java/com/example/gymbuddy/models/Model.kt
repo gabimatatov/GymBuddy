@@ -6,7 +6,6 @@ import com.example.gymbuddy.dataclass.Workout
 import com.example.gymbuddy.db.AppLocalDb
 import com.example.gymbuddy.db.AppLocalDbRepository
 import com.example.gymbuddy.repos.WorkoutRepository
-import com.google.firebase.firestore.FirebaseFirestore
 import java.util.concurrent.Executors
 
 class Model private constructor() {
@@ -53,10 +52,6 @@ class Model private constructor() {
         }
     }
 
-    fun getWorkoutById(id: String): Workout {
-        return database.workoutDao().getWorkoutById(id)
-    }
-
     fun insertWorkouts(vararg workouts: Workout) {
         val currentTime = System.currentTimeMillis()
 
@@ -72,20 +67,6 @@ class Model private constructor() {
                 }
             )
         }
-    }
-
-    fun deleteWorkout(workout: Workout) {
-        workoutRepository.deleteWorkout(workout,
-            onSuccess = {
-                executor.execute {
-                    database.workoutDao().delete(workout)
-                    println("Successfully deleted workout: ${workout.workoutId} from Firestore and local DB.")
-                }
-            },
-            onFailure = { exception ->
-                println("Error deleting workout from Firestore: ${exception.message}")
-            }
-        )
     }
 
     fun deleteWorkoutById(workoutId: String, callback: (Boolean) -> Unit) {

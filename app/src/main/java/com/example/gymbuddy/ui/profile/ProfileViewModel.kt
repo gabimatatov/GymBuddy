@@ -53,10 +53,6 @@ class ProfileViewModel(private val userId: String, private val email: String) : 
         )
     }
 
-    fun updateUser(user: User) {
-        userRepository.updateUser(user, onSuccess = { fetchUser() }, onFailure = {})
-    }
-
     fun updateUserName(newName: String) {
         userRepository.updateUserName(userId, newName, onSuccess = { fetchUser() }, onFailure = {})
     }
