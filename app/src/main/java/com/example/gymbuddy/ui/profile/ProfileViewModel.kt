@@ -7,13 +7,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.gymbuddy.dataclass.User
 import com.example.gymbuddy.dataclass.Workout
+import com.example.gymbuddy.models.Model
 import com.example.gymbuddy.repos.UserRepository
-import com.example.gymbuddy.repos.WorkoutRepository
 
 class ProfileViewModel(private val userId: String, private val email: String) : ViewModel() {
 
     private val userRepository = UserRepository()
-    private val workoutRepository = WorkoutRepository()
 
     private val _userLiveData: MutableLiveData<User> = MutableLiveData()
     val userLiveData: LiveData<User> get() = _userLiveData
@@ -41,16 +40,11 @@ class ProfileViewModel(private val userId: String, private val email: String) : 
 
     private fun fetchUserWorkouts() {
         Log.d("ProfileViewModel", "Fetching workouts for user: $email")
-        workoutRepository.getUserWorkouts(email,
-            onSuccess = { workouts ->
-                Log.d("ProfileViewModel", "Fetched ${workouts.size} workouts")
-                _userWorkouts.postValue(workouts)
-            },
-            onFailure = { exception ->
-                Log.e("ProfileViewModel", "Failed to fetch workouts: ${exception.message}")
-                _userWorkouts.postValue(emptyList())
-            }
-        )
+
+        Model.shared.getUserWorkouts(email) { workouts ->
+            Log.d("ProfileViewModel", "Fetched ${workouts.size} workouts from local DB")
+            _userWorkouts.postValue(workouts)
+        }
     }
 
     fun updateUserName(newName: String) {

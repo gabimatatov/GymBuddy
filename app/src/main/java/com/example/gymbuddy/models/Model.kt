@@ -112,4 +112,33 @@ class Model private constructor() {
         )
     }
 
+    fun getUserWorkouts(ownerId: String, callback: (List<Workout>) -> Unit) {
+        workoutRepository.getUserWorkouts(ownerId, onSuccess = { workoutsFromFirestore ->
+            executor.execute {
+                val localWorkouts = database.workoutDao().getAllWorkouts()
+                val firestoreWorkoutIds = workoutsFromFirestore.map { it.workoutId }.toSet()
+
+                // Identify workouts that exist locally but are missing in Firestore
+                val workoutsToDelete = localWorkouts.filter { it.workoutId !in firestoreWorkoutIds }
+
+                // Remove these workouts from the local database
+                if (workoutsToDelete.isNotEmpty()) {
+                    println("Deleting ${workoutsToDelete.size} missing workouts from local DB.")
+                    database.workoutDao().deleteWorkouts(*workoutsToDelete.toTypedArray())
+                }
+
+                // Insert or update Firestore workouts in local DB
+                database.workoutDao().insertWorkouts(*workoutsFromFirestore.toTypedArray())
+
+                val updatedWorkouts = database.workoutDao().getAllWorkouts()
+                println("Local DB now contains ${updatedWorkouts.size} workouts.")
+                mainHandler.post { callback(updatedWorkouts) }
+            }
+        }, onFailure = {
+            println("Failed to fetch workouts from Firestore for user: $ownerId")
+            mainHandler.post { callback(emptyList()) }
+        })
+    }
+
+
 }
