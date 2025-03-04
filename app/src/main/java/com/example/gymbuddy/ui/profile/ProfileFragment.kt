@@ -26,7 +26,7 @@ class ProfileFragment : Fragment(), EditDisplayNameDialogFragment.EditUsernameDi
     CameraUtil.CameraResultCallback {
 
     private val authViewModel: AuthViewModel by viewModels()
-    private lateinit var userViewModel: ProfileViewModel
+    private lateinit var profileViewModel: ProfileViewModel
     private lateinit var userPhotoImageView: ImageView
     private lateinit var cameraUtil: CameraUtil
 
@@ -66,9 +66,9 @@ class ProfileFragment : Fragment(), EditDisplayNameDialogFragment.EditUsernameDi
             user?.let {
                 emailTextView.text = user.email
                 displayNameTextView.text = user.displayName
-                userViewModel = ProfileViewModel(user.uid)
+                profileViewModel = ProfileViewModel(user.uid)
 
-                userViewModel.userLiveData.observe(viewLifecycleOwner, Observer { userData ->
+                profileViewModel.userLiveData.observe(viewLifecycleOwner, Observer { userData ->
                     userData?.let { updateUI(userData) }
                 })
             }
@@ -86,7 +86,7 @@ class ProfileFragment : Fragment(), EditDisplayNameDialogFragment.EditUsernameDi
 
     // Upload the Bitmap to Firebase
     private fun uploadImageToFirebase(bitmap: Bitmap) {
-        userViewModel.updateUserPhoto(bitmap)
+        profileViewModel.updateUserPhoto(bitmap)
         Toast.makeText(requireContext(), "Photo Updated", Toast.LENGTH_SHORT).show()
     }
 
@@ -107,7 +107,7 @@ class ProfileFragment : Fragment(), EditDisplayNameDialogFragment.EditUsernameDi
 
     override fun onDisplayNameUpdated(displayName: String) {
         if (displayName.isNotEmpty()) {
-            userViewModel.updateUserName(displayName)
+            profileViewModel.updateUserName(displayName)
             Log.d("NameUpdate", "Updated display name")
             Toast.makeText(requireContext(), "Username Updated!", Toast.LENGTH_SHORT).show()
         } else {
@@ -120,7 +120,7 @@ class ProfileFragment : Fragment(), EditDisplayNameDialogFragment.EditUsernameDi
         AlertDialog.Builder(requireContext())
             .setTitle("Delete Profile Photo")
             .setMessage("Are you sure you want to delete your profile photo?")
-            .setPositiveButton("Delete") { _, _ -> userViewModel.deleteUserPhoto() }
+            .setPositiveButton("Delete") { _, _ -> profileViewModel.deleteUserPhoto() }
             .setNegativeButton("Cancel", null)
             .show()
     }
