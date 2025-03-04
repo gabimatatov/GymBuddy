@@ -14,8 +14,8 @@ class WorkoutRepository {
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     fun addWorkout(workout: Workout, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
-        val workoutId = UUID.randomUUID().toString() // Generate a unique ID
-        val workoutWithId = workout.copy(workoutId = workoutId) // Assign the ID
+        val workoutId = UUID.randomUUID().toString()
+        val workoutWithId = workout.copy(workoutId = workoutId)
 
         db.collection("workouts")
             .document(workoutId)
@@ -63,19 +63,6 @@ class WorkoutRepository {
             }
             .addOnFailureListener { exception ->
                 Log.e("WorkoutRepository", "Failed to fetch workouts: ${exception.message}")
-                onFailure(exception)
-            }
-    }
-
-    fun deleteWorkout(workout: Workout, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
-        db.collection("workouts").document(workout.workoutId)
-            .delete()
-            .addOnSuccessListener {
-                println("Workout deleted from Firestore: ${workout.workoutId}")
-                onSuccess()
-            }
-            .addOnFailureListener { exception ->
-                println("Error deleting workout from Firestore: ${exception.message}")
                 onFailure(exception)
             }
     }

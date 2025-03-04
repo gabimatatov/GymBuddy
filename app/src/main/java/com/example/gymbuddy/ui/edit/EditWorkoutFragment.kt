@@ -1,5 +1,6 @@
 package com.example.gymbuddy.ui.edit
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,14 +14,31 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.gymbuddy.R
 import com.example.gymbuddy.databinding.FragmentEditWorkoutBinding
+import com.example.gymbuddy.objects.CameraUtil
+import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
+import java.io.ByteArrayOutputStream
+import java.util.UUID
 
-class EditWorkoutFragment : Fragment() {
+class EditWorkoutFragment : Fragment(), CameraUtil.CameraResultCallback {
 
     private var _binding: FragmentEditWorkoutBinding? = null
     private val binding get() = _binding!!
     private val args: EditWorkoutFragmentArgs by navArgs()
     private val viewModel: EditWorkoutViewModel by viewModels()
+
+    // Camera utility
+    private lateinit var cameraUtil: CameraUtil
+
+    // Temporary bitmap to store captured image
+    private var capturedImageBitmap: Bitmap? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // Initialize CameraUtil
+        cameraUtil = CameraUtil(this)
+        cameraUtil.setCameraResultCallback(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -32,7 +50,7 @@ class EditWorkoutFragment : Fragment() {
     }
 
     private fun setupUI() {
-        // Setup workout image
+        // Setup workout image with camera intent
         setupWorkoutImage()
 
         binding.editTextWorkoutName.setText(args.workoutName)
@@ -51,25 +69,31 @@ class EditWorkoutFragment : Fragment() {
 
     private fun setupWorkoutImage() {
         // Get the image URL from SafeArgs
-        val imageUrl = args.workoutImageUrl ?: ""
+        val imageUrl = args.workoutImageUrl
 
-        // Set click listener to log image details
+        // Set click listener to open camera
         binding.imageWorkout.setOnClickListener {
-            Log.d("EditWorkoutFragment", "Workout Image Clicked")
-            Log.d("EditWorkoutFragment", "Image URL: $imageUrl")
+            cameraUtil.checkCameraPermission()
         }
 
         // Load image with Picasso
-        if (!imageUrl.isNullOrBlank()) {
+        if (!imageUrl.isNullOrEmpty()) {
             Picasso.get()
                 .load(imageUrl)
-                .placeholder(R.drawable.gym_buddy_icon)
-                .error(R.drawable.gym_buddy_icon)
                 .into(binding.imageWorkout)
         } else {
             // Set default image if no URL is provided
             binding.imageWorkout.setImageResource(R.drawable.gym_buddy_icon)
         }
+    }
+
+    // Implement the camera result callback
+    override fun onImageCaptured(bitmap: Bitmap) {
+        // Store the captured bitmap
+        capturedImageBitmap = bitmap
+
+        // Display the captured image
+        binding.imageWorkout.setImageBitmap(bitmap)
     }
 
     private fun saveWorkout() {
@@ -83,7 +107,69 @@ class EditWorkoutFragment : Fragment() {
             return
         }
 
-        viewModel.updateWorkout(args.workoutId, updatedName, updatedDescription, updatedExercises, updatedDifficulty)
+        // If an image was captured, upload it first
+        capturedImageBitmap?.let { bitmap ->
+            uploadImageToFirebase(bitmap) { imageUrl ->
+                Log.d("test", "${imageUrl}")
+                // Update workout with the new image URL
+                viewModel.updateWorkout(
+                    args.workoutId,
+                    updatedName,
+                    updatedDescription,
+                    updatedExercises,
+                    updatedDifficulty,
+                    imageUrl
+                )
+            }
+        } ?: run {
+            // If no new image, update workout with existing image URL
+            Log.d("test", "Image is empty")
+            viewModel.updateWorkout(
+                args.workoutId,
+                updatedName,
+                updatedDescription,
+                updatedExercises,
+                updatedDifficulty,
+                args.workoutImageUrl ?: ""
+            )
+        }
+    }
+
+    // Function to upload image to Firebase Storage
+    private fun uploadImageToFirebase(bitmap: Bitmap, onSuccess: (String) -> Unit) {
+        val storage = FirebaseStorage.getInstance()
+        val storageRef = storage.reference
+
+        // Generate a unique filename
+        val filename = "workout_${UUID.randomUUID()}.jpg"
+        val imageRef = storageRef.child("workout_images/$filename")
+
+        // Convert bitmap to byte array
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val data = baos.toByteArray()
+
+        // Upload image
+        imageRef.putBytes(data)
+            .addOnSuccessListener { taskSnapshot ->
+                // Get download URL
+                imageRef.downloadUrl.addOnSuccessListener { uri ->
+                    onSuccess(uri.toString())
+                }
+            }
+            .addOnFailureListener { exception ->
+                Toast.makeText(
+                    requireContext(),
+                    "Image upload failed: ${exception.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+    }
+
+    // Override onActivityResult to process camera intent
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: android.content.Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        cameraUtil.processActivityResult(requestCode, resultCode, data)
     }
 
     private fun setupObservers() {

@@ -17,11 +17,16 @@ class EditWorkoutViewModel : ViewModel() {
     val errorMessage: LiveData<String> get() = _errorMessage
 
     fun updateWorkout(
-        workoutId: String, name: String, description: String, exercises: String, difficulty: String
+        workoutId: String,
+        name: String,
+        description: String,
+        exercises: String,
+        difficulty: String,
+        imageUrl: String
     ) {
         GlobalScope.launch(Dispatchers.IO) {
             try {
-                Model.shared.updateWorkout(workoutId, name, description, exercises, difficulty) { success ->
+                Model.shared.updateWorkout(workoutId, name, description, exercises, difficulty, imageUrl) { success ->
                     _updateSuccess.postValue(success)
                 }
             } catch (e: Exception) {
