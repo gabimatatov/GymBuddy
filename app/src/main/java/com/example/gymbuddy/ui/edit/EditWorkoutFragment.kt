@@ -78,10 +78,12 @@ class EditWorkoutFragment : Fragment(), CameraUtil.CameraResultCallback {
 
         // Load image with Picasso
         if (!imageUrl.isNullOrEmpty()) {
+            Log.d("test", "enterd")
             Picasso.get()
                 .load(imageUrl)
                 .into(binding.imageWorkout)
         } else {
+            Log.d("test", "enterssssssd")
             // Set default image if no URL is provided
             binding.imageWorkout.setImageResource(R.drawable.gym_buddy_icon)
         }
@@ -130,7 +132,7 @@ class EditWorkoutFragment : Fragment(), CameraUtil.CameraResultCallback {
                 updatedDescription,
                 updatedExercises,
                 updatedDifficulty,
-                args.workoutImageUrl ?: ""
+                args.workoutImageUrl
             )
         }
     }
