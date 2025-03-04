@@ -1,6 +1,6 @@
 package com.example.gymbuddy.ui.home
 
-import WorkoutAdapter
+import com.example.gymbuddy.adapters.WorkoutAdapter
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,9 +10,11 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gymbuddy.R
 import com.example.gymbuddy.databinding.FragmentHomeBinding
+import com.example.gymbuddy.dataclass.Workout
 
 class HomeFragment : Fragment() {
 
@@ -39,12 +41,29 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        workoutAdapter = WorkoutAdapter(emptyList())
+        workoutAdapter = WorkoutAdapter(emptyList()) { selectedWorkout ->
+            navigateToWorkoutDetails(selectedWorkout)
+        }
         binding.recyclerViewWorkouts.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = workoutAdapter
         }
     }
+
+
+    private fun navigateToWorkoutDetails(workout: Workout) {
+        val action = HomeFragmentDirections
+            .actionNavigationHomeToWorkoutDetailsFragment(
+                workoutId = workout.workoutId,
+                workoutName = workout.name,
+                workoutDescription = workout.description,
+                workoutExercises = workout.exercises,
+                workoutDifficulty = workout.difficulty,
+                workoutOwner = workout.ownerId
+            )
+        findNavController().navigate(action)
+    }
+
 
     private fun setupDifficultyFilter() {
         val difficultyOptions = resources.getStringArray(R.array.difficulty_filter)

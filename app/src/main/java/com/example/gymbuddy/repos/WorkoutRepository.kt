@@ -13,7 +13,6 @@ class WorkoutRepository {
 
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    // Function to add a new workout to Firestore
     fun addWorkout(workout: Workout, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
         val workoutId = UUID.randomUUID().toString() // Generate a unique ID
         val workoutWithId = workout.copy(workoutId = workoutId) // Assign the ID
@@ -52,22 +51,18 @@ class WorkoutRepository {
             }
     }
 
-    // Function to fetch all workout of specific difficulty
-    fun getWorkoutsByDifficulty(difficulty: String?, onSuccess: (List<Workout>) -> Unit, onFailure: (Exception) -> Unit) {
-        val query = if (difficulty == null) {
-            db.collection("workouts").orderBy("timestamp", Query.Direction.DESCENDING) // Get all workouts
-        } else {
-            db.collection("workouts")
-                .whereEqualTo("difficulty", difficulty)
-                .orderBy("timestamp", Query.Direction.DESCENDING)
-        }
-
-        query.get()
+    fun getUserWorkouts(ownerId: String, onSuccess: (List<Workout>) -> Unit, onFailure: (Exception) -> Unit) {
+        db.collection("workouts")
+            .whereEqualTo("ownerId", ownerId)
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .get()
             .addOnSuccessListener { result ->
                 val workouts = result.mapNotNull { it.toObject(Workout::class.java) }
+                Log.d("WorkoutRepository", "Fetched ${workouts.size} workouts for user: $ownerId")
                 onSuccess(workouts)
             }
             .addOnFailureListener { exception ->
+                Log.e("WorkoutRepository", "Failed to fetch workouts: ${exception.message}")
                 onFailure(exception)
             }
     }

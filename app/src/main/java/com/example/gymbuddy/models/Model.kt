@@ -6,7 +6,6 @@ import com.example.gymbuddy.dataclass.Workout
 import com.example.gymbuddy.db.AppLocalDb
 import com.example.gymbuddy.db.AppLocalDbRepository
 import com.example.gymbuddy.repos.WorkoutRepository
-import com.google.firebase.firestore.FirebaseFirestore
 import java.util.concurrent.Executors
 
 class Model private constructor() {
@@ -32,16 +31,13 @@ class Model private constructor() {
                 val localWorkouts = database.workoutDao().getAllWorkouts()
                 val firestoreWorkoutIds = workoutsFromFirestore.map { it.workoutId }.toSet()
 
-                // Identify workouts that exist locally but are missing in Firestore
                 val workoutsToDelete = localWorkouts.filter { it.workoutId !in firestoreWorkoutIds }
 
-                // Remove these workouts from the local database
                 if (workoutsToDelete.isNotEmpty()) {
                     println("Deleting ${workoutsToDelete.size} missing workouts from local DB.")
                     database.workoutDao().deleteWorkouts(*workoutsToDelete.toTypedArray())
                 }
 
-                // Insert or update Firestore workouts in local DB
                 val latestUpdatedTime = workoutsFromFirestore.maxOfOrNull { it.lastUpdated ?: lastUpdated } ?: lastUpdated
                 Workout.lastUpdated = latestUpdatedTime
                 database.workoutDao().insertWorkouts(*workoutsFromFirestore.toTypedArray())
@@ -51,10 +47,6 @@ class Model private constructor() {
                 mainHandler.post { callback(updatedWorkouts) }
             }
         }
-    }
-
-    fun getWorkoutById(id: String): Workout {
-        return database.workoutDao().getWorkoutById(id)
     }
 
     fun insertWorkouts(vararg workouts: Workout) {
@@ -72,20 +64,6 @@ class Model private constructor() {
                 }
             )
         }
-    }
-
-    fun deleteWorkout(workout: Workout) {
-        workoutRepository.deleteWorkout(workout,
-            onSuccess = {
-                executor.execute {
-                    database.workoutDao().delete(workout)
-                    println("Successfully deleted workout: ${workout.workoutId} from Firestore and local DB.")
-                }
-            },
-            onFailure = { exception ->
-                println("Error deleting workout from Firestore: ${exception.message}")
-            }
-        )
     }
 
     fun deleteWorkoutById(workoutId: String, callback: (Boolean) -> Unit) {
@@ -130,5 +108,31 @@ class Model private constructor() {
             }
         )
     }
+
+    fun getUserWorkouts(ownerId: String, callback: (List<Workout>) -> Unit) {
+        workoutRepository.getUserWorkouts(ownerId, onSuccess = { workoutsFromFirestore ->
+            executor.execute {
+                val localWorkouts = database.workoutDao().getAllWorkouts()
+                val firestoreWorkoutIds = workoutsFromFirestore.map { it.workoutId }.toSet()
+
+                val workoutsToDelete = localWorkouts.filter { it.workoutId !in firestoreWorkoutIds }
+
+                if (workoutsToDelete.isNotEmpty()) {
+                    println("Deleting ${workoutsToDelete.size} missing workouts from local DB.")
+                    database.workoutDao().deleteWorkouts(*workoutsToDelete.toTypedArray())
+                }
+
+                database.workoutDao().insertWorkouts(*workoutsFromFirestore.toTypedArray())
+
+                val updatedWorkouts = database.workoutDao().getAllWorkouts()
+                println("Local DB now contains ${updatedWorkouts.size} workouts.")
+                mainHandler.post { callback(updatedWorkouts) }
+            }
+        }, onFailure = {
+            println("Failed to fetch workouts from Firestore for user: $ownerId")
+            mainHandler.post { callback(emptyList()) }
+        })
+    }
+
 
 }

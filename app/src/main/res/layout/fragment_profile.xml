@@ -1,66 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".ui.profile.ProfileFragment">
 
-    <!-- User Details Card Container with Shadow - Full Width and Height -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/userDetailsCardView"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="6dp"
-        app:cardPreventCornerOverlap="true"
-        app:cardUseCompatPadding="false">
+        android:paddingBottom="16dp"
+        android:paddingTop="16dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <!-- User Details Card -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/userDetailsCardView"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            app:cardCornerRadius="8dp"
+            app:cardElevation="6dp"
+            app:cardPreventCornerOverlap="true"
+            app:cardUseCompatPadding="true"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="12dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
-            <!-- Profile Headline - Inside Card -->
-            <TextView
-                android:id="@+id/profileHeadlineTextView"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="My Profile"
-                android:gravity="center"
-                android:textColor="@android:color/black"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:paddingBottom="10dp"/>
+                android:padding="16dp">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="161dp">
+                <!-- Profile Headline -->
+                <TextView
+                    android:id="@+id/profileHeadlineTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="My Profile"
+                    android:gravity="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:paddingBottom="10dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
 
                 <!-- User Photo -->
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/userPhotoImageView"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
-                    android:layout_marginEnd="16dp"
                     android:scaleType="centerCrop"
                     tools:src="@drawable/trainer_icon"
-                    app:shapeAppearanceOverlay="@style/RoundedSquare" />
+                    app:shapeAppearanceOverlay="@style/RoundedSquare"
+                    app:layout_constraintTop_toBottomOf="@id/profileHeadlineTextView"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="12dp"/>
 
-                <!-- User Details Container -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_toEndOf="@id/userPhotoImageView"
-                    android:gravity="center_vertical">
+                <!-- User Details -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="@id/userPhotoImageView"
+                    app:layout_constraintStart_toEndOf="@id/userPhotoImageView"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginStart="16dp">
 
-                    <!-- User Name -->
                     <TextView
                         android:id="@+id/displayNameTextView"
                         android:layout_width="wrap_content"
@@ -68,9 +77,10 @@
                         android:textColor="@android:color/black"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        tools:text="User Name" />
+                        tools:text="User Name"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"/>
 
-                    <!-- User Email -->
                     <TextView
                         android:id="@+id/emailTextView"
                         android:layout_width="wrap_content"
@@ -78,39 +88,53 @@
                         android:textColor="#555555"
                         android:textSize="14sp"
                         android:layout_marginTop="4dp"
-                        tools:text="user@example.com" />
-                </LinearLayout>
-            </RelativeLayout>
+                        tools:text="user@example.com"
+                        app:layout_constraintTop_toBottomOf="@id/displayNameTextView"
+                        app:layout_constraintStart_toStartOf="parent"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- Delete Image Button -->
-            <Button
-                android:id="@+id/deleteImageButton"
-                android:layout_width="150dp"
-                android:layout_height="35dp"
-                android:textSize="12sp"
-                android:layout_marginTop="8dp"
-                android:text="Delete Image" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+                <!-- Delete Image Button -->
+                <Button
+                    android:id="@+id/deleteImageButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:text="Delete Image"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="6dp"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintTop_toBottomOf="@id/userPhotoImageView"
+                    app:layout_constraintStart_toStartOf="@id/userPhotoImageView"
+                    app:layout_constraintEnd_toEndOf="@id/userPhotoImageView"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
 
-    <!-- My Workouts Section -->
-    <TextView
-        android:id="@+id/myWorkoutsTitleTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="My Workouts"
-        android:textColor="@android:color/black"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"/>
+        <!-- My Workouts Section -->
+        <TextView
+            android:id="@+id/myWorkoutsTitleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="My Workouts"
+            android:textColor="@android:color/black"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintTop_toBottomOf="@id/userDetailsCardView"
+            app:layout_constraintStart_toStartOf="parent"/>
 
-    <!-- Workout List -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/myWorkoutsRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"/>
-</LinearLayout>
+        <!-- Workout List -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/myWorkoutsRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_workout"
+            app:layout_constraintTop_toBottomOf="@id/myWorkoutsTitleTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>

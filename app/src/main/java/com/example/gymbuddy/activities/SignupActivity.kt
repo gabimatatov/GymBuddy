@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.gymbuddy.MainActivity
 import com.example.gymbuddy.R
 import com.example.gymbuddy.objects.GlobalVariables
-import com.example.gymbuddy.ui.profile.UserViewModel
+import com.example.gymbuddy.ui.profile.ProfileViewModel
 
 class SignupActivity : AppCompatActivity() {
 
@@ -33,7 +33,7 @@ class SignupActivity : AppCompatActivity() {
             val password = passwordEditText.text.toString().trim()
             val username = usernameEditText.text.toString().trim()
 
-            // ✅ Input Validation Before Signup
+            // Input Validation Before Signup
             when {
                 email.isEmpty() -> {
                     emailEditText.error = "Email is required"
@@ -61,25 +61,26 @@ class SignupActivity : AppCompatActivity() {
             }
         }
 
-        // ✅ Observe Signup Errors and Show in Toast
+        // Observe Signup Errors and Show in Toast
         authViewModel.authError.observe(this) { errorMessage ->
             if (!errorMessage.isNullOrEmpty()) {
                 Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
             }
         }
 
-        // ✅ Navigate to LoginActivity
+        // Navigate to LoginActivity
         signInTextView.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
 
-        // ✅ Observe Authentication State (Navigate to MainActivity if Signed In)
+        // Observe Authentication State (Navigate to MainActivity if Signed In)
         authViewModel.isUserSignedIn.observe(this) { isSignedIn ->
             if (isSignedIn) {
                 val username = usernameEditText.text.toString().trim()
                 val userid = authViewModel.currentUser.value!!.uid
-                val userViewModel = UserViewModel(userid)
+                val email = authViewModel.currentUser.value!!.email ?: ""
+                val userViewModel = ProfileViewModel(userid, email)
                 userViewModel.updateUserName(username)
                 userViewModel.userLiveData.observe(this) { userdata ->
                     GlobalVariables.currentUser = userdata

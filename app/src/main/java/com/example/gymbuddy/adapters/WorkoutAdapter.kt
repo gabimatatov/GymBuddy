@@ -1,35 +1,27 @@
+package com.example.gymbuddy.adapters
+
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gymbuddy.databinding.ItemWorkoutBinding
 import com.example.gymbuddy.dataclass.Workout
-import com.example.gymbuddy.ui.home.HomeFragmentDirections
 
 class WorkoutAdapter(
-    private var workouts: List<Workout>
+    private var workouts: List<Workout>,
+    private val onWorkoutClick: (Workout) -> Unit
 ) : RecyclerView.Adapter<WorkoutAdapter.WorkoutViewHolder>() {
 
     class WorkoutViewHolder(private val binding: ItemWorkoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(workout: Workout) {
+        fun bind(workout: Workout, onWorkoutClick: (Workout) -> Unit) {
             binding.textWorkoutName.text = workout.name
             binding.textWorkoutDescription.text = workout.description
             binding.textWorkoutDifficulty.text = "Difficulty: ${workout.difficulty}"
             binding.textWorkoutCreator.text = "Created by: ${workout.ownerId}"
 
             binding.root.setOnClickListener {
-                val action = HomeFragmentDirections
-                    .actionNavigationHomeToWorkoutDetailsFragment(
-                        workoutId = workout.workoutId,
-                        workoutName = workout.name,
-                        workoutDescription = workout.description,
-                        workoutExercises = workout.exercises,
-                        workoutDifficulty = workout.difficulty,
-                        workoutOwner = workout.ownerId
-                    )
-                it.findNavController().navigate(action)
+                onWorkoutClick(workout)
             }
         }
     }
@@ -40,7 +32,7 @@ class WorkoutAdapter(
     }
 
     override fun onBindViewHolder(holder: WorkoutViewHolder, position: Int) {
-        holder.bind(workouts[position])
+        holder.bind(workouts[position], onWorkoutClick)
     }
 
     override fun getItemCount(): Int = workouts.size

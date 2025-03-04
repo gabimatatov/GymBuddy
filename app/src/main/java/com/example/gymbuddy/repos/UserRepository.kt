@@ -21,9 +21,10 @@ class UserRepository {
     private val storage: FirebaseStorage = FirebaseStorage.getInstance()
 
     // Function to initialize user document
-    fun initializeUserDocument(userId: String) {
+    fun initializeUserDocument(userId: String, email: String?) {
         val initialUserData = hashMapOf(
             "userId" to userId,
+            "email" to email,
             "name" to "",
             "photoUrl" to "",
             "workoutIds" to emptyList<String>(),
@@ -33,7 +34,7 @@ class UserRepository {
 
         db.collection("users")
             .document(userId)
-            .set(initialUserData, SetOptions.mergeFields("userId"))
+            .set(initialUserData, SetOptions.mergeFields("userId", "email"))
             .addOnSuccessListener {
                 // Document initialization successful
                 Log.d("initializeUser", "success")
