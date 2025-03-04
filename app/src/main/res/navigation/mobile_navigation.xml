@@ -60,6 +60,9 @@
         <action
             android:id="@+id/action_navigation_profile_to_editFragment"
             app:destination="@id/editFragment" />
+        <action
+            android:id="@+id/action_navigation_profile_to_workoutDetailsFragment"
+            app:destination="@id/workoutDetailsFragment" />
     </fragment>
 
     <fragment
