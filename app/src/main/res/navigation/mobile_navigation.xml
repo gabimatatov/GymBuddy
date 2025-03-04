@@ -100,6 +100,12 @@
         <argument
             android:name="workoutOwner"
             app:argType="string" />
+
+        <argument
+            android:name="workoutImageUrl"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="" />
     </fragment>
 
     <fragment
@@ -122,6 +128,11 @@
         <argument
             android:name="workoutDifficulty"
             app:argType="string" />
+        <argument
+            android:name="workoutImageUrl"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="" />
     </fragment>
 
     <action

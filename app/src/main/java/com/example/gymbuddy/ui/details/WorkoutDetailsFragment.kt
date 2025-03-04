@@ -71,7 +71,8 @@ class WorkoutDetailsFragment : Fragment() {
                 workoutDescription = args.workoutDescription,
                 workoutExercises = args.workoutExercises,
                 workoutDifficulty = args.workoutDifficulty,
-                workoutOwner = args.workoutOwner
+                workoutOwner = args.workoutOwner,
+                workoutImageUrl = args.workoutImageUrl
             )
         findNavController().navigate(action)
     }

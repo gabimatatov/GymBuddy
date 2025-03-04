@@ -1,6 +1,7 @@
 package com.example.gymbuddy.ui.edit
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.gymbuddy.R
 import com.example.gymbuddy.databinding.FragmentEditWorkoutBinding
+import com.squareup.picasso.Picasso
 
 class EditWorkoutFragment : Fragment() {
 
@@ -30,6 +32,9 @@ class EditWorkoutFragment : Fragment() {
     }
 
     private fun setupUI() {
+        // Setup workout image
+        setupWorkoutImage()
+
         binding.editTextWorkoutName.setText(args.workoutName)
         binding.editTextWorkoutDescription.setText(args.workoutDescription)
         binding.editTextWorkoutExercises.setText(args.workoutExercises)
@@ -41,6 +46,29 @@ class EditWorkoutFragment : Fragment() {
 
         binding.buttonSaveWorkout.setOnClickListener {
             saveWorkout()
+        }
+    }
+
+    private fun setupWorkoutImage() {
+        // Get the image URL from SafeArgs
+        val imageUrl = args.workoutImageUrl ?: ""
+
+        // Set click listener to log image details
+        binding.imageWorkout.setOnClickListener {
+            Log.d("EditWorkoutFragment", "Workout Image Clicked")
+            Log.d("EditWorkoutFragment", "Image URL: $imageUrl")
+        }
+
+        // Load image with Picasso
+        if (!imageUrl.isNullOrBlank()) {
+            Picasso.get()
+                .load(imageUrl)
+                .placeholder(R.drawable.gym_buddy_icon)
+                .error(R.drawable.gym_buddy_icon)
+                .into(binding.imageWorkout)
+        } else {
+            // Set default image if no URL is provided
+            binding.imageWorkout.setImageResource(R.drawable.gym_buddy_icon)
         }
     }
 
