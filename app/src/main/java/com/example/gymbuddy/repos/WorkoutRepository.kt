@@ -72,6 +72,22 @@ class WorkoutRepository {
             }
     }
 
+    fun getUserWorkouts(ownerId: String, onSuccess: (List<Workout>) -> Unit, onFailure: (Exception) -> Unit) {
+        db.collection("workouts")
+            .whereEqualTo("ownerId", ownerId)
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener { result ->
+                val workouts = result.mapNotNull { it.toObject(Workout::class.java) }
+                Log.d("WorkoutRepository", "Fetched ${workouts.size} workouts for user: $ownerId")
+                onSuccess(workouts)
+            }
+            .addOnFailureListener { exception ->
+                Log.e("WorkoutRepository", "Failed to fetch workouts: ${exception.message}")
+                onFailure(exception)
+            }
+    }
+
     fun deleteWorkout(workout: Workout, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
         db.collection("workouts").document(workout.workoutId)
             .delete()
