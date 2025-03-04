@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.gymbuddy.MainActivity
 import com.example.gymbuddy.R
 import com.example.gymbuddy.objects.GlobalVariables
-import com.example.gymbuddy.ui.profile.UserViewModel
+import com.example.gymbuddy.ui.profile.ProfileViewModel
 
 class LoginActivity : AppCompatActivity() {
 
@@ -68,7 +68,7 @@ class LoginActivity : AppCompatActivity() {
         authViewModel.isUserSignedIn.observe(this) { isSignedIn ->
             if (isSignedIn) {
                 val userid = authViewModel.currentUser.value!!.uid
-                val userViewModel = UserViewModel(userid)
+                val userViewModel = ProfileViewModel(userid)
                 userViewModel.userLiveData.observe(this) { userdata ->
                     GlobalVariables.currentUser = userdata
                     startActivity(Intent(this, MainActivity::class.java))

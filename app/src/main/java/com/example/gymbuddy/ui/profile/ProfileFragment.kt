@@ -26,7 +26,7 @@ class ProfileFragment : Fragment(), EditDisplayNameDialogFragment.EditUsernameDi
     CameraUtil.CameraResultCallback {
 
     private val authViewModel: AuthViewModel by viewModels()
-    private lateinit var userViewModel: UserViewModel
+    private lateinit var userViewModel: ProfileViewModel
     private lateinit var userPhotoImageView: ImageView
     private lateinit var cameraUtil: CameraUtil
 
@@ -66,7 +66,7 @@ class ProfileFragment : Fragment(), EditDisplayNameDialogFragment.EditUsernameDi
             user?.let {
                 emailTextView.text = user.email
                 displayNameTextView.text = user.displayName
-                userViewModel = UserViewModel(user.uid)
+                userViewModel = ProfileViewModel(user.uid)
 
                 userViewModel.userLiveData.observe(viewLifecycleOwner, Observer { userData ->
                     userData?.let { updateUI(userData) }
