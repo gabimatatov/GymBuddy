@@ -10,7 +10,7 @@ import com.example.gymbuddy.dataclass.Workout
 import com.example.gymbuddy.repos.UserRepository
 import com.example.gymbuddy.repos.WorkoutRepository
 
-class ProfileViewModel(private val userId: String) : ViewModel() {
+class ProfileViewModel(private val userId: String, private val email: String) : ViewModel() {
 
     private val userRepository = UserRepository()
     private val workoutRepository = WorkoutRepository()
@@ -22,7 +22,7 @@ class ProfileViewModel(private val userId: String) : ViewModel() {
     val userWorkouts: LiveData<List<Workout>> get() = _userWorkouts
 
     init {
-        userRepository.initializeUserDocument(userId)
+        userRepository.initializeUserDocument(userId, email)
         fetchUser()
         fetchUserWorkouts() // Fetch workouts when ViewModel is created
     }

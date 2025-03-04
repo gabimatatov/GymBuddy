@@ -84,7 +84,7 @@ class ProfileFragment : Fragment(), EditDisplayNameDialogFragment.EditUsernameDi
             user?.let {
                 emailTextView.text = user.email
                 displayNameTextView.text = user.displayName
-                profileViewModel = ProfileViewModel(user.email ?: "")
+                profileViewModel = ProfileViewModel(user.uid ?: "", user.email ?: "")
 
                 profileViewModel.userLiveData.observe(viewLifecycleOwner, Observer { userData ->
                     userData?.let { updateUI(userData) }

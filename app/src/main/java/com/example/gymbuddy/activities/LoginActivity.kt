@@ -68,7 +68,8 @@ class LoginActivity : AppCompatActivity() {
         authViewModel.isUserSignedIn.observe(this) { isSignedIn ->
             if (isSignedIn) {
                 val userid = authViewModel.currentUser.value!!.uid
-                val userViewModel = ProfileViewModel(userid)
+                val email = authViewModel.currentUser.value?.email ?: ""
+                val userViewModel = ProfileViewModel(userid, email)
                 userViewModel.userLiveData.observe(this) { userdata ->
                     GlobalVariables.currentUser = userdata
                     startActivity(Intent(this, MainActivity::class.java))

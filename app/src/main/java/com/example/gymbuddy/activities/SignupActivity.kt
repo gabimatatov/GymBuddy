@@ -79,7 +79,8 @@ class SignupActivity : AppCompatActivity() {
             if (isSignedIn) {
                 val username = usernameEditText.text.toString().trim()
                 val userid = authViewModel.currentUser.value!!.uid
-                val userViewModel = ProfileViewModel(userid)
+                val email = authViewModel.currentUser.value!!.email ?: ""
+                val userViewModel = ProfileViewModel(userid, email)
                 userViewModel.updateUserName(username)
                 userViewModel.userLiveData.observe(this) { userdata ->
                     GlobalVariables.currentUser = userdata
