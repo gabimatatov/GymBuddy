@@ -15,12 +15,16 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.gymbuddy.R
 import com.example.gymbuddy.activities.AuthViewModel
 import com.example.gymbuddy.dataclass.User
-import com.example.gymbuddy.ui.dialog.EditDisplayNameDialogFragment
+import com.example.gymbuddy.dataclass.Workout
 import com.example.gymbuddy.objects.CameraUtil
+import com.example.gymbuddy.ui.dialog.EditDisplayNameDialogFragment
 import com.squareup.picasso.Picasso
+import WorkoutAdapter
 
 class ProfileFragment : Fragment(), EditDisplayNameDialogFragment.EditUsernameDialogListener,
     CameraUtil.CameraResultCallback {
@@ -29,18 +33,20 @@ class ProfileFragment : Fragment(), EditDisplayNameDialogFragment.EditUsernameDi
     private lateinit var profileViewModel: ProfileViewModel
     private lateinit var userPhotoImageView: ImageView
     private lateinit var cameraUtil: CameraUtil
+    private lateinit var myWorkoutsRecyclerView: RecyclerView
+    private lateinit var workoutAdapter: WorkoutAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         return inflater.inflate(R.layout.fragment_profile, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize camera utility
+        // Initialize UI components
         cameraUtil = CameraUtil(this)
         cameraUtil.setCameraResultCallback(this)
 
@@ -48,6 +54,7 @@ class ProfileFragment : Fragment(), EditDisplayNameDialogFragment.EditUsernameDi
         val emailTextView: TextView = view.findViewById(R.id.emailTextView)
         val deleteImageButton: Button = view.findViewById(R.id.deleteImageButton)
         userPhotoImageView = view.findViewById(R.id.userPhotoImageView)
+        myWorkoutsRecyclerView = view.findViewById(R.id.myWorkoutsRecyclerView)
 
         deleteImageButton.setOnClickListener {
             showDeleteConfirmationDialog()
@@ -62,14 +69,26 @@ class ProfileFragment : Fragment(), EditDisplayNameDialogFragment.EditUsernameDi
             cameraUtil.checkCameraPermission()
         }
 
+        // Setup RecyclerView for user workouts
+        workoutAdapter = WorkoutAdapter(emptyList())
+        myWorkoutsRecyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = workoutAdapter
+        }
+
         authViewModel.currentUser.observe(viewLifecycleOwner, Observer { user ->
             user?.let {
                 emailTextView.text = user.email
                 displayNameTextView.text = user.displayName
-                profileViewModel = ProfileViewModel(user.uid)
+                profileViewModel = ProfileViewModel(user.email ?: "")
 
                 profileViewModel.userLiveData.observe(viewLifecycleOwner, Observer { userData ->
                     userData?.let { updateUI(userData) }
+                })
+
+                profileViewModel.userWorkouts.observe(viewLifecycleOwner, Observer { workouts ->
+                    Log.d("ProfileFragment", "Received ${workouts.size} workouts")
+                    workoutAdapter.updateData(workouts)
                 })
             }
         })

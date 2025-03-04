@@ -9,23 +9,24 @@ import com.example.gymbuddy.base.MyApplication
 
 @Entity
 data class Workout(
-    @PrimaryKey val workoutId: String,
-    val name: String,
-    val description: String,
-    val imageUrl: String,
-    val exercises: String,
-    val ownerId: String,
-    val difficulty: String,
-    val timestamp: Long,
+    @PrimaryKey val workoutId: String = "",
+    val name: String = "",
+    val description: String = "",
+    val imageUrl: String = "",
+    val exercises: String = "",
+    val ownerId: String = "",
+    val difficulty: String = "",
+    val timestamp: Long = 0L,
     val lastUpdated: Long? = null
 ) {
+    // 🔹 Required no-argument constructor for Firestore
+    constructor() : this("", "", "", "", "", "", "", 0L, null)
 
     companion object {
         // 🔹 SharedPreferences for local last update tracking
         var lastUpdated: Long
             get() = MyApplication.Globals.context?.getSharedPreferences("TAG", Context.MODE_PRIVATE)
                 ?.getLong(LOCAL_LAST_UPDATED, 0) ?: 0
-
             set(value) {
                 MyApplication.Globals.context
                     ?.getSharedPreferences("TAG", Context.MODE_PRIVATE)?.apply {
