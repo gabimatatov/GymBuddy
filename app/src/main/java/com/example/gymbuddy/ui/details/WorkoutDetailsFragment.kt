@@ -65,6 +65,7 @@ class WorkoutDetailsFragment : Fragment() {
         if (!imageUrl.isNullOrEmpty()) {
             Picasso.get()
                 .load(imageUrl)
+                .placeholder(R.drawable.gym_buddy_icon)
                 .into(binding.imageWorkout)
         } else {
             binding.imageWorkout.setImageResource(R.drawable.gym_buddy_icon)
