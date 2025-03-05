@@ -58,18 +58,9 @@
         android:label="@string/menu_profile"
         tools:layout="@layout/fragment_profile" >
         <action
-            android:id="@+id/action_navigation_profile_to_editFragment"
-            app:destination="@id/editFragment" />
-        <action
             android:id="@+id/action_navigation_profile_to_workoutDetailsFragment"
             app:destination="@id/workoutDetailsFragment" />
     </fragment>
-
-    <fragment
-        android:id="@+id/editFragment"
-        android:name="com.example.gymbuddy.ui.edit.EditWorkoutFragment"
-        android:label="fragment_edit"
-        tools:layout="@layout/fragment_edit" />
 
     <fragment
         android:id="@+id/workoutDetailsFragment"

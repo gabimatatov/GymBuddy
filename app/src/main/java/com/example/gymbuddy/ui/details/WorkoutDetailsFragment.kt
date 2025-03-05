@@ -9,7 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.gymbuddy.R
 import com.example.gymbuddy.databinding.FragmentWorkoutDetailsBinding
+import com.squareup.picasso.Picasso
 
 class WorkoutDetailsFragment : Fragment() {
 
@@ -23,6 +25,7 @@ class WorkoutDetailsFragment : Fragment() {
     ): View {
         _binding = FragmentWorkoutDetailsBinding.inflate(inflater, container, false)
         setupObservers()
+        setupWorkoutImage()
         viewModel.checkIfUserIsOwner(args.workoutOwner)
         return binding.root
     }
@@ -51,6 +54,20 @@ class WorkoutDetailsFragment : Fragment() {
             if (success) {
                 findNavController().navigateUp()
             }
+        }
+    }
+
+    private fun setupWorkoutImage() {
+        // Get the image URL from SafeArgs
+        val imageUrl = args.workoutImageUrl
+
+        // Load image with Picasso
+        if (!imageUrl.isNullOrEmpty()) {
+            Picasso.get()
+                .load(imageUrl)
+                .into(binding.imageWorkout)
+        } else {
+            binding.imageWorkout.setImageResource(R.drawable.gym_buddy_icon)
         }
     }
 

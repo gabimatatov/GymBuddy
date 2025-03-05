@@ -9,13 +9,14 @@
     tools:context=".ui.details.WorkoutDetailsFragment">
 
     <!-- Workout Image (Centered) -->
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imageWorkout"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:scaleType="centerCrop"
         android:src="@drawable/gym_buddy_icon"
         android:contentDescription="Workout Image"
+        app:shapeAppearanceOverlay="@style/RoundedSquare"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
