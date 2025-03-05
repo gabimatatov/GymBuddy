@@ -11,10 +11,13 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.UUID
+import com.example.gymbuddy.repos.WorkoutRepository
 
 class AddViewModel : ViewModel() {
 
     private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
+
+    private val workoutRepository = WorkoutRepository()
 
     private val _workoutSaved = MutableLiveData<Boolean>()
     val workoutSaved: LiveData<Boolean> get() = _workoutSaved
@@ -52,7 +55,15 @@ class AddViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 if (imageBitmap != null) {
-
+                    workoutRepository.uploadImage(imageBitmap,
+                        onSuccess = { imageUrl ->
+                            workout.imageUrl = imageUrl
+                            Model.shared.insertWorkouts(workout)
+                        },
+                        onFailure = { error ->
+                            _errorMessage.postValue("Image upload failed: ${error.message}")
+                        })
+                    _workoutSaved.postValue(true)
                 } else {
                     Model.shared.insertWorkouts(workout)
                     _workoutSaved.postValue(true)
