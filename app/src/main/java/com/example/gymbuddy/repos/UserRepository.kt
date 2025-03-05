@@ -11,7 +11,6 @@ import com.google.firebase.storage.StorageReference
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import android.content.Context
 import com.example.gymbuddy.base.MyApplication.Globals.context
 import java.util.*
 
@@ -138,26 +137,6 @@ class UserRepository {
             }
     }
 
-    // Function to update user rated workouts in Firestore
-    fun updateUserRatedWorkouts(
-        userId: String,
-        newRatedWorkouts: Map<String, Int>,
-        onSuccess: () -> Unit,
-        onFailure: () -> Unit
-    ) {
-        db.collection("users")
-            .document(userId)
-            .update("ratedWorkouts", newRatedWorkouts)
-            .addOnSuccessListener {
-                onSuccess()
-            }
-            .addOnFailureListener { exception ->
-                // Handle failure
-                Log.d("updateUserRatedWorkouts", "failed: ${exception.message}")
-                onFailure()
-            }
-    }
-
     // Function to update user photo URL in Firestore
     fun updateUserPhoto(userId: String, bitmap: Bitmap, onSuccess: (String) -> Unit, onFailure: () -> Unit) {
         // Save the Bitmap as a file
@@ -194,8 +173,7 @@ class UserRepository {
         return file
     }
 
-    // Function to upload an image to Firestore Storage and get the URL
-// Function to upload the file to Firebase Storage
+    // Function to upload the file to Firebase Storage
     private fun uploadImage(file: File, onSuccess: (String) -> Unit, onFailure: () -> Unit) {
         val storageRef: StorageReference = storage.reference
         val imageRef: StorageReference = storageRef.child("userImages/${file.name}")

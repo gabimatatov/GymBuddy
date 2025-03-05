@@ -1,17 +1,24 @@
 package com.example.gymbuddy.repos
 
+import android.graphics.Bitmap
+import android.net.Uri
 import android.util.Log
+import com.example.gymbuddy.base.MyApplication.Globals.context
 import com.example.gymbuddy.dataclass.Workout
-import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
-import java.util.Date
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.util.UUID
 
 class WorkoutRepository {
 
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val storage: FirebaseStorage = FirebaseStorage.getInstance()
 
     fun addWorkout(workout: Workout, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
         val workoutId = UUID.randomUUID().toString()
@@ -87,5 +94,32 @@ class WorkoutRepository {
             }
     }
 
+    private fun saveBitmapToFile(bitmap: Bitmap): File {
+        val file = File(context?.cacheDir, "${UUID.randomUUID()}.jpg")
+        try {
+            FileOutputStream(file).use { outputStream ->
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+            }
+        } catch (e: IOException) {
+            Log.e("WorkoutRepository", "Error saving bitmap to file: ${e.message}")
+        }
+        return file
+    }
 
+    fun uploadImage(bitmap: Bitmap, onSuccess: (String) -> Unit, onFailure: (Exception) -> Unit) {
+        val file = saveBitmapToFile(bitmap)
+        val storageRef: StorageReference = storage.reference
+        val imageRef: StorageReference = storageRef.child("workout_images_test/${file.name}")
+
+        imageRef.putFile(Uri.fromFile(file))
+            .addOnSuccessListener {
+                imageRef.downloadUrl.addOnSuccessListener { uri ->
+                    onSuccess(uri.toString())
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.e("WorkoutRepository", "Image upload failed: ${exception.message}")
+                onFailure(exception)
+            }
+    }
 }
