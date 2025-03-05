@@ -109,7 +109,7 @@ class WorkoutRepository {
     fun uploadImage(bitmap: Bitmap, onSuccess: (String) -> Unit, onFailure: (Exception) -> Unit) {
         val file = saveBitmapToFile(bitmap)
         val storageRef: StorageReference = storage.reference
-        val imageRef: StorageReference = storageRef.child("workout_images_test/${file.name}")
+        val imageRef: StorageReference = storageRef.child("workoutImages/${file.name}")
 
         imageRef.putFile(Uri.fromFile(file))
             .addOnSuccessListener {
