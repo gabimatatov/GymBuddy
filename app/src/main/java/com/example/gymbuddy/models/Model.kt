@@ -82,13 +82,20 @@ class Model private constructor() {
     }
 
     fun updateWorkout(
-        workoutId: String, name: String, description: String, exercises: String, difficulty: String, callback: (Boolean) -> Unit
+        workoutId: String,
+        name: String,
+        description: String,
+        exercises: String,
+        difficulty: String,
+        imageUrl: String,
+        callback: (Boolean) -> Unit
     ) {
         val updatedWorkout = hashMapOf(
             "name" to name,
             "description" to description,
             "exercises" to exercises,
             "difficulty" to difficulty,
+            "imageUrl" to imageUrl,
             "lastUpdated" to System.currentTimeMillis()
         )
 
@@ -96,7 +103,7 @@ class Model private constructor() {
             onSuccess = {
                 executor.execute {
                     database.workoutDao().updateWorkout(
-                        workoutId, name, description, exercises, difficulty, System.currentTimeMillis()
+                        workoutId, name, description, exercises, difficulty, imageUrl, System.currentTimeMillis()
                     )
                     println("Workout updated in Firestore and locally: $workoutId")
                     callback(true)
@@ -133,6 +140,4 @@ class Model private constructor() {
             mainHandler.post { callback(emptyList()) }
         })
     }
-
-
 }

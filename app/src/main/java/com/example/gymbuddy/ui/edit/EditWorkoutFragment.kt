@@ -1,5 +1,6 @@
 package com.example.gymbuddy.ui.edit
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,13 +13,28 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.gymbuddy.R
 import com.example.gymbuddy.databinding.FragmentEditWorkoutBinding
+import com.example.gymbuddy.objects.CameraUtil
+import com.squareup.picasso.Picasso
 
-class EditWorkoutFragment : Fragment() {
+class EditWorkoutFragment : Fragment(), CameraUtil.CameraResultCallback {
 
     private var _binding: FragmentEditWorkoutBinding? = null
     private val binding get() = _binding!!
     private val args: EditWorkoutFragmentArgs by navArgs()
     private val viewModel: EditWorkoutViewModel by viewModels()
+
+    // Camera utility
+    private lateinit var cameraUtil: CameraUtil
+
+    // Temporary bitmap to store captured image
+    private var capturedImageBitmap: Bitmap? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // Initialize CameraUtil
+        cameraUtil = CameraUtil(this)
+        cameraUtil.setCameraResultCallback(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -30,6 +46,9 @@ class EditWorkoutFragment : Fragment() {
     }
 
     private fun setupUI() {
+        // Setup workout image with camera intent
+        setupWorkoutImage()
+
         binding.editTextWorkoutName.setText(args.workoutName)
         binding.editTextWorkoutDescription.setText(args.workoutDescription)
         binding.editTextWorkoutExercises.setText(args.workoutExercises)
@@ -44,6 +63,34 @@ class EditWorkoutFragment : Fragment() {
         }
     }
 
+    private fun setupWorkoutImage() {
+        // Get the image URL from SafeArgs
+        val imageUrl = args.workoutImageUrl
+
+        // Set click listener to open camera
+        binding.imageWorkout.setOnClickListener {
+            cameraUtil.checkCameraPermission()
+        }
+
+        // Load image with Picasso
+        if (!imageUrl.isNullOrEmpty()) {
+            Picasso.get()
+                .load(imageUrl)
+                .into(binding.imageWorkout)
+        } else {
+            binding.imageWorkout.setImageResource(R.drawable.gym_buddy_icon)
+        }
+    }
+
+    // Implement the camera result callback
+    override fun onImageCaptured(bitmap: Bitmap) {
+        // Store the captured bitmap
+        capturedImageBitmap = bitmap
+
+        // Display the captured image
+        binding.imageWorkout.setImageBitmap(bitmap)
+    }
+
     private fun saveWorkout() {
         val updatedName = binding.editTextWorkoutName.text.toString().trim()
         val updatedDescription = binding.editTextWorkoutDescription.text.toString().trim()
@@ -55,7 +102,21 @@ class EditWorkoutFragment : Fragment() {
             return
         }
 
-        viewModel.updateWorkout(args.workoutId, updatedName, updatedDescription, updatedExercises, updatedDifficulty)
+        viewModel.updateWorkout(
+            args.workoutId,
+            updatedName,
+            updatedDescription,
+            updatedExercises,
+            updatedDifficulty,
+            capturedImageBitmap,
+            args.workoutImageUrl
+        )
+    }
+
+    // Override onActivityResult to process camera intent
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: android.content.Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        cameraUtil.processActivityResult(requestCode, resultCode, data)
     }
 
     private fun setupObservers() {

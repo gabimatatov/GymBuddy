@@ -28,8 +28,8 @@ interface WorkoutDao {
     @Query("DELETE FROM Workout WHERE workoutId = :workoutId")
     fun deleteWorkoutById(workoutId: String)
 
-    @Query("UPDATE Workout SET name = :name, description = :description, exercises = :exercises, difficulty = :difficulty, lastUpdated = :lastUpdated WHERE workoutId = :workoutId")
-    fun updateWorkout(workoutId: String, name: String, description: String, exercises: String, difficulty: String, lastUpdated: Long)
+    @Query("UPDATE Workout SET name = :name, description = :description, exercises = :exercises, difficulty = :difficulty, imageUrl = :imageUrl, lastUpdated = :lastUpdated WHERE workoutId = :workoutId")
+    fun updateWorkout(workoutId: String, name: String, description: String, exercises: String, difficulty: String, imageUrl: String, lastUpdated: Long)
 
 
 }

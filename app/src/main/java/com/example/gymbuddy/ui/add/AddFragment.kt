@@ -1,5 +1,6 @@
 package com.example.gymbuddy.ui.add
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,14 +12,25 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.gymbuddy.R
 import com.example.gymbuddy.databinding.FragmentAddBinding
+import com.example.gymbuddy.objects.CameraUtil
 
-class AddFragment : Fragment() {
+class AddFragment : Fragment(), CameraUtil.CameraResultCallback {
 
     private var _binding: FragmentAddBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: AddViewModel by viewModels()
     private var selectedDifficulty: String = ""
+
+    // Camera utility
+    private lateinit var cameraUtil: CameraUtil
+    private var capturedImageBitmap: Bitmap? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        cameraUtil = CameraUtil(this)
+        cameraUtil.setCameraResultCallback(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -27,11 +39,11 @@ class AddFragment : Fragment() {
 
         setupDifficultyDropdown()
         observeViewModel()
+        setupImage()
 
         binding.buttonSaveWorkout.setOnClickListener {
             saveWorkout()
         }
-
         return binding.root
     }
 
@@ -61,7 +73,13 @@ class AddFragment : Fragment() {
         val description = binding.editTextWorkoutDescription.text.toString().trim()
         val exercises = binding.editTextWorkoutExercises.text.toString().trim()
 
-        viewModel.saveWorkout(name, description, exercises, selectedDifficulty)
+        viewModel.saveWorkout(
+            name,
+            description,
+            exercises,
+            selectedDifficulty,
+            capturedImageBitmap
+        )
     }
 
     private fun observeViewModel() {
@@ -80,5 +98,27 @@ class AddFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun setupImage() {
+        binding.imageWorkout.setImageResource(R.drawable.gym_buddy_icon)
+        binding.imageWorkout.setOnClickListener {
+            cameraUtil.checkCameraPermission()
+        }
+    }
+
+    // Override onActivityResult to process camera intent
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: android.content.Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        cameraUtil.processActivityResult(requestCode, resultCode, data)
+    }
+
+    // Implement the camera result callback
+    override fun onImageCaptured(bitmap: Bitmap) {
+        // Store the captured bitmap
+        capturedImageBitmap = bitmap
+
+        // Display the captured image
+        binding.imageWorkout.setImageBitmap(bitmap)
     }
 }

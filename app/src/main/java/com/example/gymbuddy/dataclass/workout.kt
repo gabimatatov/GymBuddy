@@ -12,7 +12,7 @@ data class Workout(
     @PrimaryKey val workoutId: String = "",
     val name: String = "",
     val description: String = "",
-    val imageUrl: String = "",
+    var imageUrl: String = "",
     val exercises: String = "",
     val ownerId: String = "",
     val difficulty: String = "",
