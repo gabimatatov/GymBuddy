@@ -40,6 +40,21 @@
             app:layout_constraintEnd_toEndOf="parent"
             tools:src="@drawable/gym_buddy_icon"/>
 
+        <!-- Add this right after the ShapeableImageView in your layout file -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/buttonClearImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-24dp"
+            android:layout_marginEnd="-24dp"
+            app:fabSize="mini"
+            app:srcCompat="@drawable/ic_delete"
+            app:tint="@color/white"
+            app:backgroundTint="@color/gymbuddy_blue"
+            app:layout_constraintTop_toTopOf="@id/imageWorkout"
+            app:layout_constraintEnd_toEndOf="@id/imageWorkout"
+            android:visibility="gone"/>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/inputLayoutWorkoutName"
             android:layout_width="match_parent"
