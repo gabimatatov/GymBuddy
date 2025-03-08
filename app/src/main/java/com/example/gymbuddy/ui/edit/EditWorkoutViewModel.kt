@@ -58,14 +58,10 @@ class EditWorkoutViewModel : ViewModel() {
 
     fun deleteWorkoutImage(workoutId: String) {
         viewModelScope.launch {
-            workoutRepository.deleteUserPhoto(
-                workoutId,
-                onSuccess = {
-                    _imageDeleted.postValue(true)
-                },
-                onFailure = { exception ->
-                    _errorMessage.postValue("Error deleting image: ${exception.message}")
-                }
+            val result = workoutRepository.deleteWorkoutImage(workoutId)
+            result.fold(
+                onSuccess = { _imageDeleted.value = true },
+                onFailure = { _errorMessage.value = "Error deleting image: ${it.message}" }
             )
         }
     }
