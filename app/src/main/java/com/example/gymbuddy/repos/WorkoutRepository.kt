@@ -143,13 +143,14 @@ class WorkoutRepository {
                 storageRef.delete().await()
             } catch (e: StorageException) {
                 if (e.errorCode == StorageException.ERROR_OBJECT_NOT_FOUND) {
-
+                    // Image not found, continue with document update
                 } else {
                     throw e
                 }
             }
 
             // Update Firestore document to remove imageUrl
+            // Make sure this completes with await()
             db.collection("workouts").document(workoutId).update("imageUrl", "").await()
 
             Result.success(true)
@@ -157,6 +158,4 @@ class WorkoutRepository {
             Result.failure(e)
         }
     }
-
-
 }

@@ -25,6 +25,7 @@ class EditWorkoutFragment : Fragment(), CameraUtil.CameraResultCallback {
     private val binding get() = _binding!!
     private val args: EditWorkoutFragmentArgs by navArgs()
     private val viewModel: EditWorkoutViewModel by viewModels()
+    private var currentImageUrl: String = ""
 
     // Camera utility
     private lateinit var cameraUtil: CameraUtil
@@ -51,6 +52,7 @@ class EditWorkoutFragment : Fragment(), CameraUtil.CameraResultCallback {
     private fun setupUI() {
         // Setup workout image with camera intent and trash icon
         setupWorkoutImage()
+        currentImageUrl = args.workoutImageUrl
 
         binding.editTextWorkoutName.setText(args.workoutName)
         binding.editTextWorkoutDescription.setText(args.workoutDescription)
@@ -105,6 +107,7 @@ class EditWorkoutFragment : Fragment(), CameraUtil.CameraResultCallback {
     }
 
     private fun deleteWorkoutImage() {
+        currentImageUrl = ""
         // Reset image to default
         binding.imageWorkout.setImageResource(R.drawable.gym_buddy_icon)
         capturedImageBitmap = null
@@ -148,7 +151,7 @@ class EditWorkoutFragment : Fragment(), CameraUtil.CameraResultCallback {
             updatedExercises,
             updatedDifficulty,
             capturedImageBitmap,
-            args.workoutImageUrl
+            currentImageUrl
         )
     }
 
