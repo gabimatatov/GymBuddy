@@ -10,6 +10,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageException
 import com.google.firebase.storage.StorageReference
 import java.io.File
 import java.io.FileOutputStream
@@ -124,36 +125,36 @@ class WorkoutRepository {
             }
     }
 
-    fun deleteUserPhoto(workoutId: String, onSuccess: () -> Unit, onFailure: () -> Unit) {
+    fun deleteUserPhoto(workoutId: String, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
         val workoutDocRef = db.collection("workouts").document(workoutId)
 
-        // Get the current photo URL
-        workoutDocRef.get().addOnSuccessListener { document ->
-            val imageUrl = document.getString("imageUrl")
+        workoutDocRef.get()
+            .addOnSuccessListener { document ->
+                val imageUrl = document.getString("imageUrl")
 
-            if (!imageUrl.isNullOrEmpty()) {
-                // Delete the image from Firebase Storage
-                val storageRef = storage.getReferenceFromUrl(imageUrl)
-                storageRef.delete().addOnSuccessListener {
-                    // Deleted from Storage, update the Firestore document to remove the photoUrl
-                    workoutDocRef.update("imageUrl", "")
+                if (!imageUrl.isNullOrEmpty()) {
+                    val storageRef = storage.getReferenceFromUrl(imageUrl)
+
+                    storageRef.delete()
                         .addOnSuccessListener {
-                            // Success, return updated user data
-//                            val updatedWorkout = Workout(workoutId, document.getString("displayName") ?: "")
-//                            onSuccess(updatedWorkout)
-                            onSuccess()
+                            workoutDocRef.update("imageUrl", "")
+                                .addOnSuccessListener { onSuccess() }
+                                .addOnFailureListener { e -> onFailure(e) }
                         }
-                        .addOnFailureListener {
-                            onFailure()
+                        .addOnFailureListener { e ->
+                            if (e is StorageException && e.errorCode == StorageException.ERROR_OBJECT_NOT_FOUND) {
+                                // Image doesn't exist; just update Firestore
+                                workoutDocRef.update("imageUrl", "")
+                                    .addOnSuccessListener { onSuccess() }
+                                    .addOnFailureListener { e -> onFailure(e) }
+                            } else {
+                                onFailure(e)
+                            }
                         }
-                }.addOnFailureListener {
-                    onFailure()
+                } else {
+                    onSuccess()
                 }
-            } else {
-                onSuccess()
             }
-        }.addOnFailureListener {
-            onFailure()
-        }
+            .addOnFailureListener { e -> onFailure(e) }
     }
 }

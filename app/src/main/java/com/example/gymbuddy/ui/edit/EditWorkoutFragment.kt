@@ -170,11 +170,11 @@ class EditWorkoutFragment : Fragment(), CameraUtil.CameraResultCallback {
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
         }
 
-//        viewModel.imageDeleted.observe(viewLifecycleOwner) { deleted ->
-//            if (deleted) {
-//                Toast.makeText(requireContext(), "Image deleted successfully", Toast.LENGTH_SHORT).show()
-//            }
-//        }
+        viewModel.imageDeleted.observe(viewLifecycleOwner) { deleted ->
+            if (deleted) {
+                Toast.makeText(requireContext(), "Image deleted successfully", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun onDestroyView() {
