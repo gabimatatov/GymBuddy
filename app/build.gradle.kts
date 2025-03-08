@@ -69,6 +69,8 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage)
     implementation(libs.firebase.auth)
+    implementation(libs.play.services.tasks)
+
 
     // Room
     implementation(libs.androidx.room.ktx)
