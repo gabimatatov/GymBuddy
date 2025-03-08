@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import com.example.gymbuddy.base.MyApplication.Globals.context
+import com.example.gymbuddy.dataclass.User
 import com.example.gymbuddy.dataclass.Workout
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -121,5 +122,38 @@ class WorkoutRepository {
                 Log.e("WorkoutRepository", "Image upload failed: ${exception.message}")
                 onFailure(exception)
             }
+    }
+
+    fun deleteUserPhoto(workoutId: String, onSuccess: () -> Unit, onFailure: () -> Unit) {
+        val workoutDocRef = db.collection("workouts").document(workoutId)
+
+        // Get the current photo URL
+        workoutDocRef.get().addOnSuccessListener { document ->
+            val imageUrl = document.getString("imageUrl")
+
+            if (!imageUrl.isNullOrEmpty()) {
+                // Delete the image from Firebase Storage
+                val storageRef = storage.getReferenceFromUrl(imageUrl)
+                storageRef.delete().addOnSuccessListener {
+                    // Deleted from Storage, update the Firestore document to remove the photoUrl
+                    workoutDocRef.update("imageUrl", "")
+                        .addOnSuccessListener {
+                            // Success, return updated user data
+//                            val updatedWorkout = Workout(workoutId, document.getString("displayName") ?: "")
+//                            onSuccess(updatedWorkout)
+                            onSuccess()
+                        }
+                        .addOnFailureListener {
+                            onFailure()
+                        }
+                }.addOnFailureListener {
+                    onFailure()
+                }
+            } else {
+                onSuccess()
+            }
+        }.addOnFailureListener {
+            onFailure()
+        }
     }
 }

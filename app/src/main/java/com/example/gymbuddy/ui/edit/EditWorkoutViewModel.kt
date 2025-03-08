@@ -52,4 +52,8 @@ class EditWorkoutViewModel : ViewModel() {
             }
         }
     }
+
+    fun deleteWorkoutImage(workoutId: String) {
+        workoutRepository.deleteUserPhoto(workoutId, onSuccess = { }, onFailure = {})
+    }
 }

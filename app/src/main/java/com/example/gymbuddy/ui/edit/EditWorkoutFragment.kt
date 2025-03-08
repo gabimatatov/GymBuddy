@@ -2,6 +2,7 @@ package com.example.gymbuddy.ui.edit
 
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -68,6 +69,7 @@ class EditWorkoutFragment : Fragment(), CameraUtil.CameraResultCallback {
     private fun setupWorkoutImage() {
         // Get the image URL from SafeArgs
         val imageUrl = args.workoutImageUrl
+        Log.d("test", "$imageUrl")
 
         // Set click listener to open camera
         binding.imageWorkout.setOnClickListener {
@@ -168,11 +170,11 @@ class EditWorkoutFragment : Fragment(), CameraUtil.CameraResultCallback {
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
         }
 
-        viewModel.imageDeleted.observe(viewLifecycleOwner) { deleted ->
-            if (deleted) {
-                Toast.makeText(requireContext(), "Image deleted successfully", Toast.LENGTH_SHORT).show()
-            }
-        }
+//        viewModel.imageDeleted.observe(viewLifecycleOwner) { deleted ->
+//            if (deleted) {
+//                Toast.makeText(requireContext(), "Image deleted successfully", Toast.LENGTH_SHORT).show()
+//            }
+//        }
     }
 
     override fun onDestroyView() {
