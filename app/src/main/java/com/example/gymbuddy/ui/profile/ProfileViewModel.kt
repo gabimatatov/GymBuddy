@@ -23,14 +23,14 @@ class ProfileViewModel(private val userId: String, private val email: String) : 
     init {
         userRepository.initializeUserDocument(userId, email)
         fetchUser()
-        fetchUserWorkouts() // Fetch workouts when ViewModel is created
+        fetchUserWorkouts()
     }
 
     private fun fetchUser() {
         userRepository.fetchUser(userId,
             onSuccess = { user ->
                 _userLiveData.postValue(user)
-                fetchUserWorkouts() // Fetch workouts again in case user data updates
+                fetchUserWorkouts()
             },
             onFailure = {
                 // Handle failure

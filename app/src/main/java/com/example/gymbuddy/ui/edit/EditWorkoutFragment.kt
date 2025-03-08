@@ -2,7 +2,6 @@ package com.example.gymbuddy.ui.edit
 
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +15,6 @@ import androidx.navigation.fragment.navArgs
 import com.example.gymbuddy.R
 import com.example.gymbuddy.databinding.FragmentEditWorkoutBinding
 import com.example.gymbuddy.objects.CameraUtil
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.squareup.picasso.Picasso
 
 class EditWorkoutFragment : Fragment(), CameraUtil.CameraResultCallback {
@@ -71,7 +69,6 @@ class EditWorkoutFragment : Fragment(), CameraUtil.CameraResultCallback {
     private fun setupWorkoutImage() {
         // Get the image URL from SafeArgs
         val imageUrl = args.workoutImageUrl
-        Log.d("test", "$imageUrl")
 
         // Set click listener to open camera
         binding.imageWorkout.setOnClickListener {

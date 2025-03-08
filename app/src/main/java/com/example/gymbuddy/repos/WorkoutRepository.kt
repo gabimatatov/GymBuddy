@@ -150,7 +150,6 @@ class WorkoutRepository {
             }
 
             // Update Firestore document to remove imageUrl
-            // Make sure this completes with await()
             db.collection("workouts").document(workoutId).update("imageUrl", "").await()
 
             Result.success(true)
