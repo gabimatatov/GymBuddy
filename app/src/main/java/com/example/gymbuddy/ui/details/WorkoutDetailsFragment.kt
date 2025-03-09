@@ -1,7 +1,6 @@
 package com.example.gymbuddy.ui.details
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -59,10 +58,12 @@ class WorkoutDetailsFragment : Fragment() {
             }
         }
 
-        // Observe favorite success
+        // Observe favorite success and navigate to favorites fragment
         viewModel.favoriteSuccess.observe(viewLifecycleOwner) { success ->
             if (success) {
                 Toast.makeText(requireContext(), "Added to Favorites", Toast.LENGTH_SHORT).show()
+                // Navigate to Favorites Fragment
+                findNavController().navigate(R.id.action_workoutDetailsFragment_to_favoritesFragment)
             } else {
                 Toast.makeText(requireContext(), "Already in Favorites", Toast.LENGTH_SHORT).show()
             }
