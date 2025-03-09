@@ -1,36 +1,33 @@
 package com.example.gymbuddy.ui.favorites
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.gymbuddy.dataclass.Workout
-import com.example.gymbuddy.db.AppLocalDb
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import com.example.gymbuddy.repos.UserRepository
+import com.example.gymbuddy.repos.WorkoutRepository
 
 class FavoritesViewModel : ViewModel() {
-
     private val _favorites = MutableLiveData<List<Workout>>()
-    val favorites: LiveData<List<Workout>> get() = _favorites
+    val favorites: LiveData<List<Workout>> = _favorites
 
     private val userRepository = UserRepository()
+    private val workoutRepository = WorkoutRepository()
 
-    fun loadFavorites(userId: String) {
-        viewModelScope.launch {
-            userRepository.getUserFavoriteWorkoutIds(userId, onSuccess = { favoriteWorkoutIds ->
-                viewModelScope.launch {
-                    val favoriteWorkouts = withContext(Dispatchers.IO) {
-                        AppLocalDb.database.workoutDao().getWorkoutsByIds(favoriteWorkoutIds)
-                    }
-                    _favorites.postValue(favoriteWorkouts)
+    // Mode to Model
+    // Method to load user's favorite workouts
+    fun loadFavorites(userId: String, since: Long) {
+        userRepository.getUserFavoriteWorkoutIds(userId, { favoriteWorkoutIds ->
+            workoutRepository.getAllWorkouts(since) { allWorkouts ->
+                val combinedWorkouts = allWorkouts.filter { workout ->
+                    workout.ownerId == userId || favoriteWorkoutIds.contains(workout.workoutId)
                 }
-            }, onFailure = {
-                _favorites.postValue(emptyList())
-            })
-        }
+                _favorites.value = combinedWorkouts
+            }
+        }, {
+            // Handle failure if needed
+            Log.d("FavoritesViewModel", "Failed to fetch favorite workout IDs.")
+        })
     }
 }
-

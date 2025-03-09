@@ -41,7 +41,9 @@ class FavoritesFragment : Fragment() {
         // Observe AuthViewModel to get the current user
         authViewModel.currentUser.observe(viewLifecycleOwner, Observer { user ->
             user?.let {
-                favoritesViewModel.loadFavorites(user.uid ?: "")
+                // Calculate the 'since' timestamp (e.g., 24 hours ago)
+                val sinceTimestamp = System.currentTimeMillis() - (24 * 60 * 60 * 1000)
+                favoritesViewModel.loadFavorites(user.uid ?: "", sinceTimestamp)
             }
         })
 
