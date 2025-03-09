@@ -100,11 +100,26 @@ class AddFragment : Fragment(), CameraUtil.CameraResultCallback {
         _binding = null
     }
 
+    private fun updateImageTrashButtonVisibility() {
+        // Show trash button only if we have a captured image
+        binding.buttonClearImage.visibility = if (capturedImageBitmap != null) View.VISIBLE else View.GONE
+    }
+
     private fun setupImage() {
         binding.imageWorkout.setImageResource(R.drawable.gym_buddy_icon)
         binding.imageWorkout.setOnClickListener {
             cameraUtil.checkCameraPermission()
         }
+
+        // Set up the clear image button
+        binding.buttonClearImage.setOnClickListener {
+            // Reset to default image
+            binding.imageWorkout.setImageResource(R.drawable.gym_buddy_icon)
+            capturedImageBitmap = null
+            updateImageTrashButtonVisibility()
+        }
+
+        updateImageTrashButtonVisibility()
     }
 
     // Override onActivityResult to process camera intent
@@ -120,5 +135,7 @@ class AddFragment : Fragment(), CameraUtil.CameraResultCallback {
 
         // Display the captured image
         binding.imageWorkout.setImageBitmap(bitmap)
+
+        updateImageTrashButtonVisibility()
     }
 }

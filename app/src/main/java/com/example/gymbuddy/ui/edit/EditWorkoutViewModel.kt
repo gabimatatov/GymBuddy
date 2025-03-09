@@ -20,6 +20,9 @@ class EditWorkoutViewModel : ViewModel() {
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> get() = _errorMessage
 
+    private val _imageDeleted = MutableLiveData<Boolean>()
+    val imageDeleted: LiveData<Boolean> get() = _imageDeleted
+
     fun updateWorkout(
         workoutId: String,
         name: String,
@@ -50,6 +53,16 @@ class EditWorkoutViewModel : ViewModel() {
             } catch (e: Exception) {
                 _errorMessage.postValue("Error updating workout: ${e.message}")
             }
+        }
+    }
+
+    fun deleteWorkoutImage(workoutId: String) {
+        viewModelScope.launch {
+            val result = workoutRepository.deleteWorkoutImage(workoutId)
+            result.fold(
+                onSuccess = { _imageDeleted.value = true },
+                onFailure = { _errorMessage.value = "Error deleting image: ${it.message}" }
+            )
         }
     }
 }

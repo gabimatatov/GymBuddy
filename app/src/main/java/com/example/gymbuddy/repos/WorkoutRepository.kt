@@ -4,11 +4,13 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import com.example.gymbuddy.base.MyApplication.Globals.context
+import kotlinx.coroutines.tasks.await
 import com.example.gymbuddy.dataclass.Workout
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageException
 import com.google.firebase.storage.StorageReference
 import java.io.File
 import java.io.FileOutputStream
@@ -121,5 +123,38 @@ class WorkoutRepository {
                 Log.e("WorkoutRepository", "Image upload failed: ${exception.message}")
                 onFailure(exception)
             }
+    }
+
+    suspend fun deleteWorkoutImage(workoutId: String): Result<Boolean> {
+        return try {
+            // Fetch workout document from Firestore
+            val workoutDoc = db.collection("workouts").document(workoutId).get().await()
+            val imageUrl = workoutDoc.getString("imageUrl")
+
+            if (imageUrl.isNullOrEmpty()) {
+                return Result.success(true)
+            }
+
+            // Get storage reference from the correct URL
+            val storageRef = storage.getReferenceFromUrl(imageUrl)
+
+            try {
+                // Delete image from Firebase Storage
+                storageRef.delete().await()
+            } catch (e: StorageException) {
+                if (e.errorCode == StorageException.ERROR_OBJECT_NOT_FOUND) {
+                    // Image not found, continue with document update
+                } else {
+                    throw e
+                }
+            }
+
+            // Update Firestore document to remove imageUrl
+            db.collection("workouts").document(workoutId).update("imageUrl", "").await()
+
+            Result.success(true)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }

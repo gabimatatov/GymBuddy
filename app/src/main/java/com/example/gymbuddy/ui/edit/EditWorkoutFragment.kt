@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -22,6 +23,7 @@ class EditWorkoutFragment : Fragment(), CameraUtil.CameraResultCallback {
     private val binding get() = _binding!!
     private val args: EditWorkoutFragmentArgs by navArgs()
     private val viewModel: EditWorkoutViewModel by viewModels()
+    private var currentImageUrl: String = ""
 
     // Camera utility
     private lateinit var cameraUtil: CameraUtil
@@ -46,8 +48,9 @@ class EditWorkoutFragment : Fragment(), CameraUtil.CameraResultCallback {
     }
 
     private fun setupUI() {
-        // Setup workout image with camera intent
+        // Setup workout image with camera intent and trash icon
         setupWorkoutImage()
+        currentImageUrl = args.workoutImageUrl
 
         binding.editTextWorkoutName.setText(args.workoutName)
         binding.editTextWorkoutDescription.setText(args.workoutDescription)
@@ -72,14 +75,47 @@ class EditWorkoutFragment : Fragment(), CameraUtil.CameraResultCallback {
             cameraUtil.checkCameraPermission()
         }
 
+        // Setup trash icon click listener
+        binding.buttonClearImage.setOnClickListener {
+            showDeleteImageConfirmationDialog()
+        }
+
         // Load image with Picasso
         if (!imageUrl.isNullOrEmpty()) {
             Picasso.get()
                 .load(imageUrl)
                 .into(binding.imageWorkout)
+            binding.buttonClearImage.visibility = View.VISIBLE
         } else {
             binding.imageWorkout.setImageResource(R.drawable.gym_buddy_icon)
+            binding.buttonClearImage.visibility = View.GONE
         }
+    }
+
+    private fun showDeleteImageConfirmationDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Delete Image")
+            .setMessage("Are you sure you want to delete this photo?")
+            .setPositiveButton("Yes") { _, _ ->
+               deleteWorkoutImage()
+            }
+            .setNegativeButton("No", null)
+            .show()
+    }
+
+    private fun deleteWorkoutImage() {
+        currentImageUrl = ""
+        // Reset image to default
+        binding.imageWorkout.setImageResource(R.drawable.gym_buddy_icon)
+        capturedImageBitmap = null
+
+        // Tell the ViewModel to delete the image from storage
+        if (!args.workoutImageUrl.isNullOrEmpty()) {
+            viewModel.deleteWorkoutImage(args.workoutId)
+        }
+
+        // Hide the trash button
+        binding.buttonClearImage.visibility = View.GONE
     }
 
     // Implement the camera result callback
@@ -89,6 +125,9 @@ class EditWorkoutFragment : Fragment(), CameraUtil.CameraResultCallback {
 
         // Display the captured image
         binding.imageWorkout.setImageBitmap(bitmap)
+
+        // Show the trash button
+        binding.buttonClearImage.visibility = View.VISIBLE
     }
 
     private fun saveWorkout() {
@@ -109,7 +148,7 @@ class EditWorkoutFragment : Fragment(), CameraUtil.CameraResultCallback {
             updatedExercises,
             updatedDifficulty,
             capturedImageBitmap,
-            args.workoutImageUrl
+            currentImageUrl
         )
     }
 
@@ -129,6 +168,12 @@ class EditWorkoutFragment : Fragment(), CameraUtil.CameraResultCallback {
 
         viewModel.errorMessage.observe(viewLifecycleOwner) { message ->
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        }
+
+        viewModel.imageDeleted.observe(viewLifecycleOwner) { deleted ->
+            if (deleted) {
+                Toast.makeText(requireContext(), "Image deleted successfully", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
