@@ -5,6 +5,7 @@ import androidx.core.os.HandlerCompat
 import com.example.gymbuddy.dataclass.Workout
 import com.example.gymbuddy.db.AppLocalDb
 import com.example.gymbuddy.db.AppLocalDbRepository
+import com.example.gymbuddy.repos.UserRepository
 import com.example.gymbuddy.repos.WorkoutRepository
 import java.util.concurrent.Executors
 
@@ -15,6 +16,7 @@ class Model private constructor() {
     private val mainHandler = HandlerCompat.createAsync(Looper.getMainLooper())
 
     private val workoutRepository = WorkoutRepository()
+    private val userRepository = UserRepository()
 
     val workouts: MutableList<Workout> = ArrayList()
 
@@ -138,6 +140,20 @@ class Model private constructor() {
         }, onFailure = {
             println("Failed to fetch workouts from Firestore for user: $ownerId")
             mainHandler.post { callback(emptyList()) }
+        })
+    }
+
+    fun getUserFavorites(userId: String, since: Long, callback: (List<Workout>) -> Unit) {
+        UserRepository().getUserFavoriteWorkoutIds(userId, { favoriteWorkoutIds ->
+            workoutRepository.getAllWorkouts(since) { allWorkouts ->
+                val combinedWorkouts = allWorkouts.filter { workout ->
+                    workout.ownerId == userId || favoriteWorkoutIds.contains(workout.workoutId)
+                }
+                callback(combinedWorkouts)
+            }
+        }, {
+            // Handle failure
+            callback(emptyList())
         })
     }
 }
