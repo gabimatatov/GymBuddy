@@ -6,18 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gymbuddy.adapters.WorkoutAdapter
 import com.example.gymbuddy.databinding.FragmentFavoritesBinding
-import com.example.gymbuddy.dataclass.Workout
 import com.example.gymbuddy.activities.AuthViewModel
+import com.example.gymbuddy.dataclass.Workout
 
 class FavoritesFragment : Fragment() {
     private var _binding: FragmentFavoritesBinding? = null
     private val binding get() = _binding!!
     private lateinit var favoritesViewModel: FavoritesViewModel
     private lateinit var adapter: WorkoutAdapter
-    private lateinit var authViewModel: AuthViewModel // Reference to AuthViewModel
+    private lateinit var authViewModel: AuthViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,11 +29,11 @@ class FavoritesFragment : Fragment() {
 
         // Initialize ViewModels
         favoritesViewModel = FavoritesViewModel()
-        authViewModel = AuthViewModel() // Initialize AuthViewModel
+        authViewModel = AuthViewModel()
 
         // Setup RecyclerView
-        adapter = WorkoutAdapter(emptyList()) { workout ->
-            // Handle click on favorite workout (e.g., open details)
+        adapter = WorkoutAdapter(emptyList()) { selectedWorkout ->
+            navigateToWorkoutDetails(selectedWorkout)
         }
         binding.recyclerViewFavorites.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewFavorites.adapter = adapter
@@ -40,7 +41,6 @@ class FavoritesFragment : Fragment() {
         // Observe AuthViewModel to get the current user
         authViewModel.currentUser.observe(viewLifecycleOwner, Observer { user ->
             user?.let {
-                // Pass the userId to the FavoritesViewModel to load the favorites
                 favoritesViewModel.loadFavorites(user.uid ?: "")
             }
         })
@@ -51,6 +51,20 @@ class FavoritesFragment : Fragment() {
         }
 
         return root
+    }
+
+    private fun navigateToWorkoutDetails(workout: Workout) {
+        val action = FavoritesFragmentDirections
+            .actionNavigationFavoritesToWorkoutDetailsFragment(
+                workoutId = workout.workoutId,
+                workoutName = workout.name,
+                workoutDescription = workout.description,
+                workoutExercises = workout.exercises,
+                workoutDifficulty = workout.difficulty,
+                workoutOwner = workout.ownerId,
+                workoutImageUrl = workout.imageUrl
+            )
+        findNavController().navigate(action)
     }
 
     override fun onDestroyView() {

@@ -23,13 +23,12 @@ class FavoritesViewModel : ViewModel() {
             userRepository.getUserFavoriteWorkoutIds(userId, onSuccess = { favoriteWorkoutIds ->
                 viewModelScope.launch {
                     val favoriteWorkouts = withContext(Dispatchers.IO) {
-                        // Pass a list of IDs to the DAO method
                         AppLocalDb.database.workoutDao().getWorkoutsByIds(favoriteWorkoutIds)
                     }
                     _favorites.postValue(favoriteWorkouts)
                 }
             }, onFailure = {
-                _favorites.postValue(emptyList()) // Handle failure
+                _favorites.postValue(emptyList())
             })
         }
     }

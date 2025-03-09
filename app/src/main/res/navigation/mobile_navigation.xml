@@ -133,5 +133,8 @@
         <argument android:name="workoutOwner" app:argType="string" />
         <argument android:name="workoutImageUrl" app:argType="string" />
     </action>
+    <action
+        android:id="@+id/action_navigation_favorites_to_workoutDetailsFragment"
+        app:destination="@id/workoutDetailsFragment" />
 
 </navigation>
