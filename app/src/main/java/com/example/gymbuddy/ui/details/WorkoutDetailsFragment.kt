@@ -58,12 +58,9 @@ class WorkoutDetailsFragment : Fragment() {
             }
         }
 
-        // Observe favorite success and navigate to favorites fragment
         viewModel.favoriteSuccess.observe(viewLifecycleOwner) { success ->
             if (success) {
                 Toast.makeText(requireContext(), "Added to Favorites", Toast.LENGTH_SHORT).show()
-                // Navigate to Favorites Fragment
-                findNavController().navigate(R.id.action_workoutDetailsFragment_to_favoritesFragment)
             } else {
                 Toast.makeText(requireContext(), "Already in Favorites", Toast.LENGTH_SHORT).show()
             }
