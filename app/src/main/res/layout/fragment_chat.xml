@@ -13,6 +13,7 @@
         android:padding="16dp"
         tools:context=".ui.chat.ChatFragment">
 
+        <!-- Welcome Message -->
         <TextView
             android:id="@+id/textViewWelcome"
             android:layout_width="match_parent"
@@ -27,6 +28,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
+        <!-- Sub Welcome Text -->
         <TextView
             android:id="@+id/textViewSubWelcome"
             android:layout_width="match_parent"
@@ -40,6 +42,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
+        <!-- User Input Box -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/inputLayoutMessage"
             android:layout_width="match_parent"
@@ -63,6 +66,7 @@
                 android:textSize="16sp"/>
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Send Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonSend"
             android:layout_width="match_parent"
@@ -75,6 +79,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
+        <!-- Response Label -->
         <TextView
             android:id="@+id/textViewResponseLabel"
             android:layout_width="wrap_content"
@@ -87,6 +92,7 @@
             app:layout_constraintTop_toBottomOf="@id/buttonSend"
             app:layout_constraintStart_toStartOf="parent"/>
 
+        <!-- Response Card with Copy Button -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardResponse"
             android:layout_width="match_parent"
@@ -99,15 +105,46 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-            <TextView
-                android:id="@+id/textViewResponse"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Your answer will appear here..."
-                android:textSize="16sp"
+                android:orientation="horizontal"
                 android:padding="12dp"
-                android:textColor="@android:color/black"/>
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/textViewResponse"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Your answer will appear here..."
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"/>
+
+                <!-- Copy Button -->
+                <ImageButton
+                    android:id="@+id/buttonCopy"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    app:srcCompat="@drawable/ic_copy"
+                    android:contentDescription="Copy response"
+                    android:visibility="gone"/>
+            </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
+
+        <!-- Loading Indicator -->
+        <ProgressBar
+            android:id="@+id/progressBarLoading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            style="?android:attr/progressBarStyleLarge"
+            app:layout_constraintTop_toBottomOf="@id/cardResponse"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="12dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
