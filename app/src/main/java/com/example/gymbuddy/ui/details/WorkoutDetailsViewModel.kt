@@ -21,6 +21,9 @@ class WorkoutDetailsViewModel : ViewModel() {
     private val _favoriteSuccess = MutableLiveData<Boolean>()
     val favoriteSuccess: LiveData<Boolean> get() = _favoriteSuccess
 
+    private val _isFavorite = MutableLiveData<Boolean>()
+    val isFavorite: LiveData<Boolean> get() = _isFavorite
+
     fun checkIfUserIsOwner(workoutOwner: String) {
         val currentUserEmail = auth.currentUser?.email
         _isOwner.postValue(currentUserEmail == workoutOwner)
@@ -32,25 +35,36 @@ class WorkoutDetailsViewModel : ViewModel() {
         }
     }
 
-    fun addToFavorites(workoutId: String) {
+    fun checkIfFavorite(workoutId: String) {
+        val userId = auth.currentUser?.uid ?: return
+
+        userRepository.fetchUser(userId, onSuccess = { user ->
+            _isFavorite.postValue(user.favoriteWorkoutIds.contains(workoutId))
+        }, onFailure = {
+            _isFavorite.postValue(false)
+        })
+    }
+
+    fun toggleFavorite(workoutId: String) {
         val userId = auth.currentUser?.uid ?: return
 
         userRepository.fetchUser(userId, onSuccess = { user ->
             val updatedFavorites = user.favoriteWorkoutIds.toMutableList()
 
-            if (!updatedFavorites.contains(workoutId)) {
-                updatedFavorites.add(workoutId)
-                userRepository.updateUserFavoriteWorkoutIds(userId, updatedFavorites, {
-                    _favoriteSuccess.postValue(true)
-                }, {
-                    _favoriteSuccess.postValue(false)
-                })
+            if (updatedFavorites.contains(workoutId)) {
+                updatedFavorites.remove(workoutId)
             } else {
-                _favoriteSuccess.postValue(false)
+                updatedFavorites.add(workoutId)
             }
+
+            userRepository.updateUserFavoriteWorkoutIds(userId, updatedFavorites, {
+                _isFavorite.postValue(updatedFavorites.contains(workoutId))
+                _favoriteSuccess.postValue(true)
+            }, {
+                _favoriteSuccess.postValue(false)
+            })
         }, onFailure = {
             _favoriteSuccess.postValue(false)
         })
     }
 }
-

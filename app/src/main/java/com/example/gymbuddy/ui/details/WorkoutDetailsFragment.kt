@@ -29,6 +29,7 @@ class WorkoutDetailsFragment : Fragment() {
         setupWorkoutImage()
         setupFavoriteButton()
         viewModel.checkIfUserIsOwner(args.workoutOwner)
+        viewModel.checkIfFavorite(args.workoutId) // Check if the workout is already a favorite
         return binding.root
     }
 
@@ -58,11 +59,15 @@ class WorkoutDetailsFragment : Fragment() {
             }
         }
 
+        // Observe favorite status and update button text
+        viewModel.isFavorite.observe(viewLifecycleOwner) { isFavorite ->
+            binding.buttonAddToFavorites.text =
+                if (isFavorite) "Remove from Favorites" else "Add to Favorites"
+        }
+
         viewModel.favoriteSuccess.observe(viewLifecycleOwner) { success ->
             if (success) {
-                Toast.makeText(requireContext(), "Added to Favorites", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(requireContext(), "Already in Favorites", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Updated Favorites", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -82,7 +87,7 @@ class WorkoutDetailsFragment : Fragment() {
 
     private fun setupFavoriteButton() {
         binding.buttonAddToFavorites.setOnClickListener {
-            viewModel.addToFavorites(args.workoutId)
+            viewModel.toggleFavorite(args.workoutId)
         }
     }
 
