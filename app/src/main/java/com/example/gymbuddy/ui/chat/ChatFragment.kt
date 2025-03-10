@@ -30,14 +30,13 @@ class ChatFragment : Fragment() {
             val userMessage = binding.editTextMessage.text.toString().trim()
 
             if (userMessage.isNotEmpty()) {
-                binding.textViewResponse.text = "GymBuddy is Thinking..." // Show loading state
+                binding.textViewResponse.text = "GymBuddy is Thinking..."
                 chatViewModel.sendMessage(userMessage) { response ->
-                    binding.textViewResponse.text = response // Update response
+                    binding.textViewResponse.text = response
 
-                    // Show the copy button when a response is received
                     binding.buttonCopy.visibility = View.VISIBLE
                 }
-                binding.editTextMessage.text?.clear() // Clear input box
+                binding.editTextMessage.text?.clear()
             } else {
                 Toast.makeText(requireContext(), "Please enter a question", Toast.LENGTH_SHORT).show()
             }
