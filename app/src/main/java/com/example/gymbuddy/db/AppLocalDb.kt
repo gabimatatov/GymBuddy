@@ -6,7 +6,7 @@ import androidx.room.RoomDatabase
 import com.example.gymbuddy.base.MyApplication
 import com.example.gymbuddy.dataclass.Workout
 
-@Database(entities = [Workout::class], version = 7)
+@Database(entities = [Workout::class], version = 8)
 abstract class AppLocalDbRepository: RoomDatabase() {
     abstract fun workoutDao(): WorkoutDao
 }

@@ -1,6 +1,9 @@
 package com.example.gymbuddy.ui.chat
 
 import ChatViewModel
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +21,7 @@ class ChatFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentChatBinding.inflate(inflater, container, false)
         setupSendButton()
+        setupCopyButton()
         return binding.root
     }
 
@@ -26,13 +30,29 @@ class ChatFragment : Fragment() {
             val userMessage = binding.editTextMessage.text.toString().trim()
 
             if (userMessage.isNotEmpty()) {
-                binding.textViewResponse.text = "GymBuddy is Thinking..." // Show loading state
+                binding.textViewResponse.text = "GymBuddy is Thinking..."
                 chatViewModel.sendMessage(userMessage) { response ->
-                    binding.textViewResponse.text = response // Update response
+                    binding.textViewResponse.text = response
+
+                    binding.buttonCopy.visibility = View.VISIBLE
                 }
-                binding.editTextMessage.text?.clear() // Clear input box
+                binding.editTextMessage.text?.clear()
             } else {
                 Toast.makeText(requireContext(), "Please enter a question", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun setupCopyButton() {
+        binding.buttonCopy.setOnClickListener {
+            val responseText = binding.textViewResponse.text.toString()
+
+            if (responseText.isNotEmpty()) {
+                val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clip = ClipData.newPlainText("Chat Response", responseText)
+                clipboard.setPrimaryClip(clip)
+
+                Toast.makeText(requireContext(), "Copied to clipboard!", Toast.LENGTH_SHORT).show()
             }
         }
     }

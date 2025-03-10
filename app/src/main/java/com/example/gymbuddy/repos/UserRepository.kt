@@ -222,4 +222,23 @@ class UserRepository {
             onFailure()
         }
     }
+
+    fun getUserFavoriteWorkoutIds(userId: String, onSuccess: (List<String>) -> Unit, onFailure: () -> Unit) {
+        db.collection("users")
+            .document(userId)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val favoriteWorkoutIds = document.get("favoriteWorkoutIds") as? List<String> ?: emptyList()
+                    onSuccess(favoriteWorkoutIds)
+                } else {
+                    onSuccess(emptyList()) // Return empty if user doesn't exist
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("getUserFavoriteWorkoutIds", "failed: ${exception.message}")
+                onFailure()
+            }
+    }
+
 }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -26,7 +27,9 @@ class WorkoutDetailsFragment : Fragment() {
         _binding = FragmentWorkoutDetailsBinding.inflate(inflater, container, false)
         setupObservers()
         setupWorkoutImage()
+        setupFavoriteButton()
         viewModel.checkIfUserIsOwner(args.workoutOwner)
+        viewModel.checkIfFavorite(args.workoutId) // Check if the workout is already a favorite
         return binding.root
     }
 
@@ -55,13 +58,23 @@ class WorkoutDetailsFragment : Fragment() {
                 findNavController().navigateUp()
             }
         }
+
+        // Observe favorite status and update button text
+        viewModel.isFavorite.observe(viewLifecycleOwner) { isFavorite ->
+            binding.buttonAddToFavorites.text =
+                if (isFavorite) "Remove from Favorites" else "Add to Favorites"
+        }
+
+        viewModel.favoriteSuccess.observe(viewLifecycleOwner) { success ->
+            if (success) {
+                Toast.makeText(requireContext(), "Updated Favorites", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun setupWorkoutImage() {
-        // Get the image URL from SafeArgs
         val imageUrl = args.workoutImageUrl
 
-        // Load image with Picasso
         if (!imageUrl.isNullOrEmpty()) {
             Picasso.get()
                 .load(imageUrl)
@@ -69,6 +82,12 @@ class WorkoutDetailsFragment : Fragment() {
                 .into(binding.imageWorkout)
         } else {
             binding.imageWorkout.setImageResource(R.drawable.gym_buddy_icon)
+        }
+    }
+
+    private fun setupFavoriteButton() {
+        binding.buttonAddToFavorites.setOnClickListener {
+            viewModel.toggleFavorite(args.workoutId)
         }
     }
 

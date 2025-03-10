@@ -31,5 +31,7 @@ interface WorkoutDao {
     @Query("UPDATE Workout SET name = :name, description = :description, exercises = :exercises, difficulty = :difficulty, imageUrl = :imageUrl, lastUpdated = :lastUpdated WHERE workoutId = :workoutId")
     fun updateWorkout(workoutId: String, name: String, description: String, exercises: String, difficulty: String, imageUrl: String, lastUpdated: Long)
 
+    @Query("SELECT * FROM Workout WHERE workoutId IN (:ids)")
+    fun getWorkoutsByIds(ids: List<String>): List<Workout>
 
 }
