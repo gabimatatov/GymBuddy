@@ -20,7 +20,10 @@ class UserRepository {
     private val storage: FirebaseStorage = FirebaseStorage.getInstance()
 
     // Function to initialize user document
-    fun initializeUserDocument(userId: String, email: String?) {
+    fun initializeUserDocument(
+        userId: String,
+        email: String?
+    ) {
         val initialUserData = hashMapOf(
             "userId" to userId,
             "email" to email,
@@ -45,7 +48,11 @@ class UserRepository {
     }
 
     // Function to fetch user data from Firestore
-    fun fetchUser(userId: String, onSuccess: (User) -> Unit, onFailure: () -> Unit) {
+    fun fetchUser(
+        userId: String,
+        onSuccess: (User) -> Unit,
+        onFailure: () -> Unit
+    ) {
         db.collection("users")
             .document(userId)
             .get()
@@ -58,21 +65,6 @@ class UserRepository {
             .addOnFailureListener { exception ->
                 // Handle failure
                 Log.d("fetchUser", "failed: ${exception.message}")
-                onFailure()
-            }
-    }
-
-    // Function to update user data in Firestore
-    fun updateUser(user: User, onSuccess: () -> Unit, onFailure: () -> Unit) {
-        db.collection("users")
-            .document(user.userId)
-            .set(user)
-            .addOnSuccessListener {
-                onSuccess()
-            }
-            .addOnFailureListener { exception ->
-                // Handle failure
-                Log.d("updateUser", "failed: ${exception.message}")
                 onFailure()
             }
     }
@@ -93,26 +85,6 @@ class UserRepository {
             .addOnFailureListener { exception ->
                 // Handle failure
                 Log.d("updateUserName", "failed: ${exception.message}")
-                onFailure()
-            }
-    }
-
-    // Function to update user workout IDs in Firestore
-    fun updateUserWorkoutIds(
-        userId: String,
-        newWorkoutIds: List<String>,
-        onSuccess: () -> Unit,
-        onFailure: () -> Unit
-    ) {
-        db.collection("users")
-            .document(userId)
-            .update("workoutIds", newWorkoutIds)
-            .addOnSuccessListener {
-                onSuccess()
-            }
-            .addOnFailureListener { exception ->
-                // Handle failure
-                Log.d("updateUserWorkoutIds", "failed: ${exception.message}")
                 onFailure()
             }
     }
@@ -138,7 +110,12 @@ class UserRepository {
     }
 
     // Function to update user photo URL in Firestore
-    fun updateUserPhoto(userId: String, bitmap: Bitmap, onSuccess: (String) -> Unit, onFailure: () -> Unit) {
+    fun updateUserPhoto(
+        userId: String,
+        bitmap: Bitmap,
+        onSuccess: (String) -> Unit,
+        onFailure: () -> Unit
+    ) {
         // Save the Bitmap as a file
         val file = saveBitmapToFile(bitmap)
 
@@ -174,7 +151,11 @@ class UserRepository {
     }
 
     // Function to upload the file to Firebase Storage
-    private fun uploadImage(file: File, onSuccess: (String) -> Unit, onFailure: () -> Unit) {
+    private fun uploadImage(
+        file: File,
+        onSuccess: (String) -> Unit,
+        onFailure: () -> Unit
+    ) {
         val storageRef: StorageReference = storage.reference
         val imageRef: StorageReference = storageRef.child("userImages/${file.name}")
 
@@ -191,7 +172,11 @@ class UserRepository {
             }
     }
 
-    fun deleteUserPhoto(userId: String, onSuccess: (User) -> Unit, onFailure: () -> Unit) {
+    fun deleteUserPhoto(
+        userId: String,
+        onSuccess: (User) -> Unit,
+        onFailure: () -> Unit
+    ) {
         val userDocRef = db.collection("users").document(userId)
 
         // Get the current photo URL
@@ -223,22 +208,49 @@ class UserRepository {
         }
     }
 
-    fun getUserFavoriteWorkoutIds(userId: String, onSuccess: (List<String>) -> Unit, onFailure: () -> Unit) {
+    fun getUserFavoriteWorkoutIds(
+        userId: String,
+        onSuccess: (List<String>) -> Unit,
+        onFailure: () -> Unit
+    ) {
         db.collection("users")
             .document(userId)
             .get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
                     val favoriteWorkoutIds = document.get("favoriteWorkoutIds") as? List<String> ?: emptyList()
-                    onSuccess(favoriteWorkoutIds)
+
+                    // Fetch all valid workouts to cross-check
+                    db.collection("workouts")
+                        .get()
+                        .addOnSuccessListener { workoutDocuments ->
+                            val validWorkoutIds = workoutDocuments.map { it.id }
+                            val validFavorites = favoriteWorkoutIds.filter { it in validWorkoutIds }
+
+                            // If there are invalid workout IDs, update Firestore
+                            if (favoriteWorkoutIds.size != validFavorites.size) {
+                                updateUserFavoriteWorkoutIds(userId, validFavorites,
+                                    onSuccess = {
+                                        Log.d("updateUserFavoriteWorkoutIds", "Removed deleted workouts from favorites.")
+                                    },
+                                    onFailure = {
+                                        Log.d("updateUserFavoriteWorkoutIds", "Failed to update favorites.")
+                                    }
+                                )
+                            }
+                            onSuccess(validFavorites)
+                        }
+                        .addOnFailureListener {
+                            Log.d("getUserFavoriteWorkoutIds", "Failed to fetch workouts.")
+                            onSuccess(favoriteWorkoutIds) // Return existing favorites even if check fails
+                        }
                 } else {
-                    onSuccess(emptyList()) // Return empty if user doesn't exist
+                    onSuccess(emptyList())
                 }
             }
             .addOnFailureListener { exception ->
-                Log.d("getUserFavoriteWorkoutIds", "failed: ${exception.message}")
+                Log.d("getUserFavoriteWorkoutIds", "Failed: ${exception.message}")
                 onFailure()
             }
     }
-
 }
