@@ -42,10 +42,15 @@ class WorkoutRepository {
     fun getAllWorkouts(since: Long, callback: (List<Workout>) -> Unit) {
         println("Fetching workouts updated since: $since")
 
-        db.collection("workouts")
-            .whereGreaterThanOrEqualTo("lastUpdated", since)
-            .orderBy("lastUpdated", Query.Direction.DESCENDING)
-            .get()
+        val query = if (since == -1L) {
+            db.collection("workouts").orderBy("lastUpdated", Query.Direction.DESCENDING)
+        } else {
+            db.collection("workouts")
+                .whereGreaterThanOrEqualTo("lastUpdated", since)
+                .orderBy("lastUpdated", Query.Direction.DESCENDING)
+        }
+
+        query.get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val workouts = task.result.mapNotNull { document ->
