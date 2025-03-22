@@ -144,7 +144,7 @@ class Model private constructor() {
     }
 
     fun getUserFavorites(userId: String, since: Long, callback: (List<Workout>) -> Unit) {
-        UserRepository().getUserFavoriteWorkoutIds(userId, { favoriteWorkoutIds ->
+        userRepository.getUserFavoriteWorkoutIds(userId, { favoriteWorkoutIds ->
             workoutRepository.getAllWorkouts(since) { allWorkouts ->
                 val combinedWorkouts = allWorkouts.filter { workout ->
                     workout.ownerId == userId || favoriteWorkoutIds.contains(workout.workoutId)
